@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的提示词 - VideoPrompt AI 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333;
+      background: #fff;
+      max-width: 1200px;
+      margin: 0 auto;
+      border: 1px solid #d0d0d0;
+      min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5;
+      padding: 12px 32px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .nav { display: flex; gap: 20px; align-items: center; }
+    .nav a { color: #888; text-decoration: none; font-size: 14px; }
+    .nav a.active { color: #333; font-weight: 600; }
+    .nav a:hover { color: #333; }
+    .content { padding: 24px 32px; }
+    .text-secondary { color: #888; font-size: 12px; }
+    .section-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .input-field {
+      padding: 10px 12px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      flex: 1;
+    }
+    .btn-secondary {
+      background: #fff;
+      color: #555;
+      border: 1px solid #aaa;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .filter-tab {
+      padding: 6px 14px;
+      border: 1px solid #d0d0d0;
+      border-radius: 16px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #fff;
+      color: #555;
+    }
+    .filter-tab.active {
+      background: #555;
+      color: #fff;
+      border-color: #555;
+    }
+    .prompt-list { display: flex; flex-direction: column; gap: 12px; }
+    .prompt-item {
+      background: #f5f5f5;
+      border: 1px solid #d0d0d0;
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .prompt-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .prompt-item-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .prompt-item-actions { display: flex; gap: 6px; }
+    .btn-icon {
+      background: none;
+      border: 1px solid #d0d0d0;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #555;
+    }
+    .prompt-item-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      max-height: 60px;
+      overflow: hidden;
+    }
+    .prompt-item-meta {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #888;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: #888;
+    }
+    .empty-state-icon { font-size: 48px; margin-bottom: 12px; }
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      background: #f5f5f5;
+      border: 1px solid #d0d0d0;
+      border-radius: 8px;
+    }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 20px; font-weight: 700; }
+    .stat-label { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎬 VideoPrompt AI</h1>
+    <div class="nav">
+      <a href="editor.html">编辑器</a>
+      <a href="templates.html">模板库</a>
+      <a href="my-prompts.html" class="active">我的提示词</a>
+      <a href="login.html">登录</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section-title">💾 我的提示词</div>
+
+    <!-- 统计 -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-value">12</div>
+        <div class="stat-label">已保存</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Sora</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Seedance</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">36</div>
+        <div class="stat-label">历史生成</div>
+      </div>
+    </div>
+
+    <!-- 搜索 -->
+    <div class="search-bar">
+      <input class="input-field" type="text" placeholder="🔍 搜索我的提示词...">
+      <button class="btn-secondary">搜索</button>
+    </div>
+
+    <!-- 筛选 -->
+    <div class="filter-tabs">
+      <span class="filter-tab active">全部</span>
+      <span class="filter-tab">Sora</span>
+      <span class="filter-tab">Seedance</span>
+      <span class="filter-tab">已收藏 ⭐</span>
+      <span class="filter-tab">最近使用</span>
+    </div>
+
+    <!-- 提示词列表 -->
+    <div class="prompt-list">
+      <!-- 项目 1 -->
+      <div class="prompt-item">
+        <div class="prompt-item-header">
+          <div class="prompt-item-title">樱花树下旋转少女</div>
+          <div class="prompt-item-actions">
+            <button class="btn-icon">📋 复制</button>
+            <button class="btn-icon">✏️ 编辑</button>
+            <button class="btn-icon">🗑️</button>
+          </div>
+        </div>
+        <div class="prompt-item-text">
+          A young woman in a crisp white linen shirt spins gracefully beneath a canopy of blooming cherry blossom trees on a centuries-old cobblestone street in Kyoto, Japan. Orbiting tracking shot, anamorphic 2.0x lens...
+        </div>
+        <div class="prompt-item-meta">
+          <span class="tag">Sora 2</span>
+          <span class="tag">电影感</span>
+          <span class="tag">浪漫</span>
+          <span class="text-secondary">2026-03-29 14:30</span>
+          <span class="text-secondary">⭐ 已收藏</span>
+        </div>
+      </div>
+
+      <!-- 项目 2 -->
+      <div class="prompt-item">
+        <div class="prompt-item-header">
+          <div class="prompt-item-title">赛博朋克雨夜街道</div>
+          <div class="prompt-item-actions">
+            <button class="btn-icon">📋 复制</button>
+            <button class="btn-icon">✏️ 编辑</button>
+            <button class="btn-icon">🗑️</button>
+          </div>
+        </div>
+        <div class="prompt-item-text">
+          一个穿黑色风衣的男人撑着透明雨伞走在霓虹灯照亮的东京涩谷街道上，手持跟随镜头，赛博朋克色调，雨水反射地面霓虹光...
+        </div>
+        <div class="prompt-item-meta">
+          <span class="tag">Seedance 2.0</span>
+          <span class="tag">赛博朋克</span>
+          <span class="tag">城市</span>
+          <span class="text-secondary">2026-03-28 22:15</span>
+        </div>
+      </div>
+
+      <!-- 项目 3 -->
+      <div class="prompt-item">
+        <div class="prompt-item-header">
+          <div class="prompt-item-title">日出海浪悬崖航拍</div>
+          <div class="prompt-item-actions">
+            <button class="btn-icon">📋 复制</button>
+            <button class="btn-icon">✏️ 编辑</button>
+            <button class="btn-icon">🗑️</button>
+          </div>
+        </div>
+        <div class="prompt-item-text">
+          Aerial drone shot sweeping over dramatic sea cliffs at sunrise. Massive ocean waves crashing against jagged rocks, sending white spray into golden morning light. Camera pulls back to reveal vast coastline...
+        </div>
+        <div class="prompt-item-meta">
+          <span class="tag">Sora 2</span>
+          <span class="tag">自然风光</span>
+          <span class="tag">航拍</span>
+          <span class="text-secondary">2026-03-27 09:45</span>
+          <span class="text-secondary">⭐ 已收藏</span>
+        </div>
+      </div>
+
+      <!-- 项目 4 -->
+      <div class="prompt-item">
+        <div class="prompt-item-header">
+          <div class="prompt-item-title">手机产品展示广告</div>
+          <div class="prompt-item-actions">
+            <button class="btn-icon">📋 复制</button>
+            <button class="btn-icon">✏️ 编辑</button>
+            <button class="btn-icon">🗑️</button>
+          </div>
+        </div>
+        <div class="prompt-item-text">
+          极简纯白背景上，一款深蓝色智能手机以45度角悬浮旋转，微距镜头缓慢推近捕捉金属边框质感和屏幕反光细节，干净的产品摄影风格...
+        </div>
+        <div class="prompt-item-meta">
+          <span class="tag">Seedance 2.0</span>
+          <span class="tag">产品展示</span>
+          <span class="tag">广告</span>
+          <span class="text-secondary">2026-03-26 16:20</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录注册 - VideoPrompt AI 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333;
+      background: #fff;
+      max-width: 1200px;
+      margin: 0 auto;
+      border: 1px solid #d0d0d0;
+      min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5;
+      padding: 12px 32px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .nav { display: flex; gap: 20px; align-items: center; }
+    .nav a { color: #888; text-decoration: none; font-size: 14px; }
+    .nav a.active { color: #333; font-weight: 600; }
+    .nav a:hover { color: #333; }
+    .login-container {
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+    .login-card {
+      background: #f5f5f5;
+      border: 1px solid #d0d0d0;
+      border-radius: 12px;
+      padding: 32px 28px;
+    }
+    .login-title {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .login-subtitle {
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      font-size: 13px;
+      color: #555;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+    }
+    .btn-primary {
+      background: #555;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: 600;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .divider-line {
+      flex: 1;
+      border: none;
+      border-top: 1px solid #d0d0d0;
+    }
+    .divider-text {
+      padding: 0 12px;
+      font-size: 12px;
+      color: #888;
+    }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      background: #fff;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .social-btn:hover { background: #f5f5f5; }
+    .social-icon { font-size: 18px; }
+    .text-secondary { color: #888; font-size: 12px; }
+    .text-center { text-align: center; }
+    .link { color: #4a90d9; text-decoration: none; }
+    .link:hover { text-decoration: underline; }
+    .benefits {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: #fff;
+      border: 1px solid #d0d0d0;
+      border-radius: 8px;
+    }
+    .benefit-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .benefit-icon { font-size: 16px; }
+    .tab-switch {
+      display: flex;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #d0d0d0;
+    }
+    .tab-switch-btn {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .tab-switch-btn.active {
+      color: #333;
+      border-bottom-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎬 VideoPrompt AI</h1>
+    <div class="nav">
+      <a href="editor.html">编辑器</a>
+      <a href="templates.html">模板库</a>
+      <a href="my-prompts.html">我的提示词</a>
+      <a href="login.html" class="active">登录</a>
+    </div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-title">🎬 VideoPrompt AI</div>
+      <div class="login-subtitle">登录以解锁更多 AI 额度和提示词管理功能</div>
+
+      <!-- 登录/注册切换 -->
+      <div class="tab-switch">
+        <button class="tab-switch-btn active">登录</button>
+        <button class="tab-switch-btn">注册</button>
+      </div>
+
+      <!-- 第三方登录 -->
+      <button class="social-btn">
+        <span class="social-icon">G</span>
+        使用 Google 账号登录
+      </button>
+      <button class="social-btn">
+        <span class="social-icon">⬡</span>
+        使用 GitHub 账号登录
+      </button>
+
+      <!-- 分隔线 -->
+      <div class="divider">
+        <hr class="divider-line">
+        <span class="divider-text">或使用邮箱</span>
+        <hr class="divider-line">
+      </div>
+
+      <!-- 邮箱登录表单 -->
+      <div class="form-group">
+        <label class="form-label" for="email">邮箱地址</label>
+        <input id="email" class="input-field" type="email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">密码</label>
+        <input id="password" class="input-field" type="password" placeholder="输入密码">
+      </div>
+
+      <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+        <label class="text-secondary" style="display: flex; align-items: center; gap: 4px;">
+          <input type="checkbox"> 记住我
+        </label>
+        <a href="#" class="link text-secondary">忘记密码？</a>
+      </div>
+
+      <button class="btn-primary">登录</button>
+
+      <!-- 注册权益说明 -->
+      <div class="benefits">
+        <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">注册即享：</div>
+        <div class="benefit-item">
+          <span class="benefit-icon">✨</span>
+          <span>每日 20 次 AI 扩写额度（未注册仅 5 次）</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">💾</span>
+          <span>云端保存和管理提示词</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">📚</span>
+          <span>访问完整模板库</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">🌐</span>
+          <span>中英双向提示词翻译</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center" style="margin-top: 16px;">
+      <a href="editor.html" class="link text-secondary">← 跳过登录，直接使用编辑器</a>
+    </div>
+  </div>
+</body>
+</html>

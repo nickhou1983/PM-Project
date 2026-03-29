@@ -65,8 +65,10 @@
 | code-testing | 负责单元、集成、UI 和 E2E 测试 |
 | code-docs | 生成 README、注释、API 文档和设计说明 |
 | designer | 把 PRD 或线框升级为高保真原型 |
+| gate-review | Stage-Gate 评审门，在 PRD/架构/上线前执行 Go/No-Go 决策 |
+| post-launch-review | 上线复盘，收集埋点数据和用户反馈，输出迭代建议 |
 | ui-testing | 使用 Playwright 做浏览器自动化验证 |
-| PM-assistant / requirement-analyst | 做需求分析、竞品调研和立项前验证 |
+| PM-assistant / requirement-analyst | 做需求分析、竞品调研、商业模型验证和立项前验证 |
 | pr-review-submit | 将审查意见写回 GitHub PR |
 
 ### Skills
@@ -109,9 +111,11 @@ cd PM-Project
 ### 3. 推荐协作流程
 
 1. 先用 planning 或 new-employee-mentor 做任务识别和路由。
-2. 再按场景调用 architect、code-review、code-testing、code-docs 等专用 Agent。
-3. 需要规范或模板时，读取对应 Skill 的 SKILL.md 与 references。
-4. 需要发布到 GitHub 时，走 github-publish 流程。
+2. 需求阶段：PM-assistant → requirement-doc → gate-review（PRD 评审）。
+3. 设计阶段：designer → architect → gate-review（架构评审）。
+4. 开发阶段：requirement-to-issues → code-testing → code-review。
+5. 发布阶段：gate-review（上线评审）→ github-publish → post-launch-review（复盘）。
+6. 需要规范或模板时，读取对应 Skill 的 SKILL.md 与 references。
 
 ## 项目文档
 

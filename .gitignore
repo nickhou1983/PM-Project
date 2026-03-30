@@ -41,3 +41,5 @@ coverage/
 *.log
 *.tmp
 *.temp
+*.pptx
+*.docx

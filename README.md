@@ -32,18 +32,18 @@
 │   └── agents/
 ├── .github/
 │   ├── agents/
-│   │   ├── PM-assistant.agent.md
+│   │   ├── pm_assistant.agent.md
 │   │   ├── architect.agent.md
-│   │   ├── code-debug.agent.md
-│   │   ├── code-docs.agent.md
-│   │   ├── code-review.agent.md
-│   │   ├── code-testing.agent.md
+│   │   ├── code_debug.agent.md
+│   │   ├── code_docs.agent.md
+│   │   ├── code_review.agent.md
+│   │   ├── code_testing.agent.md
 │   │   ├── designer.agent.md
-│   │   ├── new-employee-mentor.agent.md
+│   │   ├── new_employee_mentor.agent.md
 │   │   ├── planning.agent.md
-│   │   ├── pr-review-submit.agent.md
-│   │   ├── requirement-analyst.agent.md
-│   │   ├── ui-testing.agent.md
+│   │   ├── pr_review_submit.agent.md
+│   │   ├── requirement_analyst.agent.md
+│   │   ├── ui_testing.agent.md
 │   │   └── plans/
 │   └── skills/
 │       ├── architect/
@@ -73,18 +73,18 @@
 | Agent | 作用 |
 | --- | --- |
 | planning | 做上下文研究、意图识别和路由建议 |
-| new-employee-mentor | 作为统一入口，把任务分配给合适的 Agent 或 Skill |
+| new_employee_mentor | 作为统一入口，把任务分配给合适的 Agent 或 Skill |
 | architect | 基于需求产出技术架构方案 |
-| code-review | 做代码评审、安全检查和质量评估 |
-| code-debug | 处理报错排查与修复建议 |
-| code-testing | 负责单元、集成、UI 和 E2E 测试 |
-| code-docs | 生成 README、注释、API 文档和设计说明 |
+| code_review | 做代码评审、安全检查和质量评估 |
+| code_debug | 处理报错排查与修复建议 |
+| code_testing | 负责单元、集成、UI 和 E2E 测试 |
+| code_docs | 生成 README、注释、API 文档和设计说明 |
 | designer | 把 PRD 或线框升级为高保真原型 |
-| gate-review | Stage-Gate 评审门，在 PRD/架构/上线前执行 Go/No-Go 决策 |
-| post-launch-review | 上线复盘，收集埋点数据和用户反馈，输出迭代建议 |
-| ui-testing | 使用 Playwright 做浏览器自动化验证 |
-| PM-assistant / requirement-analyst | 做需求分析、竞品调研、商业模型验证和立项前验证 |
-| pr-review-submit | 将审查意见写回 GitHub PR |
+| gate_review | Stage-Gate 评审门，在 PRD/架构/上线前执行 Go/No-Go 决策 |
+| post_launch_review | 上线复盘，收集埋点数据和用户反馈，输出迭代建议 |
+| ui_testing | 使用 Playwright 做浏览器自动化验证 |
+| pm_assistant / requirement_analyst | 做需求分析、竞品调研、商业模型验证和立项前验证 |
+| pr_review_submit | 将审查意见写回 GitHub PR |
 
 ### Skills
 
@@ -125,11 +125,11 @@ cd PM-Project
 
 ### 3. 推荐协作流程
 
-1. 先用 planning 或 new-employee-mentor 做任务识别和路由。
-2. 需求阶段：PM-assistant → requirement-doc → gate-review（PRD 评审）。
-3. 设计阶段：designer → architect → gate-review（架构评审）。
-4. 开发阶段：requirement-to-issues → code-testing → code-review。
-5. 发布阶段：gate-review（上线评审）→ github-publish → post-launch-review（复盘）。
+1. 先用 planning 或 new_employee_mentor 做任务识别和路由。
+2. 需求阶段：pm_assistant → requirement-doc → gate_review（PRD 评审）。
+3. 设计阶段：designer → architect → gate_review（架构评审）。
+4. 开发阶段：requirement-to-issues → code_testing → code_review。
+5. 发布阶段：gate_review（上线评审）→ github-publish → post_launch_review（复盘）。
 6. 需要规范或模板时，读取对应 Skill 的 SKILL.md 与 references。
 
 ## 项目文档

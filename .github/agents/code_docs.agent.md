@@ -1,5 +1,5 @@
 ---
-name: Code Docs Agent
+name: "code_docs"
 description: "用于生成代码文档、函数注释、README、设计说明和项目文档。适用于补全注释、编写 API 文档、整理模块说明；当用户要求同步到飞书/Feishu/Lark 时，调用 feishu-docs skill 执行文档写入。"
 tools: [read, edit, search, execute, web]
 argument-hint: "描述要生成的文档类型、目标文件或模块，以及是否需要同步到飞书"

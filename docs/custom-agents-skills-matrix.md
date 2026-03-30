@@ -15,20 +15,20 @@
 
 | 运行时 ID | `.codex` 文件 | `.github` 文件 | 职责定位 | 推荐触发场景 |
 | --- | --- | --- | --- | --- |
-| `pm_assistant` | `.codex/agents/pm-assistant.toml` | `.github/agents/PM-assistant.agent.md` | 立项前验证与价值评估 | 灵感分析、竞品分析、飞书查重、商业快评 |
-| `requirement_analyst` | `.codex/agents/requirement-analyst.toml` | `.github/agents/requirement-analyst.agent.md` | 轻量需求验证 | 快速判断需求是否值得推进 |
+| `pm_assistant` | `.codex/agents/pm_assistant.toml` | `.github/agents/pm_assistant.agent.md` | 立项前验证与价值评估 | 灵感分析、竞品分析、飞书查重、商业快评 |
+| `requirement_analyst` | `.codex/agents/requirement_analyst.toml` | `.github/agents/requirement_analyst.agent.md` | 轻量需求验证 | 快速判断需求是否值得推进 |
 | `planning` | `.codex/agents/planning.toml` | `.github/agents/planning.agent.md` | 上下文研究与路由建议 | 执行前分析、复杂任务梳理 |
-| `new_employee_mentor` | `.codex/agents/new-employee-mentor.toml` | `.github/agents/new-employee-mentor.agent.md` | 统一入口路由器 | 不确定该用哪个 Agent/Skill 时 |
+| `new_employee_mentor` | `.codex/agents/new_employee_mentor.toml` | `.github/agents/new_employee_mentor.agent.md` | 统一入口路由器 | 不确定该用哪个 Agent/Skill 时 |
 | `designer` | `.codex/agents/designer.toml` | `.github/agents/designer.agent.md` | 高保真原型设计 | 从 PRD / wireframe 升级高保真原型 |
 | `architect` | `.codex/agents/architect.toml` | `.github/agents/architect.agent.md` | 架构设计 | 从 PRD 产出技术架构文档 |
-| `gate_review` | `.codex/agents/gate-review.toml` | `.github/agents/gate-review.agent.md` | Stage-Gate 审核 | PRD 评审、架构评审、上线评审 |
-| `code_debug` | `.codex/agents/code-debug.toml` | `.github/agents/code-debug.agent.md` | 故障诊断 | 报错分析、未知异常排查 |
-| `code_docs` | `.codex/agents/code-docs.toml` | `.github/agents/code-docs.agent.md` | 文档生成 | 注释、README、API 文档、设计说明 |
-| `code_review` | `.codex/agents/code-review.toml` | `.github/agents/code-review.agent.md` | 代码审查 | PR 审查、回归风险识别、安全检查 |
-| `pr_review_submit` | `.codex/agents/pr-review-submit.toml` | `.github/agents/pr-review-submit.agent.md` | PR Review 发布 | 将审查结果写回 GitHub PR |
-| `code_testing` | `.codex/agents/code-testing.toml` | `.github/agents/code-testing.agent.md` | 通用测试执行 | 单元测试、集成测试、覆盖率分析 |
-| `ui_testing` | `.codex/agents/ui-testing.toml` | `.github/agents/ui-testing.agent.md` | 深度 UI 自动化测试 | Playwright、视觉回归、a11y、POM |
-| `post_launch_review` | `.codex/agents/post-launch-review.toml` | `.github/agents/post-launch-review.agent.md` | 上线复盘 | 指标回顾、反馈归因、迭代建议 |
+| `gate_review` | `.codex/agents/gate_review.toml` | `.github/agents/gate_review.agent.md` | Stage-Gate 审核 | PRD 评审、架构评审、上线评审 |
+| `code_debug` | `.codex/agents/code_debug.toml` | `.github/agents/code_debug.agent.md` | 故障诊断 | 报错分析、未知异常排查 |
+| `code_docs` | `.codex/agents/code_docs.toml` | `.github/agents/code_docs.agent.md` | 文档生成 | 注释、README、API 文档、设计说明 |
+| `code_review` | `.codex/agents/code_review.toml` | `.github/agents/code_review.agent.md` | 代码审查 | PR 审查、回归风险识别、安全检查 |
+| `pr_review_submit` | `.codex/agents/pr_review_submit.toml` | `.github/agents/pr_review_submit.agent.md` | PR Review 发布 | 将审查结果写回 GitHub PR |
+| `code_testing` | `.codex/agents/code_testing.toml` | `.github/agents/code_testing.agent.md` | 通用测试执行 | 单元测试、集成测试、覆盖率分析 |
+| `ui_testing` | `.codex/agents/ui_testing.toml` | `.github/agents/ui_testing.agent.md` | 深度 UI 自动化测试 | Playwright、视觉回归、a11y、POM |
+| `post_launch_review` | `.codex/agents/post_launch_review.toml` | `.github/agents/post_launch_review.agent.md` | 上线复盘 | 指标回顾、反馈归因、迭代建议 |
 
 ## Skills
 

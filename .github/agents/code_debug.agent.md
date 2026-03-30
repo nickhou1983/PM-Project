@@ -1,5 +1,6 @@
 ---
 description: "代码诊断助手。分析错误信息（文字或图片），检索飞书知识库判断是否已知问题，未知问题则搜索代码仓库并生成修复方案。触发条件：(1) 代码报错/异常/Bug 排查，(2) 错误截图分析，(3) 生产问题诊断，(4) 运行时异常定位，(5) 编译/构建错误排查。"
+name: "code_debug"
 tools: [read, edit, search, agent, web, todo]
 argument-hint: "描述错误信息、粘贴报错截图、或提供错误日志"
 agents: ["implement-subagent"]

@@ -1,6 +1,6 @@
 ---
 description: "架构师 Agent。根据产品需求文档（PRD）设计完整的技术架构方案，输出结构化的架构设计文档。覆盖：技术栈选型、系统架构、数据模型、API 设计、部署方案、非功能需求、安全设计。Use when: 用户需要架构设计、技术方案、系统设计、技术选型、从 PRD 推导架构、设计技术架构、数据库设计、API 设计、部署架构。"
-name: "Architect"
+name: "architect"
 argument-hint: "提供 PRD 文档路径或描述产品需求，例如：根据 docs/prd-ai-movie-review.md 设计技术架构"
 user-invocable: true
 ---

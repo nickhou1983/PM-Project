@@ -1,6 +1,6 @@
 ---
-description: "设计师 Agent（Designer）。基于 PM 产出的 PRD 和低保真 wireframe，生成高保真 Hi-Fi 原型图。覆盖主题选型、品牌配色、组件系统、交互动效、视觉规范。Use when: 用户需要高保真原型图、将 wireframe 升级为高保真、UI 原型设计、视觉设计、生成 hifi prototype、将低保真转高保真。"
-name: "Designer"
+description: "设计师 Agent。基于 PM 产出的 PRD 和低保真 wireframe，生成高保真 Hi-Fi 原型图。覆盖主题选型、品牌配色、组件系统、交互动效、视觉规范。Use when: 用户需要高保真原型图、将 wireframe 升级为高保真、UI 原型设计、视觉设计、生成 hifi prototype、将低保真转高保真。"
+name: "designer"
 argument-hint: "提供 PRD 或 wireframe 路径，例如：将 docs/prd-videoprompt-ai/wireframes 升级为高保真原型"
 user-invocable: true
 ---
@@ -14,9 +14,9 @@ user-invocable: true
 ```
 PM (requirement-doc)  → 低保真 wireframe + PRD
         ↓
-Designer (你)         → 高保真 Hi-Fi 原型
+designer (你)         → 高保真 Hi-Fi 原型
         ↓
-Architect (architect) → 技术架构方案
+architect             → 技术架构方案
 ```
 
 ## 约束

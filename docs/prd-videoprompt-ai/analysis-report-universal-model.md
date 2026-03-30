@@ -152,7 +152,7 @@
 
 > 💡 **如果结论为「⚠️ 建议缩范围推进」**，先明确 Phase 1 MVP 范围（5 模型 + 引擎重构），再使用 `requirement-doc` Skill 更新 PRD。
 
-> 💡 **评审闭环**：PRD 更新后，建议使用 `gate-review` Agent 做正式评审（Go/No-Go 决策），确保质量达标后推进架构设计。
+> 💡 **评审闭环**：PRD 更新后，建议使用 `gate_review` Agent 做正式评审（Go/No-Go 决策），确保质量达标后推进架构设计。
 
 > 💡 **原型展示**：PRD 生成后，可使用 `modao-prototype` Skill 将核心页面导入墨刀，用于产品评审和团队协作展示。
 

@@ -206,7 +206,7 @@ await page.waitForSelector('.alert');
 
 ## 视觉回归测试要点
 
-详细的视觉回归策略参见 Agent 定义（`ui-testing.agent.md`），以下是核心要点：
+详细的视觉回归策略参见 Agent 定义（`ui_testing.agent.md`），以下是核心要点：
 
 ### 截图粒度
 
@@ -246,7 +246,7 @@ await expect(page).toHaveScreenshot('static.png', { animations: 'disabled' });
 
 ## 无障碍测试要点
 
-详细的无障碍策略参见 Agent 定义（`ui-testing.agent.md`），以下是核心要点：
+详细的无障碍策略参见 Agent 定义（`ui_testing.agent.md`），以下是核心要点：
 
 ### 依赖
 
@@ -329,5 +329,5 @@ test('首页应通过 WCAG 2.1 AA', async ({ page }) => {
 
 ### 建议
 - 未覆盖的场景
-- 可补充的单元/集成测试（可交由 Code Testing Agent）
+- 可补充的单元/集成测试（可交由 `code_testing` Agent）
 ```

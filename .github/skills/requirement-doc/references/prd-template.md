@@ -215,29 +215,29 @@
 
 ## 附录 A：需求分析报告
 
-> **条件章节**：仅当产品灵感经过 `Requirement Analyst` Agent 分析后生成此附录。若无分析报告，删除本章节。
+> **条件章节**：仅当产品灵感经过 `requirement_analyst` Agent 分析后生成此附录。若无分析报告，删除本章节。
 
-以下为立项前的需求分析与验证报告原文（由 Requirement Analyst 输出）：
+以下为立项前的需求分析与验证报告原文（由 `requirement_analyst` 输出）：
 
 ### A.1 需求概述
 
-{Requirement Analyst 报告 §1 — 核心功能点、目标用户、痛点概述}
+{requirement_analyst 报告 §1 — 核心功能点、目标用户、痛点概述}
 
 ### A.2 内部查重结果
 
-{Requirement Analyst 报告 §2 — 飞书文档查重结果}
+{requirement_analyst 报告 §2 — 飞书文档查重结果}
 
 ### A.3 竞品分析
 
-{Requirement Analyst 报告 §3 — 竞品列表、SWOT 分析、差异化机会}
+{requirement_analyst 报告 §3 — 竞品列表、SWOT 分析、差异化机会}
 
 ### A.4 价值评估
 
-{Requirement Analyst 报告 §4 — 五维评分（需求清晰度/市场空间/技术可行性/差异化/战略契合度）及综合评分}
+{requirement_analyst 报告 §4 — 五维评分（需求清晰度/市场空间/技术可行性/差异化/战略契合度）及综合评分}
 
 ### A.5 结论与建议
 
-{Requirement Analyst 报告 §5 — 最终建议（推荐推进/建议调整/建议搁置）及理由}
+{requirement_analyst 报告 §5 — 最终建议（推荐推进/建议调整/建议搁置）及理由}
 
 ---
 

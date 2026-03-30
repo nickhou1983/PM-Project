@@ -1,5 +1,6 @@
 ---
 description: "任务规划与上下文研究。分析用户原始输入，研究代码仓库上下文，输出结构化的 Planning 结果（上下文摘要、意图分析、推荐路由、开放问题）。适用于需要在执行前做深度分析和路由决策的场景。"
+name: "planning"
 tools: [search, read, problems, changes, testFailure, fetch, usages]
 argument-hint: "用户的原始任务描述"
 ---
@@ -46,11 +47,11 @@ You are a **Planning Agent** responsible for analyzing user requests, researchin
 ```
 用户输入
 ├─ 包含「审查」「review」「检查代码」「代码质量」
-│  → code-review Agent
+│  → code_review Agent
 ├─ 包含「安全审查」「安全审计」「OWASP」「漏洞扫描」「安全加固」
 │  → security-audit Skill
 ├─ 包含「文档」「注释」「README」「API 文档」「设计文档」
-│  → code-docs Agent
+│  → code_docs Agent
 ├─ 包含「提交」「commit」「推送」「PR」「pull request」「合并」「发布」
 │  → github-publish Skill
 ├─ 包含「规范」「标准」「命名」「风格」「编码规范」
@@ -58,9 +59,9 @@ You are a **Planning Agent** responsible for analyzing user requests, researchin
 ├─ 包含「微服务」「Docker」「K8s」「CI/CD」「部署」
 │  → microservices Skill
 ├─ 包含「测试」「单元测试」「E2E」「Playwright」「覆盖率」
-│  → code-testing Agent
+│  → code_testing Agent
 ├─ 包含「报错」「错误」「异常」「bug」「排查」「诊断」
-│  → code-debug Agent
+│  → code_debug Agent
 ├─ 包含「架构」「技术方案」「设计方案」「系统设计」「技术选型」「数据库设计」「API 设计」「部署架构」
 │  → architect Agent
 ├─ 混合场景（如「提交并审查」）

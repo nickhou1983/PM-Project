@@ -1,6 +1,6 @@
 ---
 description: "需求分析与灵感验证 Agent。对用户提出的产品灵感进行系统化分析：理解需求、查重飞书已有文档、检索网络竞品、输出价值评估报告。Use when: 用户提出新灵感/需求想法，想验证可行性，想了解市场上是否有类似产品，想评估需求价值，进行竞品分析，需求查重。"
-name: "Requirement Analyst"
+name: "requirement_analyst"
 tools: [read, search, web, agent, todo]
 argument-hint: "描述你的产品灵感或需求想法，例如：做一个 AI 会议纪要自动生成工具"
 ---
@@ -146,5 +146,5 @@ argument-hint: "描述你的产品灵感或需求想法，例如：做一个 AI 
 2. {具体的行动建议 2}
 3. {具体的行动建议 3}
 
-> 💡 **如果结论为「✅ 建议推进」**，建议使用 `requirement-doc` Skill 将本分析报告转化为正式的产品需求文档（PRD）。PRD 完成后使用 `gate-review` Agent 执行 PRD 评审（Gate 1），确保质量达标后推进到架构设计。
+> 💡 **如果结论为「✅ 建议推进」**，建议使用 `requirement-doc` Skill 将本分析报告转化为正式的产品需求文档（PRD）。PRD 完成后使用 `gate_review` Agent 执行 PRD 评审（Gate 1），确保质量达标后推进到架构设计。
 ```

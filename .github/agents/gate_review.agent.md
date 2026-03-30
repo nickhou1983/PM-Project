@@ -1,6 +1,6 @@
 ---
 description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持三个评审门：PRD 评审（PRD 完成后）、架构评审（架构设计完成后）、上线评审（发布前）。Use when: 需求评审、架构评审、上线前检查、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
-name: "gate-review"
+name: "gate_review"
 tools: [read, search, web, agent, todo]
 argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
 ---
@@ -47,7 +47,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 
 | # | 检查项 | 判定 | 说明 |
 |---|--------|------|------|
-| 6 | 是否有立项验证报告（PM-assistant 价值评估） | ✅/⚠️/❌ | |
+| 6 | 是否有立项验证报告（pm_assistant 价值评估） | ✅/⚠️/❌ | |
 | 7 | 竞品分析是否充分（≥3 个竞品） | ✅/⚠️/❌ | |
 | 8 | 差异化优势是否明确 | ✅/⚠️/❌ | |
 | 9 | 目标用户和痛点是否有数据支撑 | ✅/⚠️/❌ | |
@@ -227,7 +227,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 - [ ] {通过 → 进入下一阶段}
 
 > 💡 评审通过后，可继续推进：
-> - Gate 1 通过 → 先使用 `Designer` Agent 或 `prototype-design` Skill 生成高保真原型，再进入 `Architect` Agent
+> - Gate 1 通过 → 先使用 `designer` Agent 或 `prototype-design` Skill 生成高保真原型，再进入 `architect` Agent
 > - Gate 2 通过 → 使用 `requirement-to-issues` Skill 拆分开发任务
 > - Gate 3 通过 → 使用 `github-publish` Skill 执行发布
 ```

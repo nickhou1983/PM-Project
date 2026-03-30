@@ -1,14 +1,14 @@
 ---
-name: Code Review Agent
+name: "code_review"
 description: "用于代码审查、PR review、安全检查和质量评估。适用于审查 PR 或代码变更、识别 bug/风险/回归，并输出 MUST/SHOULD/NIT 分级审查报告。"
 tools: [search, usages, problems, changes, read, agent]
 argument-hint: "提供 PR 编号、变更范围或关注点（如安全、性能、测试）"
 user-invocable: true
-agents: ["PR Review Submit Agent", "implement-subagent"]
+agents: ["pr_review_submit", "implement-subagent"]
 handoffs:
-  - agent: "PR Review Submit Agent"
+  - agent: "pr_review_submit"
     label: "Submit review to GitHub"
-    prompt: "After the user explicitly approves publishing, invoke PR Review Submit Agent to submit this review to GitHub PR comments with owner/repo/pullNumber, final status, and findings (path/line/severity)."
+    prompt: "After the user explicitly approves publishing, invoke pr_review_submit to submit this review to GitHub PR comments with owner/repo/pullNumber, final status, and findings (path/line/severity)."
   - agent: "implement-subagent"
     label: "Fix review findings"
     prompt: "After the user explicitly asks to fix the issues, invoke implement-subagent to apply fixes for all MUST and SHOULD findings. Pass the full findings list with file paths, line numbers, problem descriptions, and suggested fixes."
@@ -44,7 +44,7 @@ Additionally:
    - **提交审查** — publish review to GitHub PR comments
    - **帮我修复** — auto-fix MUST and SHOULD findings
 7. Based on user choice:
-   - If publish: hand off to `PR Review Submit Agent` with owner/repo/pullNumber, final status, and findings.
+   - If publish: hand off to `pr_review_submit` with owner/repo/pullNumber, final status, and findings.
    - If fix: hand off to `implement-subagent` with full findings list (path/line/problem/suggested fix).
    - User may choose both sequentially (fix first, then publish).
 

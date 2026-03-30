@@ -1,5 +1,5 @@
 ---
-name: PR Review Submit Agent
+name: "pr_review_submit"
 description: "专门负责将代码审查结果自动写入 GitHub PR Review。适用于审查完成后批量创建行级评论、提交 APPROVE/REQUEST_CHANGES/COMMENT。"
 tools: [read, search, changes]
 argument-hint: "提供 owner/repo/pull number，以及审查结论和逐条问题（含文件与行号）"

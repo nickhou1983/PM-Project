@@ -7,7 +7,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 将产品灵感或需求分析结果转化为结构化的 PRD（产品需求文档），并生成配套的**低保真 HTML 原型图（wireframe）**，基于标准模板生成完整的需求文档。低保真原型为灰度线框图，重点是信息架构和功能布局的清晰表达，用于快速验证交互逻辑。
 
-> **分工说明**：高保真原型（Hi-Fi Prototype）由 `prototype-design` Skill（设计师角色）负责，基于本 Skill 产出的 PRD + wireframe 升级生成。当用户要求「高保真」「hifi」「高保真原型」时，应引导使用 `prototype-design` Skill 或 `Designer` Agent。
+> **分工说明**：高保真原型（Hi-Fi Prototype）由 `prototype-design` Skill（设计师角色）负责，基于本 Skill 产出的 PRD + wireframe 升级生成。当用户要求「高保真」「hifi」「高保真原型」时，应引导使用 `prototype-design` Skill 或 `designer` Agent。
 
 ## 参考文件
 
@@ -32,12 +32,12 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - 用户直接描述产品灵感或需求想法
 - 提取核心功能点、目标用户、解决的痛点
 
-**来源 B：Requirement Analyst 分析报告**
-- 若已通过 `Requirement Analyst` Agent 生成分析报告，直接解析报告中的：
+**来源 B：`requirement_analyst` 分析报告**
+- 若已通过 `requirement_analyst` Agent 生成分析报告，直接解析报告中的：
   - 需求概述（核心功能点、目标用户、痛点）
   - 竞品分析（市场空白、差异化机会）
   - 价值评估（综合评分、建议）
-- **附录处理**：将 Requirement Analyst 分析报告全文收录为 PRD 「附录 A：需求分析报告」（参照 prd-template.md 附录 A 模板），并在 PRD §1.1 项目背景中添加引用：「立项验证详情见附录 A」
+- **附录处理**：将 `requirement_analyst` 分析报告全文收录为 PRD 「附录 A：需求分析报告」（参照 prd-template.md 附录 A 模板），并在 PRD §1.1 项目背景中添加引用：「立项验证详情见附录 A」
 
 **来源 C：飞书文档**
 - 使用 `feishu-docs` Skill 读取飞书上已有的需求草稿或讨论记录
@@ -99,7 +99,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 4. **文件输出位置**：`docs/prd-{项目名}/wireframes/`
 5. **在 PRD 文档中引用**：在「交互设计」章节（6.1）中添加原型图文件链接
 
-> **注意**：低保真原型为灰度线框图，重点是信息架构和功能布局的清晰表达，不追求美观。如需高保真原型（品牌配色、图标、动效），请使用 `prototype-design` Skill 或 `Designer` Agent 在此基础上升级。
+> **注意**：低保真原型为灰度线框图，重点是信息架构和功能布局的清晰表达，不追求美观。如需高保真原型（品牌配色、图标、动效），请使用 `prototype-design` Skill 或 `designer` Agent 在此基础上升级。
 
 ### 步骤 5：输出与交付
 
@@ -140,7 +140,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
   3. 导入完成后汇总结果，便于在墨刀中进行评审
 
 **建议：执行 PRD 评审**
-- PRD 完成后，建议使用 `gate-review` Agent 执行 Gate 1（PRD 评审），确保需求完整性、商业合理性、可行性和原型质量达标后再进入架构设计阶段。
+- PRD 完成后，建议使用 `gate_review` Agent 执行 Gate 1（PRD 评审），确保需求完整性、商业合理性、可行性和原型质量达标后再进入架构设计阶段。
 
 ## 质量检查清单
 
@@ -160,7 +160,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] 使用灰度线框风格，无外部框架或 CDN 依赖
 - [ ] PRD 交互设计章节已引用原型图文件路径
 - [ ] （如选择导出到墨刀）P0 核心页面已通过 modao-prototype Skill 导入墨刀并确认可查看
-- [ ] 若有 Requirement Analyst 分析报告，已作为附录 A 附加并在 §1.1 中引用
+- [ ] 若有 `requirement_analyst` 分析报告，已作为附录 A 附加并在 §1.1 中引用
 - [ ] 功能概览表（§4.1）包含 R/I/C/E 各因子明细列
 - [ ] 附录 B 包含完整的 RICE 评分计算过程及取值理由
 - [ ] 【版本管理】文档头版本号与 §11 变更记录最新条目一致

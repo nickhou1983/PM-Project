@@ -236,12 +236,12 @@ async function main() {
     titleBar(s, "端到端自动化流水线");
 
     const steps = [
-      { num: "1", label: "立项验证", sub: "PM-assistant", color: C.amber, icon: I.lightbulb },
+      { num: "1", label: "立项验证", sub: "pm_assistant", color: C.amber, icon: I.lightbulb },
       { num: "2", label: "PRD 生成", sub: "requirement-doc", color: C.pri, icon: I.file },
-      { num: "3", label: "高保真原型", sub: "Designer", color: C.purple, icon: I.palette },
-      { num: "4", label: "架构设计", sub: "Architect", color: C.teal, icon: I.sitemap },
+      { num: "3", label: "高保真原型", sub: "designer", color: C.purple, icon: I.palette },
+      { num: "4", label: "架构设计", sub: "architect", color: C.teal, icon: I.sitemap },
       { num: "5", label: "任务拆分", sub: "req-to-issues", color: C.sec, icon: I.tasks },
-      { num: "6", label: "评审与复盘", sub: "gate-review", color: C.rose, icon: I.shield },
+      { num: "6", label: "评审与复盘", sub: "gate_review", color: C.rose, icon: I.shield },
     ];
 
     const sw = 1.35, sh = 2.3, gap = 0.15;
@@ -291,12 +291,12 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 4 — Stage 1: PM-assistant
+  // SLIDE 4 — Stage 1: pm_assistant
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();
     s.background = { color: C.white };
-    titleBar(s, "阶段 1：立项前验证（PM-assistant）");
+    titleBar(s, "阶段 1：立项前验证（pm_assistant）");
 
     // Left: 5 steps
     const steps = [
@@ -472,7 +472,7 @@ async function main() {
     addCard(s, 0.5, 1.35, 4.3, 3.7);
     addAccentBar(s, 0.5, 1.35, 3.7, C.teal);
     s.addImage({ data: I.project, x: 0.75, y: 1.5, w: 0.36, h: 0.36 });
-    s.addText("Architect Agent", {
+    s.addText("architect Agent", {
       x: 1.25, y: 1.5, w: 3.4, h: 0.35,
       fontSize: 14, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
     });
@@ -633,11 +633,11 @@ async function main() {
 
     // ── Top: pipeline flow ──
     const pipe = [
-      { label: "PM-assistant",     sub: "迭代检测",          color: C.amber },
+      { label: "pm_assistant",     sub: "迭代检测",          color: C.amber },
       { label: "requirement-doc",  sub: "PRD 版本递增",      color: C.pri },
-      { label: "gate-review",      sub: "Gate 1 版本校验",   color: C.rose },
-      { label: "Architect",        sub: "架构版本 + 关联 PRD", color: C.teal },
-      { label: "gate-review",      sub: "Gate 2 版本校验",   color: C.rose },
+      { label: "gate_review",      sub: "Gate 1 版本校验",   color: C.rose },
+      { label: "architect",        sub: "架构版本 + 关联 PRD", color: C.teal },
+      { label: "gate_review",      sub: "Gate 2 版本校验",   color: C.rose },
       { label: "req-to-issues",    sub: "版本溯源写入",      color: C.sec },
     ];
     const pw = 1.35, pgap = 0.15;
@@ -734,20 +734,20 @@ async function main() {
     });
 
     const agents = [
-      ["PM-assistant",     "立项前验证与需求过滤",     "「我有一个产品灵感…」"],
-      ["Requirement Analyst","需求分析与灵感验证",     "「帮我分析这个需求可行性」"],
-      ["Designer",         "高保真原型设计",           "「将线框图升级为高保真」"],
-      ["Architect",        "技术架构设计",             "「根据 PRD 设计架构」"],
-      ["gate-review",      "Stage-Gate 评审门",        "「对 PRD 做评审」"],
-      ["post-launch-review","上线复盘与迭代决策",      "「复盘上线数据表现」"],
+      ["pm_assistant",     "立项前验证与需求过滤",     "「我有一个产品灵感…」"],
+      ["requirement_analyst","需求分析与灵感验证",     "「帮我分析这个需求可行性」"],
+      ["designer",         "高保真原型设计",           "「将线框图升级为高保真」"],
+      ["architect",        "技术架构设计",             "「根据 PRD 设计架构」"],
+      ["gate_review",      "Stage-Gate 评审门",        "「对 PRD 做评审」"],
+      ["post_launch_review","上线复盘与迭代决策",      "「复盘上线数据表现」"],
       ["planning",         "任务上下文研究与路由",      "每次任务前自动调用"],
-      ["new-employee-mentor","统一入口与任务分发",      "不确定用哪个工具时"],
-      ["code-review",      "代码评审与质量检查",        "「审查这段代码」"],
-      ["code-debug",       "报错排查与修复",           "「这个报错怎么修」"],
-      ["code-testing",     "测试生成与覆盖",           "「写单元测试」"],
-      ["code-docs",        "文档生成",                 "「生成 README」"],
-      ["pr-review-submit", "PR 审查提交",              "「提交审查意见到 PR」"],
-      ["ui-testing",       "UI 自动化测试",            "「用 Playwright 测试」"],
+      ["new_employee_mentor","统一入口与任务分发",      "不确定用哪个工具时"],
+      ["code_review",      "代码评审与质量检查",        "「审查这段代码」"],
+      ["code_debug",       "报错排查与修复",           "「这个报错怎么修」"],
+      ["code_testing",     "测试生成与覆盖",           "「写单元测试」"],
+      ["code_docs",        "文档生成",                 "「生成 README」"],
+      ["pr_review_submit", "PR 审查提交",              "「提交审查意见到 PR」"],
+      ["ui_testing",       "UI 自动化测试",            "「用 Playwright 测试」"],
     ];
 
     const headerOpts = (txt) => ({

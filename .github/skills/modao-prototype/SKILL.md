@@ -12,7 +12,7 @@ description: "墨刀原型生成与导入 Skill。通过墨刀 MCP（modao-proto
 - VS Code 用户级 MCP 配置中需已配置 `modao-proto-mcp`（`@modao-mcp/modao-proto-mcp`）
 - 墨刀访问令牌已配置（建议通过环境变量注入，避免明文存储在配置文件中）
 
-> **安全提醒**：如果当前 MCP 配置中 token 为明文，建议改为 `--token=${MODAO_TOKEN}` 并在环境变量中设置 `MODAO_TOKEN`。
+> **安全提醒**：不要把 `--token=${MODAO_TOKEN}` 直接写进 Codex MCP 的 `args` 里依赖参数插值。在当前 Codex App/RMCP 环境下，这种写法可能导致 token 没有实际传入子进程。更稳妥的方式是通过 shell 启动命令在运行时展开环境变量，例如：`command = "sh"`，`args = ["-lc", "exec npx -y @modao-mcp/modao-proto-mcp --token \"$MODAO_TOKEN\" --url https://modao.cc"]`。
 
 ## 参考文件
 

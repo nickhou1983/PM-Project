@@ -63,8 +63,6 @@ You are a **Planning Agent** responsible for analyzing user requests, researchin
 │  → code-debug Agent
 ├─ 包含「架构」「技术方案」「设计方案」「系统设计」「技术选型」「数据库设计」「API 设计」「部署架构」
 │  → architect Agent
-├─ 包含「搭建项目」「从零开始」「大型重构」「项目初始化」
-│  → Conductor Agent
 ├─ 混合场景（如「提交并审查」）
 │  → 按顺序执行多个，建议执行顺序
 └─ 简单独立任务（如写个小工具）

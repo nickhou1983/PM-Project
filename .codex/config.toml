@@ -1,0 +1,65 @@
+# PM-Project Codex CLI Configuration
+# 项目级配置，放在仓库 .codex/config.toml
+# 用户级配置放在 ~/.codex/config.toml
+
+# ============================================================
+# Subagent 设置
+# ============================================================
+[agents]
+max_threads = 6
+max_depth = 1
+
+# ============================================================
+# MCP 服务器配置
+# ============================================================
+
+# --- 飞书 (Feishu) MCP ---
+# 用于文档查重、知识库检索、文档同步
+# 需要设置环境变量: FEISHU_MCP_UAT 或 FEISHU_MCP_TAT
+[mcp_servers.feishu]
+url = "https://mcp.feishu.cn/mcp"
+bearer_token_env_var = "FEISHU_MCP_UAT"
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
+# --- 墨刀 (Modao) MCP ---
+# 用于原型生成和导入
+# 需要设置环境变量: MODAO_TOKEN
+[mcp_servers.modao]
+command = "npx"
+args = ["-y", "@modao-mcp/modao-proto-mcp", "--token=${MODAO_TOKEN}", "--url=https://modao.cc"]
+
+
+# --- Playwright MCP ---
+# 用于 UI 自动化测试
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp"]
+startup_timeout_sec = 15
+tool_timeout_sec = 60
+
+# --- GitHub MCP ---
+# 用于 PR 管理、Issue 操作、代码搜索
+# 需要设置环境变量: GITHUB_PERSONAL_ACCESS_TOKEN
+[mcp_servers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+
+[mcp_servers.github.env]
+GITHUB_PERSONAL_ACCESS_TOKEN_ENV = "GITHUB_PERSONAL_ACCESS_TOKEN"
+
+# --- Context7 MCP ---
+# 用于获取最新开发文档
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+# --- Tavily MCP ---
+# 用于网络搜索（竞品分析、技术调研）
+# 需要设置环境变量: TAVILY_API_KEY
+[mcp_servers.tavily]
+command = "npx"
+args = ["-y", "@tavily/mcp"]
+
+[mcp_servers.tavily.env]
+TAVILY_API_KEY_ENV = "TAVILY_API_KEY"

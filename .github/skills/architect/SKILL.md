@@ -25,10 +25,10 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
 
 | Skill | 路径 | 何时加载 |
 |-------|------|----------|
-| `microservices` | `.claude/skills/microservices/` | 当架构选择微服务风格时，加载 `references/development.md` 获取服务拆分和通信规范 |
-| `feishu-docs` | `.claude/skills/feishu-docs/` | 用户要求将架构文档同步到飞书时 |
-| `github-publish` | `.claude/skills/github-publish/` | 用户要求提交架构文档到 GitHub 时 |
-| `requirement-to-issues` | `.claude/skills/requirement-to-issues/` | 用户要求将架构模块拆分为 GitHub Issues 时 |
+| `microservices` | `.agents/skills/microservices/` | 当架构选择微服务风格时，加载 `references/development.md` 获取服务拆分和通信规范 |
+| `feishu-docs` | `.agents/skills/feishu-docs/` | 用户要求将架构文档同步到飞书时 |
+| `github-publish` | `.agents/skills/github-publish/` | 用户要求提交架构文档到 GitHub 时 |
+| `requirement-to-issues` | `.agents/skills/requirement-to-issues/` | 用户要求将架构模块拆分为 GitHub Issues 时 |
 
 ## 工作流
 

@@ -24,7 +24,7 @@ description: "墨刀原型生成与导入 Skill。通过墨刀 MCP（modao-proto
 
 | Skill | 路径 | 协作关系 |
 |-------|------|----------|
-| `requirement-doc` | `.claude/skills/requirement-doc/` | 可从其步骤 4 生成的 HTML wireframes 作为输入，或从 PRD 功能需求章节提取页面列表 |
+| `requirement-doc` | `.agents/skills/requirement-doc/` | 可从其步骤 4 生成的 HTML wireframes 作为输入，或从 PRD 功能需求章节提取页面列表 |
 
 ## 工作流
 

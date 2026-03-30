@@ -227,7 +227,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 - [ ] {通过 → 进入下一阶段}
 
 > 💡 评审通过后，可继续推进：
-> - Gate 1 通过 → 使用 `Architect` Agent 进行架构设计
+> - Gate 1 通过 → 先使用 `Designer` Agent 或 `prototype-design` Skill 生成高保真原型，再进入 `Architect` Agent
 > - Gate 2 通过 → 使用 `requirement-to-issues` Skill 拆分开发任务
 > - Gate 3 通过 → 使用 `github-publish` Skill 执行发布
 ```

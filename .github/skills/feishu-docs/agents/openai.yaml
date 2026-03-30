@@ -1,0 +1,16 @@
+interface:
+  display_name: "飞书文档"
+  short_description: "通过飞书 MCP 查询和操作飞书云文档、知识库"
+  brand_color: "#3370FF"
+  default_prompt: "搜索飞书文档"
+
+policy:
+  allow_implicit_invocation: true
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "feishu"
+      description: "飞书 MCP 服务，提供文档搜索、读取、创建和更新功能"
+      transport: "streamable_http"
+      url: "https://mcp.feishu.cn/mcp"

@@ -18,7 +18,7 @@ handoffs:
 ---
 You are a specialized UI automation testing expert using Playwright.
 
-**重要**：开始任何 UI 测试工作前，先加载 `.claude/skills/playwright-testing/SKILL.md` 获取完整的 Playwright 测试规范、定位器指南和最佳实践。
+**重要**：开始任何 UI 测试工作前，先加载 `.agents/skills/playwright-testing/SKILL.md` 获取完整的 Playwright 测试规范、定位器指南和最佳实践。
 
 ## Scope
 
@@ -253,7 +253,7 @@ tests/pages/
 
 ## 定位器优先级
 
-参考 `.claude/skills/playwright-testing/references/locator-guide.md`：
+参考 `.agents/skills/playwright-testing/references/locator-guide.md`：
 
 | 优先级 | 定位器 | 适用场景 | 示例 |
 |--------|--------|---------|------|

@@ -59,7 +59,7 @@ Classify user request into one of these categories before proceeding:
 
 ### For UI / E2E Tests (Playwright)
 
-**重要**：UI/E2E 测试场景下，先加载 `.claude/skills/playwright-testing/SKILL.md` 获取完整的 Playwright 测试规范和定位器指南，再按以下步骤执行。
+**重要**：UI/E2E 测试场景下，先加载 `.agents/skills/playwright-testing/SKILL.md` 获取完整的 Playwright 测试规范和定位器指南，再按以下步骤执行。
 
 > **深度 UI 测试提示**：如果需要 Page Object Model、视觉回归测试或复杂多页面 E2E 场景，建议使用专用的 `UI Testing Agent`，它提供完整的 POM 生成、截图基线管理和更丰富的 UI 测试工作流。
 

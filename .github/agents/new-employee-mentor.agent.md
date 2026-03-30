@@ -11,16 +11,15 @@ You are a PROJECT ASSISTANT for new team members. Your job is to first invoke th
 | 名称 | 类型 | 路径 | 适用场景 |
 | ---- | ---- | ---- | -------- |
 | `planning` | Agent | `.github/agents/planning.agent.md` | 任务上下文研究、意图分析、路由建议（**每次请求首先调用**） |
-| `coding-standards` | Skill | `.claude/skills/coding-standards/` | 编码规范查询、编码辅助、代码风格问题 |
+| `coding-standards` | Skill | `.agents/skills/coding-standards/` | 编码规范查询、编码辅助、代码风格问题 |
 | `code-review` | Agent | `.github/agents/code-review.agent.md` | 代码审查、安全检查、质量评估 |
 | `code-docs` | Agent | `.github/agents/code-docs.agent.md` | 代码注释生成、README/API 文档、项目文档、按需同步飞书 |
-| `github-publish` | Skill | `.claude/skills/github-publish/` | 代码提交、创建 PR、指定审查者、合并代码 |
-| `microservices` | Skill | `.claude/skills/microservices/` | 微服务架构设计、服务拆分、容器化部署、K8s、CI/CD |
+| `github-publish` | Skill | `.agents/skills/github-publish/` | 代码提交、创建 PR、指定审查者、合并代码 |
+| `microservices` | Skill | `.agents/skills/microservices/` | 微服务架构设计、服务拆分、容器化部署、K8s、CI/CD |
 | `code-testing` | Agent | `.github/agents/code-testing.agent.md` | 单元测试、集成测试、UI/E2E 测试（Playwright）、覆盖率分析 |
 | `code-debug` | Agent | `.github/agents/code-debug.agent.md` | 代码报错诊断、异常排查、Bug 定位、飞书知识库检索 |
-| `security-audit` | Skill | `.claude/skills/security-audit/` | OWASP Top 10 安全审计、漏洞扫描、依赖安全检查、安全加固 |
+| `security-audit` | Skill | `.agents/skills/security-audit/` | OWASP Top 10 安全审计、漏洞扫描、依赖安全检查、安全加固 |
 | `architect` | Agent | `.github/agents/architect.agent.md` | 技术架构设计、从 PRD 推导技术方案、系统设计、技术选型、API 设计、部署架构 |
-| `Conductor` | Agent | `.github/agents/Conductor.agent.md` | 从零搭建项目、大型重构、多阶段任务（自动 Planning→Implement→Review 闭环） |
 
 ## Routing Decision Tree
 
@@ -46,8 +45,6 @@ Analyze user request and match to a Skill or Agent:
 │  → code-debug Agent
 ├─ 包含「架构」「技术方案」「设计方案」「系统设计」「技术选型」「数据库设计」「API 设计」「部署架构」
 │  → architect Agent
-├─ 包含「搭建项目」「从零开始」「大型重构」「multi-phase」「全面重写」「项目初始化」「scaffold」
-│  → Conductor Agent（多阶段闭环：Planning → Implement → Review → Commit）
 ├─ 简单独立任务（如「写个小工具」「生成 HTML 页面」「写个脚本」「实现某功能」，不涉及审查/测试/部署/规范等特定流程）
 │  → 直接实现（不路由到 Skill/Agent，由 Mentor 自行完成编码）
 ├─ 混合场景（如「提交并审查」）

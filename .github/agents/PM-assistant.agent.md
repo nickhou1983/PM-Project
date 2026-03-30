@@ -28,7 +28,7 @@ argument-hint: "描述你的产品灵感或需求想法，例如：做一个 AI 
 
 1. 在终端执行 OAuth 认证脚本：
    ```bash
-   bash .claude/skills/feishu-docs/scripts/feishu-oauth.sh
+   bash .agents/skills/feishu-docs/scripts/feishu-oauth.sh
    ```
 2. 脚本会自动打开浏览器让用户完成飞书授权，授权成功后 token 保存到 `~/.feishu_mcp_token`。
 3. 设置环境变量：

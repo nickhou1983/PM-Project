@@ -9,6 +9,13 @@
 - Custom Agents：负责路由、规划、评审、调试、测试、设计等角色化协作。
 - Skills：负责沉淀特定领域的方法论、模板、参考文档和执行流程。
 
+运行时目录约定：
+
+- `.codex/agents/`：Codex/App 当前实际使用的 Agent 运行时定义。
+- `.github/agents/`：面向 GitHub Copilot 和说明文档的 Agent 定义。
+- `.github/skills/`：Skill 主目录；`.agents/skills/` 为兼容软链接。
+- `plans/`：运行时 Planning 结果与路由中间产物目录。
+
 适合的使用场景：
 
 - 为团队建立统一的 Copilot 协作工作流。
@@ -19,6 +26,10 @@
 
 ```text
 .
+├── .agents/
+│   └── skills -> ../.github/skills
+├── .codex/
+│   └── agents/
 ├── .github/
 │   ├── agents/
 │   │   ├── PM-assistant.agent.md
@@ -48,6 +59,10 @@
 │       ├── requirement-doc/
 │       ├── requirement-to-issues/
 │       └── security-audit/
+├── docs/
+│   └── custom-agents-skills-matrix.md
+├── plans/
+│   └── README.md
 └── README.md
 ```
 
@@ -104,7 +119,7 @@ cd PM-Project
 
 - .github/agents 下放置各类角色化 Agent 定义。
 - .github/skills 下放置领域 Skill、参考模板与脚本。
-- .github/agents/plans 下保留任务规划和阶段性输出。
+- plans 下保留运行时 Planning 输出；.github/agents/plans 保留历史设计过程文档。
 
 建议把这个仓库作为团队知识库维护，而不是把临时业务代码直接混入其中。
 
@@ -120,6 +135,8 @@ cd PM-Project
 ## 项目文档
 
 - [CONTRIBUTING.md](CONTRIBUTING.md)：贡献方式、提交规范与新增 Agent/Skill 的约定。
+- [docs/custom-agents-skills-matrix.md](docs/custom-agents-skills-matrix.md)：当前支持的 Custom Agent / Skill 能力矩阵。
+- [docs/pm-assistant-downstream-workflow.md](docs/pm-assistant-downstream-workflow.md)：`pm_assistant` 到下游 Agent / Skill 的工作流说明。
 - [LICENSE](LICENSE)：当前仓库许可证。
 
 ## 适合继续补充的内容
@@ -133,7 +150,7 @@ cd PM-Project
 
 - Agent 负责角色分工与路由，不要把长篇参考材料塞进单个 Agent 文件。
 - Skill 负责方法、模板和操作步骤，尽量把可复用知识放进 references。
-- 规划文档建议统一沉淀到 .github/agents/plans，方便追踪演进过程。
+- 运行时规划文档建议统一沉淀到 plans/；历史设计过程保留在 .github/agents/plans。
 - 提交信息建议使用 Conventional Commits，便于后续自动化处理。
 
 ## 许可证

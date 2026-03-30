@@ -59,7 +59,7 @@ user-invocable: true
      - **微服务架构**：中大型系统 / 多团队协作 / 独立部署需求
      - **Serverless**：事件驱动 / 弹性需求高 / 冷启动可接受
      - **混合架构**：核心单体 + 辅助微服务 / 渐进式拆分
-   - 如果选择微服务，加载 `.claude/skills/microservices/SKILL.md` 及其 `references/development.md` 获取微服务设计规范
+   - 如果选择微服务，加载 `.agents/skills/microservices/SKILL.md` 及其 `references/development.md` 获取微服务设计规范
 2. **技术栈调研**：
    - 使用 `web` 工具搜索相关技术方案和最佳实践
    - 对比候选技术的优缺点、成熟度、社区活跃度
@@ -73,7 +73,7 @@ user-invocable: true
 
 加载架构文档模板并逐章节设计：
 
-1. **加载模板**：读取 `.claude/skills/architect/references/architecture-template.md`
+1. **加载模板**：读取 `.agents/skills/architect/references/architecture-template.md`
 2. **逐章节设计**（共 10 个章节）：
 
    **第 1 章：设计概述** — 项目背景、设计目标、设计原则、范围边界、需求追溯矩阵（将 PRD 的 P0/P1/P2 功能需求映射到架构模块和 API）
@@ -104,7 +104,7 @@ user-invocable: true
 
 将设计成果写入项目文档：
 
-1. **确定输出路径**：默认 `docs/architecture-{项目名}.md`，用户可自定义
+1. **确定输出路径**：默认 `docs/prd-{项目名}/architecture-{项目名}.md`，用户可自定义
 2. **版本管理**：
    - 若目标路径已存在架构文档（迭代更新）：读取现有版本号，根据变更范围递增（Patch/Minor/Major），追加变更记录
    - 若为首次创建：版本号设为 `v1.0.0`
@@ -147,15 +147,15 @@ user-invocable: true
 
 **后续操作处理：**
 
-- **提交架构文档到 GitHub**：当用户说「提交架构文档」「commit」「推送」「publish」，加载 `.claude/skills/github-publish/SKILL.md` 并执行其工作流
-- **同步到飞书**：当用户说「同步飞书」「写入飞书」「feishu」，加载 `.claude/skills/feishu-docs/SKILL.md` 并执行创建文档流程
-- **拆分开发任务**：当用户说「拆分任务」「创建 Issues」「生成 Issue」，加载 `.claude/skills/requirement-to-issues/SKILL.md`，将架构文档中的模块拆分为可执行的 GitHub Issues
-- **部署方案详设**：当用户说「部署方案」「微服务部署」，加载 `.claude/skills/microservices/SKILL.md` 及 `references/deployment.md`，输出详细的部署方案
+- **提交架构文档到 GitHub**：当用户说「提交架构文档」「commit」「推送」「publish」，加载 `.agents/skills/github-publish/SKILL.md` 并执行其工作流
+- **同步到飞书**：当用户说「同步飞书」「写入飞书」「feishu」，加载 `.agents/skills/feishu-docs/SKILL.md` 并执行创建文档流程
+- **拆分开发任务**：当用户说「拆分任务」「创建 Issues」「生成 Issue」，加载 `.agents/skills/requirement-to-issues/SKILL.md`，将架构文档中的模块拆分为可执行的 GitHub Issues
+- **部署方案详设**：当用户说「部署方案」「微服务部署」，加载 `.agents/skills/microservices/SKILL.md` 及 `references/deployment.md`，输出详细的部署方案
 - 如果用户无明确意图，停在步骤 5 等待用户决策
 
 ## 输出格式
 
-架构文档的完整结构参见 `.claude/skills/architect/references/architecture-template.md`，核心章节：
+架构文档的完整结构参见 `.agents/skills/architect/references/architecture-template.md`，核心章节：
 
 ```markdown
 # {项目名} — 技术架构设计文档

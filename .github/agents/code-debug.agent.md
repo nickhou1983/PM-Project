@@ -38,7 +38,7 @@ Follow this workflow strictly for every diagnostics request:
 
 使用 `feishu-docs` Skill 检索飞书知识库：
 
-1. **加载 feishu-docs Skill** — 读取 `.claude/skills/feishu-docs/SKILL.md` 获取工作流
+1. **加载 feishu-docs Skill** — 读取 `.agents/skills/feishu-docs/SKILL.md` 获取工作流
 2. **构造搜索词** — 使用 Step 2 提取的关键词组合搜索
 3. **执行搜索** — 调用飞书 MCP 搜索文档/知识库
 4. **匹配判断** — 分析搜索结果与当前错误的相关度

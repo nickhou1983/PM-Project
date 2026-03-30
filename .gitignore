@@ -37,6 +37,10 @@ dist/
 build/
 coverage/
 
+# Codex CLI local caches (keep config and agents in VCS)
+.codex/cache/
+.codex/*.local
+
 # Logs and temp files
 *.log
 *.tmp

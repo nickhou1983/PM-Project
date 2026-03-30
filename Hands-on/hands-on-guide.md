@@ -512,8 +512,7 @@ open docs/prd-todo-app/wireframes/index.html
 start docs/prd-todo-app/wireframes/index.html
 ```
 
-<!-- 📸 截图占位：浏览器中预览低保真原型的截图 -->
-![低保真原型预览](screenshots/step3-wireframe-preview.png)
+![alt text](image-7.png)
 
 ---
 
@@ -525,10 +524,10 @@ start docs/prd-todo-app/wireframes/index.html
 将 docs/prd-todo-app/wireframes/ 下的低保真原型导入墨刀。
 ```
 
-或者直接输入：
+或者生成高保真原型并导入：
 
 ```text
-生成高保真原型并导入墨刀。
+使用墨刀MCP，生成高保真原型，并导入墨刀。
 ```
 
 Agent 会依次调用墨刀 MCP 的三个工具完成导入：
@@ -538,9 +537,6 @@ Agent 会依次调用墨刀 MCP 的三个工具完成导入：
 | ① | `gen_description` | 为每个页面生成结构化设计说明 |
 | ② | `gen_html` | 根据设计说明生成适配墨刀的 HTML 原型 |
 | ③ | `import_html` | 将 HTML 原型导入墨刀个人空间 |
-
-<!-- 📸 截图占位：Codex App 调用墨刀 MCP 工具的过程截图 -->
-![调用墨刀 MCP](screenshots/step4-modao-import.png)
 
 导入完成后，Agent 会输出汇总表：
 

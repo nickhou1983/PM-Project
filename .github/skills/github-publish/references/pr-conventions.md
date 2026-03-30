@@ -89,6 +89,20 @@ Closes #<issue-number>
 - `hotfix/critical-data-loss`
 - `release/v2.1.0`
 
+### 文档版本分支命名
+
+PRD 或架构文档的迭代更新，分支名中应包含版本号：
+
+- `docs/prd-{项目名}-v{版本号}` — PRD 迭代更新，如 `docs/prd-videoprompt-ai-v1.1.0`
+- `docs/arch-{项目名}-v{版本号}` — 架构文档迭代更新，如 `docs/arch-videoprompt-ai-v1.1.0`
+
+PR 标题示例：
+
+- `docs(prd): update VideoPrompt AI PRD to v1.1.0`
+- `docs(arch): update VideoPrompt AI architecture to v1.1.0`
+
+> **注意**：PRD 和架构文档的迭代更新建议走独立 PR，便于独立审批和版本追溯。首次创建时可以合并在同一 PR 中。
+
 ### 分支来源
 
 - `feature/*` / `fix/*` / `refactor/*`：从 `develop` 或 `main` 创建

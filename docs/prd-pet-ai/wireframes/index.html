@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原型导航 - 宠物AI一体化 App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header { background: #f5f5f5; padding: 16px 24px; border-bottom: 1px solid #d0d0d0; }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header p { font-size: 12px; color: #888; margin-top: 4px; }
+    .content { padding: 16px 24px 80px; }
+    .section-title { font-size: 14px; font-weight: 600; color: #555; margin: 16px 0 8px; padding-bottom: 6px; border-bottom: 1px solid #e8e8e8; }
+    .card {
+      background: #f5f5f5; border: 1px solid #d0d0d0;
+      border-radius: 8px; padding: 14px 16px; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .card a { color: #4a90d9; text-decoration: none; font-size: 15px; font-weight: 600; }
+    .card a:hover { text-decoration: underline; }
+    .card-desc { font-size: 12px; color: #888; margin-top: 3px; }
+    .badge {
+      font-size: 11px; padding: 2px 8px; border-radius: 10px;
+      background: #555; color: #fff; white-space: nowrap; margin-left: 8px;
+    }
+    .badge.p1 { background: #888; }
+    .flow-box {
+      background: #f9f9f9; border: 1px dashed #ccc; border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #555; line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🐾 宠物AI一体化 App</h1>
+    <p>低保真原型图导航（Wireframe）· 共 8 个页面</p>
+  </div>
+  <div class="content">
+
+    <div class="flow-box">
+      <strong>核心用户流程：</strong><br>
+      注册登录 → 创建宠物档案 → AI初诊 → 健康评估结果<br>
+      → 查看推荐保健品 → 商品详情 → 购物车 → 结算支付
+    </div>
+
+    <div class="section-title">👤 用户认证</div>
+    <div class="card">
+      <div>
+        <a href="user-auth-login.html">登录 / 注册页</a>
+        <div class="card-desc">手机号 + 短信验证码一键登录注册</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+
+    <div class="section-title">🐱 宠物档案</div>
+    <div class="card">
+      <div>
+        <a href="pet-profile-home.html">宠物档案首页</a>
+        <div class="card-desc">多宠物切换、档案概览、健康记录入口</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+
+    <div class="section-title">🩺 AI 初诊</div>
+    <div class="card">
+      <div>
+        <a href="ai-diagnosis-input.html">AI 初诊输入页</a>
+        <div class="card-desc">症状描述表单、宠物选择、提交问诊</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+    <div class="card">
+      <div>
+        <a href="ai-diagnosis-result.html">AI 初诊结果页</a>
+        <div class="card-desc">健康评估等级、行动建议、推荐保健品入口</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+
+    <div class="section-title">💊 保健品推荐</div>
+    <div class="card">
+      <div>
+        <a href="health-recommendation-list.html">保健品推荐列表</a>
+        <div class="card-desc">AI 推荐商品、筛选栏、推荐理由标签</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+
+    <div class="section-title">🛒 电商购物</div>
+    <div class="card">
+      <div>
+        <a href="ecommerce-product-detail.html">商品详情页</a>
+        <div class="card-desc">商品图片轮播、规格选择、用户评价、加购</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+    <div class="card">
+      <div>
+        <a href="ecommerce-cart.html">购物车结算页</a>
+        <div class="card-desc">购物车商品列表、合计金额、支付流程</div>
+      </div>
+      <span class="badge">P0</span>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 初诊结果 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5; padding: 12px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .back-btn { font-size: 20px; cursor: pointer; color: #555; text-decoration: none; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .content { padding: 16px 24px 80px; }
+    .level-card {
+      border-radius: 12px; padding: 20px;
+      text-align: center; margin-bottom: 16px;
+      background: #fff8e1; border: 2px solid #ffe082;
+    }
+    .level-icon { font-size: 48px; margin-bottom: 8px; }
+    .level-title { font-size: 22px; font-weight: 700; color: #f57f17; }
+    .level-subtitle { font-size: 14px; color: #888; margin-top: 4px; }
+    .symptom-summary {
+      background: #f5f5f5; border: 1px solid #e0e0e0;
+      border-radius: 10px; padding: 12px 16px; margin-bottom: 16px;
+    }
+    .symptom-summary .label { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .symptom-summary .text { font-size: 14px; color: #333; }
+    .section-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .advice-list { margin-bottom: 16px; }
+    .advice-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+    }
+    .advice-item:last-child { border-bottom: none; }
+    .advice-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .advice-text { font-size: 14px; line-height: 1.5; }
+    .advice-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .advice-text span { font-size: 13px; color: #666; }
+    .science-card {
+      background: #e8f4fd; border: 1px solid #b3d9f5;
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 16px;
+    }
+    .science-card .sc-title { font-size: 13px; font-weight: 600; color: #1976d2; margin-bottom: 4px; }
+    .science-card .sc-text { font-size: 13px; color: #555; line-height: 1.6; }
+    .recommend-section { margin-top: 4px; }
+    .recommend-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    }
+    .see-all { font-size: 13px; color: #4a90d9; text-decoration: none; }
+    .product-card {
+      display: flex; align-items: center; gap: 12px;
+      background: #f5f5f5; border: 1px solid #d0d0d0;
+      border-radius: 10px; padding: 12px; margin-bottom: 10px;
+    }
+    .product-img {
+      width: 60px; height: 60px; background: #d0d0d0;
+      border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #888; text-align: center;
+    }
+    .product-info { flex: 1; }
+    .product-name { font-size: 14px; font-weight: 600; }
+    .product-reason {
+      font-size: 11px; color: #fff; background: #888;
+      border-radius: 4px; padding: 2px 6px; display: inline-block; margin: 3px 0;
+    }
+    .product-price { font-size: 15px; font-weight: 700; color: #333; }
+    .add-cart-btn {
+      background: #555; color: #fff; border: none;
+      border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .disclaimer {
+      font-size: 12px; color: #aaa; text-align: center;
+      padding: 12px; border-top: 1px solid #eee; margin-top: 8px; line-height: 1.6;
+    }
+    .tab-bar {
+      display: flex; border-top: 1px solid #d0d0d0;
+      background: #f5f5f5; position: fixed; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      max-width: 375px; width: 100%;
+    }
+    .tab-bar a {
+      flex: 1; text-align: center; padding: 8px 0;
+      font-size: 11px; color: #888; text-decoration: none;
+      border-top: 2px solid transparent;
+    }
+    .tab-bar a.active { color: #333; border-top-color: #555; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="ai-diagnosis-input.html" class="back-btn">←</a>
+    <h1>AI 评估结果</h1>
+  </div>
+
+  <div class="content">
+    <!-- 健康评估等级 -->
+    <div class="level-card">
+      <div class="level-icon">🟡</div>
+      <div class="level-title">需要关注</div>
+      <div class="level-subtitle">奶茶 · 英国短毛猫 · 3岁</div>
+    </div>
+
+    <!-- 症状摘要 -->
+    <div class="symptom-summary">
+      <div class="label">本次描述的症状</div>
+      <div class="text">食欲不振、不爱喝水 · 持续约 1 天 · 轻微程度</div>
+    </div>
+
+    <!-- 行动建议 -->
+    <div class="section-title">🎯 行动建议</div>
+    <div class="advice-list">
+      <div class="advice-item">
+        <span class="advice-icon">💧</span>
+        <div class="advice-text">
+          <strong>增加饮水量</strong>
+          <span>尝试使用流动饮水机，或在饮水中加入少量鸡胸肉汤（无盐）提高饮水积极性</span>
+        </div>
+      </div>
+      <div class="advice-item">
+        <span class="advice-icon">👀</span>
+        <div class="advice-text">
+          <strong>密切观察 48 小时</strong>
+          <span>记录每日进食量和饮水量，若症状持续 48 小时以上或出现呕吐/腹泻，立即就医</span>
+        </div>
+      </div>
+      <div class="advice-item">
+        <span class="advice-icon">🌡️</span>
+        <div class="advice-text">
+          <strong>检查环境因素</strong>
+          <span>新食物、换粮、搬家、噪音压力都可能导致食欲下降，排查近期是否有变化</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 科普卡片 -->
+    <div class="science-card">
+      <div class="sc-title">📖 科普：猫咪为什么会食欲不振？</div>
+      <div class="sc-text">
+        短期食欲不振（1-2天）常见于换粮、环境变化或轻微消化不适。英短猫因特定基因，
+        消化系统较为敏感，益生菌补充有助于维护肠道菌群平衡。
+      </div>
+    </div>
+
+    <!-- 推荐保健品 -->
+    <div class="recommend-section">
+      <div class="recommend-header">
+        <div class="section-title" style="margin-bottom:0">💊 针对性保健品推荐</div>
+        <a href="health-recommendation-list.html" class="see-all">查看全部 ›</a>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">商品图<br>占位</div>
+        <div class="product-info">
+          <div class="product-name">猫咪益生菌粉 30g</div>
+          <div class="product-reason">消化问题首选 · 适合英短</div>
+          <div class="product-price">¥68</div>
+        </div>
+        <button class="add-cart-btn" onclick="window.location.href='ecommerce-cart.html'">加购</button>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">商品图<br>占位</div>
+        <div class="product-info">
+          <div class="product-name">消化酶营养膏 120g</div>
+          <div class="product-reason">促进消化 · 成年猫适用</div>
+          <div class="product-price">¥45</div>
+        </div>
+        <button class="add-cart-btn" onclick="window.location.href='ecommerce-cart.html'">加购</button>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ 以上内容仅供参考，不构成医疗诊断建议。<br>如症状持续或加重，请及时就医。
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <a href="pet-profile-home.html">🐾<br>我的宠物</a>
+    <a href="ai-diagnosis-input.html" class="active">🩺<br>AI初诊</a>
+    <a href="health-recommendation-list.html">💊<br>推荐</a>
+    <a href="ecommerce-product-detail.html">🛒<br>商城</a>
+    <a href="#">👤<br>我的</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购物车结算 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #f5f5f5;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header {
+      background: #fff; padding: 12px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .back-btn { font-size: 20px; color: #555; text-decoration: none; }
+    .header h1 { font-size: 18px; font-weight: 600; flex: 1; }
+    .header-count { font-size: 14px; color: #888; }
+    .content { padding: 10px 12px 140px; }
+    .section-card {
+      background: #fff; border-radius: 10px;
+      border: 1px solid #e0e0e0; margin-bottom: 10px;
+    }
+    .address-section { padding: 14px 16px; }
+    .address-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+    .address-row { display: flex; align-items: center; justify-content: space-between; }
+    .address-text .name { font-size: 15px; font-weight: 600; }
+    .address-text .addr { font-size: 13px; color: #555; margin-top: 2px; }
+    .change-btn { font-size: 13px; color: #4a90d9; cursor: pointer; }
+    .cart-item {
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .checkbox {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #555; background: #555; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px;
+    }
+    .item-img {
+      width: 72px; height: 72px; background: #e0e0e0;
+      border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #888; text-align: center;
+    }
+    .item-body { flex: 1; }
+    .item-name { font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
+    .item-spec { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .item-bottom { display: flex; justify-content: space-between; align-items: center; }
+    .item-price { font-size: 16px; font-weight: 700; }
+    .qty-control { display: flex; align-items: center; gap: 10px; }
+    .qty-btn {
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 1px solid #d0d0d0; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; cursor: pointer; color: #555;
+    }
+    .qty-num { font-size: 15px; font-weight: 600; min-width: 20px; text-align: center; }
+    .summary-section { padding: 12px 16px; }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; padding: 4px 0; color: #555;
+    }
+    .summary-row.total { font-size: 16px; font-weight: 700; color: #333; padding-top: 10px; border-top: 1px solid #f0f0f0; margin-top: 6px; }
+    .recommend-section { padding: 12px 16px; }
+    .recommend-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+    .mini-product { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .mini-img { width: 48px; height: 48px; background: #e0e0e0; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; text-align: center; }
+    .mini-name { font-size: 13px; flex: 1; }
+    .mini-price { font-size: 13px; font-weight: 600; }
+    .mini-add { font-size: 12px; color: #4a90d9; cursor: pointer; white-space: nowrap; }
+    .checkout-bar {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      max-width: 375px; width: 100%;
+      background: #fff; border-top: 1px solid #d0d0d0;
+      padding: 10px 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .total-summary { flex: 1; }
+    .total-label { font-size: 12px; color: #888; }
+    .total-amount { font-size: 18px; font-weight: 700; }
+    .btn-checkout {
+      background: #555; color: #fff; border: none;
+      border-radius: 24px; padding: 12px 28px; font-size: 15px;
+      font-weight: 600; cursor: pointer; white-space: nowrap;
+    }
+    .payment-methods {
+      padding: 12px 16px; font-size: 13px;
+    }
+    .payment-label { color: #888; margin-bottom: 8px; }
+    .payment-opts { display: flex; gap: 10px; }
+    .payment-opt {
+      flex: 1; border: 1.5px solid #d0d0d0; border-radius: 8px;
+      padding: 10px; text-align: center; cursor: pointer; font-size: 13px;
+    }
+    .payment-opt.selected { border-color: #555; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="ecommerce-product-detail.html" class="back-btn">←</a>
+    <h1>购物车</h1>
+    <span class="header-count">2件</span>
+  </div>
+
+  <div class="content">
+    <!-- 收货地址 -->
+    <div class="section-card">
+      <div class="address-section">
+        <div class="address-label">收货地址</div>
+        <div class="address-row">
+          <div class="address-text">
+            <div class="name">张小明 · 138****8888</div>
+            <div class="addr">上海市浦东新区xx街道xx路xxx号xx小区xx幢</div>
+          </div>
+          <div class="change-btn">更换 ›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 购物车商品列表 -->
+    <div class="section-card">
+      <div class="cart-item">
+        <div class="checkbox">✓</div>
+        <div class="item-img">商品图<br>占位</div>
+        <div class="item-body">
+          <div class="item-name">猫咪益生菌粉 · 消化调理配方</div>
+          <div class="item-spec">规格：30g（30袋）</div>
+          <div class="item-bottom">
+            <div class="item-price">¥68</div>
+            <div class="qty-control">
+              <div class="qty-btn">－</div>
+              <div class="qty-num">1</div>
+              <div class="qty-btn">＋</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cart-item">
+        <div class="checkbox">✓</div>
+        <div class="item-img">商品图<br>占位</div>
+        <div class="item-body">
+          <div class="item-name">消化酶营养膏 · 猫用</div>
+          <div class="item-spec">规格：120g</div>
+          <div class="item-bottom">
+            <div class="item-price">¥45</div>
+            <div class="qty-control">
+              <div class="qty-btn">－</div>
+              <div class="qty-num">2</div>
+              <div class="qty-btn">＋</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 价格汇总 -->
+    <div class="section-card">
+      <div class="summary-section">
+        <div class="summary-row"><span>商品合计</span><span>¥158</span></div>
+        <div class="summary-row"><span>运费</span><span style="color:#4a90d9">免运费</span></div>
+        <div class="summary-row"><span>优惠券</span><span style="color:#4a90d9">暂无可用</span></div>
+        <div class="summary-row total"><span>实付金额</span><span>¥158</span></div>
+      </div>
+    </div>
+
+    <!-- 支付方式 -->
+    <div class="section-card">
+      <div class="payment-methods">
+        <div class="payment-label">支付方式</div>
+        <div class="payment-opts">
+          <div class="payment-opt selected">💬 微信支付</div>
+          <div class="payment-opt">🔵 支付宝</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 猜你喜欢 -->
+    <div class="section-card">
+      <div class="recommend-section">
+        <div class="recommend-title">还差这些保健品</div>
+        <div class="mini-product">
+          <div class="mini-img">图</div>
+          <div class="mini-name">深海鱼油 60粒</div>
+          <div class="mini-price">¥58</div>
+          <div class="mini-add">＋ 加购</div>
+        </div>
+        <div class="mini-product">
+          <div class="mini-img">图</div>
+          <div class="mini-name">化毛膏 60g</div>
+          <div class="mini-price">¥36</div>
+          <div class="mini-add">＋ 加购</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkout-bar">
+    <div class="total-summary">
+      <div class="total-label">全部 2 件</div>
+      <div class="total-amount">¥158</div>
+    </div>
+    <button class="btn-checkout">去结算</button>
+  </div>
+</body>
+</html>

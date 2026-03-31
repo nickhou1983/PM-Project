@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宠物档案首页 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5; padding: 12px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .header span { font-size: 22px; cursor: pointer; }
+    .pet-switcher {
+      background: #fff; padding: 12px 24px;
+      border-bottom: 1px solid #e8e8e8; overflow-x: auto;
+      display: flex; gap: 16px; align-items: center;
+    }
+    .pet-avatar {
+      display: flex; flex-direction: column; align-items: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .avatar-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #e0e0e0; display: flex; align-items: center;
+      justify-content: center; font-size: 22px;
+      border: 2px solid transparent;
+    }
+    .avatar-circle.active { border-color: #555; }
+    .pet-name { font-size: 11px; color: #888; margin-top: 4px; text-align: center; max-width: 52px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pet-name.active { color: #333; font-weight: 600; }
+    .add-pet {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #f0f0f0; border: 1.5px dashed #bbb;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #aaa; flex-shrink: 0; cursor: pointer;
+    }
+    .content { padding: 16px 24px 80px; }
+    .profile-card {
+      background: #f5f5f5; border: 1px solid #d0d0d0;
+      border-radius: 12px; padding: 16px; margin-bottom: 16px;
+    }
+    .profile-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .pet-big-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #d0d0d0; display: flex; align-items: center;
+      justify-content: center; font-size: 32px; flex-shrink: 0;
+    }
+    .pet-info h2 { font-size: 18px; font-weight: 700; }
+    .pet-info .tags { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+    .tag {
+      font-size: 11px; padding: 2px 8px; border-radius: 10px;
+      background: #e0e0e0; color: #555;
+    }
+    .stats-row { display: flex; gap: 0; border-top: 1px solid #ddd; padding-top: 12px; }
+    .stat { flex: 1; text-align: center; }
+    .stat-val { font-size: 18px; font-weight: 700; }
+    .stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+    .stat:not(:last-child) { border-right: 1px solid #ddd; }
+    .section-title { font-size: 15px; font-weight: 600; margin: 16px 0 10px; }
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .action-btn {
+      background: #f5f5f5; border: 1px solid #d0d0d0;
+      border-radius: 10px; padding: 14px 12px; text-align: center;
+      cursor: pointer; text-decoration: none; color: #333; display: block;
+    }
+    .action-btn .icon { font-size: 24px; display: block; margin-bottom: 6px; }
+    .action-btn .label { font-size: 13px; font-weight: 500; }
+    .action-btn .desc { font-size: 11px; color: #888; margin-top: 2px; }
+    .record-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+    }
+    .record-item:last-child { border-bottom: none; }
+    .record-left .date { font-size: 12px; color: #888; }
+    .record-left .symptom { font-size: 14px; margin-top: 2px; }
+    .level-badge {
+      font-size: 12px; padding: 3px 10px; border-radius: 10px;
+      background: #ffe082; color: #555;
+    }
+    .level-badge.green { background: #c8e6c9; }
+    .level-badge.red { background: #ffcdd2; }
+    .tab-bar {
+      display: flex; border-top: 1px solid #d0d0d0;
+      background: #f5f5f5; position: fixed; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      max-width: 375px; width: 100%;
+    }
+    .tab-bar a {
+      flex: 1; text-align: center; padding: 8px 0;
+      font-size: 11px; color: #888; text-decoration: none;
+      border-top: 2px solid transparent;
+    }
+    .tab-bar a.active { color: #333; border-top-color: #555; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>我的宠物</h1>
+    <span title="消息通知">🔔</span>
+  </div>
+
+  <!-- 宠物切换栏 -->
+  <div class="pet-switcher">
+    <div class="pet-avatar">
+      <div class="avatar-circle active">🐱</div>
+      <div class="pet-name active">奶茶</div>
+    </div>
+    <div class="pet-avatar">
+      <div class="avatar-circle">🐶</div>
+      <div class="pet-name">豆豆</div>
+    </div>
+    <div class="add-pet">＋</div>
+  </div>
+
+  <div class="content">
+    <!-- 当前宠物档案卡 -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="pet-big-avatar">🐱</div>
+        <div class="pet-info">
+          <h2>奶茶</h2>
+          <div class="tags">
+            <span class="tag">英国短毛猫</span>
+            <span class="tag">3岁</span>
+            <span class="tag">已绝育</span>
+            <span class="tag">母</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-val">4.2<span style="font-size:12px;color:#888">kg</span></div>
+          <div class="stat-label">体重</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">12</div>
+          <div class="stat-label">问诊记录</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">3</div>
+          <div class="stat-label">疫苗记录</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 快捷操作 -->
+    <div class="section-title">快捷功能</div>
+    <div class="action-grid">
+      <a href="ai-diagnosis-input.html" class="action-btn">
+        <span class="icon">🩺</span>
+        <div class="label">AI 初诊</div>
+        <div class="desc">描述症状，获取评估</div>
+      </a>
+      <div class="action-btn">
+        <span class="icon">⚖️</span>
+        <div class="label">记录体重</div>
+        <div class="desc">查看体重趋势</div>
+      </div>
+      <div class="action-btn">
+        <span class="icon">💉</span>
+        <div class="label">疫苗记录</div>
+        <div class="desc">管理接种计划</div>
+      </div>
+      <div class="action-btn">
+        <span class="icon">📋</span>
+        <div class="label">就诊历史</div>
+        <div class="desc">历史问诊记录</div>
+      </div>
+    </div>
+
+    <!-- 近期问诊记录 -->
+    <div class="section-title">近期问诊</div>
+    <div class="profile-card" style="padding:12px 16px;">
+      <div class="record-item">
+        <div class="record-left">
+          <div class="date">2026-03-28</div>
+          <div class="symptom">食欲不振，不爱喝水</div>
+        </div>
+        <span class="level-badge">🟡 关注</span>
+      </div>
+      <div class="record-item">
+        <div class="record-left">
+          <div class="date">2026-03-15</div>
+          <div class="symptom">毛发打结，有掉毛</div>
+        </div>
+        <span class="level-badge green">🟢 正常</span>
+      </div>
+      <div class="record-item">
+        <div class="record-left">
+          <div class="date">2026-02-22</div>
+          <div class="symptom">呕吐，精神不振</div>
+        </div>
+        <span class="level-badge red">🔴 就医</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <a href="pet-profile-home.html" class="active">🐾<br>我的宠物</a>
+    <a href="ai-diagnosis-input.html">🩺<br>AI初诊</a>
+    <a href="health-recommendation-list.html">💊<br>推荐</a>
+    <a href="ecommerce-product-detail.html">🛒<br>商城</a>
+    <a href="#">👤<br>我的</a>
+  </div>
+</body>
+</html>

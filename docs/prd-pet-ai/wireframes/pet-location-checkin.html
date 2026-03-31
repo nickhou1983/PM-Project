@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>打卡评价 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #333; background: #fff; max-width: 375px; margin: 0 auto; border: 1px solid #d0d0d0; min-height: 100vh; }
+    .header { background: #f5f5f5; padding: 12px 24px; border-bottom: 1px solid #d0d0d0; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .header a { font-size: 12px; color: #4a90d9; text-decoration: none; }
+    .content { padding: 16px 24px 80px; }
+    .card { background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+    .label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; }
+    .input, .textarea { width: 100%; border: 1px solid #d0d0d0; border-radius: 6px; padding: 10px 12px; font-size: 14px; background: #fff; }
+    .textarea { min-height: 92px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 6px 10px; border: 1px solid #d0d0d0; border-radius: 16px; background: #fff; font-size: 12px; }
+    .chip.active { background: #555; color: #fff; border-color: #555; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .img { height: 72px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; }
+    .btn { display: block; width: 100%; text-align: center; text-decoration: none; background: #555; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; }
+    .muted { font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>打卡评价</h1>
+    <a href="pet-location-detail.html">返回详情</a>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div style="font-size:15px; font-weight:600;">爪爪咖啡实验室</div>
+      <div class="muted" style="margin-top:4px;">补充你的真实携宠体验，帮助更多宠物主少踩坑。</div>
+    </div>
+
+    <div class="card">
+      <label class="label">图片上传（1-9 张）</label>
+      <div class="grid">
+        <div class="img">图片1</div>
+        <div class="img">图片2</div>
+        <div class="img">＋添加</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">体验标签</label>
+      <div class="chips">
+        <span class="chip active">猫咪友好</span>
+        <span class="chip">大型犬谨慎</span>
+        <span class="chip active">店员友好</span>
+        <span class="chip">空间较小</span>
+        <span class="chip">有饮水</span>
+        <span class="chip">需预约</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">文字评价</label>
+      <textarea class="textarea">周二下午人不多，猫包可以放在靠窗位置。店员提醒大型犬最好提前预约，整体很友好。</textarea>
+    </div>
+
+    <div class="card">
+      <label class="label">规则纠错（可选）</label>
+      <input class="input" type="text" value="建议补充：周末 14:00-18:00 需预约">
+    </div>
+
+    <a class="btn" href="pet-location-detail.html">提交打卡并返回详情</a>
+  </div>
+</body>
+</html>

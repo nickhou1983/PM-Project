@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宠物友好地图 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff; max-width: 375px; margin: 0 auto; border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header { background: #f5f5f5; padding: 12px 24px; border-bottom: 1px solid #d0d0d0; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .header p { font-size: 12px; color: #888; margin-top: 4px; }
+    .search-bar { padding: 12px 24px; border-bottom: 1px solid #e8e8e8; background: #fff; }
+    .search-row { display: flex; gap: 8px; }
+    .input { flex: 1; border: 1px solid #d0d0d0; border-radius: 6px; padding: 10px 12px; font-size: 14px; background: #fff; }
+    .btn { border: 1px solid #aaa; background: #fff; color: #555; border-radius: 6px; padding: 10px 12px; font-size: 13px; text-decoration: none; }
+    .content { padding: 16px 24px 90px; }
+    .pet-switcher { display: flex; gap: 8px; overflow: auto; margin-bottom: 12px; }
+    .chip { border: 1px solid #d0d0d0; background: #f5f5f5; color: #555; padding: 6px 10px; border-radius: 16px; white-space: nowrap; font-size: 12px; }
+    .chip.active { background: #555; color: #fff; border-color: #555; }
+    .map { background: #e0e0e0; border: 1px solid #d0d0d0; border-radius: 12px; height: 260px; position: relative; margin-bottom: 12px; }
+    .marker { position: absolute; background: #555; color: #fff; border-radius: 12px; padding: 4px 8px; font-size: 11px; }
+    .marker.light { background: #888; }
+    .summary { background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+    .summary strong { font-size: 14px; }
+    .card { background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 10px; padding: 14px; margin-bottom: 12px; text-decoration: none; color: #333; display: block; }
+    .title-row { display: flex; justify-content: space-between; gap: 8px; }
+    .card-title { font-size: 15px; font-weight: 600; }
+    .muted { font-size: 12px; color: #888; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .tag { font-size: 11px; padding: 2px 8px; background: #e0e0e0; border-radius: 10px; }
+    .footer-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 375px; width: 100%; display: flex; border-top: 1px solid #d0d0d0; background: #f5f5f5; }
+    .footer-nav a { flex: 1; text-align: center; padding: 8px 0; font-size: 11px; text-decoration: none; color: #888; border-top: 2px solid transparent; }
+    .footer-nav a.active { color: #333; border-top-color: #555; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>宠物友好地图</h1>
+    <p>以上海静安寺为例 · 当前宠物：奶茶（英短，3岁）</p>
+  </div>
+  <div class="search-bar">
+    <div class="search-row">
+      <input class="input" type="text" value="静安寺附近宠物友好咖啡馆" aria-label="搜索场所">
+      <a class="btn" href="pet-location-list.html">筛选</a>
+    </div>
+  </div>
+  <div class="content">
+    <div class="pet-switcher">
+      <span class="chip active">奶茶 · 猫咪</span>
+      <span class="chip">豆豆 · 小型犬</span>
+      <span class="chip">仅室内友好</span>
+      <span class="chip">有饮水</span>
+    </div>
+
+    <div class="map">
+      <div class="marker" style="top: 44px; left: 34px;">公园 12</div>
+      <div class="marker light" style="top: 96px; left: 190px;">咖啡馆 8</div>
+      <div class="marker" style="top: 150px; left: 88px;">商场 4</div>
+      <div class="marker light" style="top: 198px; left: 220px;">酒店 3</div>
+      <div style="position:absolute; left:12px; bottom:12px; font-size:12px; color:#666;">地图占位 · 展示点位聚合、当前位置和缩放操作</div>
+    </div>
+
+    <div class="summary">
+      <strong>附近共 27 个宠物友好场所</strong>
+      <div class="muted" style="margin-top:6px;">优先展示适合猫咪 / 室内可进入 / 评分 4.5 以上的地点</div>
+    </div>
+
+    <a class="card" href="pet-location-detail.html">
+      <div class="title-row">
+        <div>
+          <div class="card-title">爪爪咖啡实验室</div>
+          <div class="muted">距你 520m · 咖啡馆 · 4.8 分</div>
+        </div>
+        <div class="muted">营业中</div>
+      </div>
+      <div class="tags">
+        <span class="tag">室内可进</span>
+        <span class="tag">需牵引/航空箱</span>
+        <span class="tag">提供饮水</span>
+      </div>
+    </a>
+
+    <a class="card" href="pet-location-detail.html">
+      <div class="title-row">
+        <div>
+          <div class="card-title">静安宠友公园</div>
+          <div class="muted">距你 1.2km · 公园 · 4.7 分</div>
+        </div>
+        <div class="muted">全天开放</div>
+      </div>
+      <div class="tags">
+        <span class="tag">大型犬友好</span>
+        <span class="tag">户外奔跑</span>
+        <span class="tag">便便袋点位</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="footer-nav">
+    <a href="pet-profile-home.html">🐾<br>我的宠物</a>
+    <a href="pet-location-map.html" class="active">🗺️<br>场景</a>
+    <a href="ai-diagnosis-input.html">🩺<br>AI初诊</a>
+    <a href="health-recommendation-list.html">💊<br>推荐</a>
+    <a href="ecommerce-product-detail.html">🛒<br>商城</a>
+  </div>
+</body>
+</html>

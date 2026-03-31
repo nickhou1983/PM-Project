@@ -15,7 +15,9 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 | 文件 | 内容 | 何时加载 |
 |------|------|----------|
-| [prd-template.md](references/prd-template.md) | PRD 标准文档模板（10 个章节） | 所有需求文档生成任务 |
+| [prd-template.md](references/prd-template.md) | 主 PRD 标准文档模板（10 个章节，§4 为模块导航层） | 所有需求文档生成任务 |
+| [module-prd-template.md](references/module-prd-template.md) | 模块 PRD 模板（5 个章节：模块概述、功能需求、用户故事、交互设计、依赖/风险） | 模块化 PRD 生成模式 |
+| [generation-prompt.md](references/generation-prompt.md) | 模块化 PRD 生成流程（4 步：提取模块→主 PRD→模块 PRD→导航索引） | 模块化 PRD 生成模式 |
 | [wireframe-guide.md](references/wireframe-guide.md) | 低保真原型图生成规范（灰度线框图） | 生成低保真原型图时 |
 
 ## 工作流
@@ -58,6 +60,48 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 ### 步骤 3：生成需求文档
 
+> **模式选择**：当产品功能模块 ≥3 个，或用户明确要求「模块化 PRD」「按模块拆分」时，进入**模块化生成模式**；否则使用单文件模式（向后兼容）。
+
+#### 3a. 模块化生成模式（默认推荐）
+
+加载 [generation-prompt.md](references/generation-prompt.md) 模块化生成流程，按 4 步执行：
+
+**Step 1 — 提取 Module 列表**：
+1. 从步骤 2 整理的功能信息中，按业务能力聚合出模块列表
+2. 为每个模块生成中英文混合标识：
+   - `module_en_slug`：小写英文、以 `-` 连接（如 `task-management`、`time-management`）
+   - `module_zh_name`：中文显示名称（如 任务管理、时间管理）
+3. 统计每个模块的功能点数量、最高优先级、模块间依赖关系
+4. 输出模块清单（JSON 格式），供后续步骤使用
+
+**Step 2 — 生成主 PRD**：
+1. 加载 [prd-template.md](references/prd-template.md) 模板
+2. 填写 §1-3（背景/用户画像/用户故事）和 §5-11（非功能需求以后的章节）
+3. §4 填写为**导航层**：
+   - §4.1 模块导航表：列出所有模块的 slug、中文名、功能点数、最高优先级，以及指向 `modules/prd-{module_en_slug}.md` 的链接
+   - §4.2 功能概览：全局功能汇总表（含 RICE 评分），但**不写功能详细描述**
+4. 输出到 `docs/prd-{项目名}/prd-{项目名}.md`
+
+**Step 3 — 生成各模块 PRD**：
+1. 加载 [module-prd-template.md](references/module-prd-template.md) 模板
+2. 遍历模块清单，为每个模块生成独立的 Module PRD：
+   - 填充模块元信息（slug、中文名、反向链接到主 PRD、相关模块）
+   - 填充功能需求（§2）：功能概览表 + 功能详细描述（输入/输出/逻辑/异常）
+   - 填充用户故事（§3）：从全局用户故事中筛选该模块相关的故事，编号格式 `US-{module_en_slug}-NNN`
+   - 填充验收标准汇总表，按测试类型标注（`[UI]`/`[API]`/`[Unit]`/`[Integration]`）
+   - 填充交互设计（§4）：关联 wireframe 页面（以 `{module_en_slug}-` 为前缀的文件）
+   - 填充依赖/风险/技术参考占位符（§5）
+3. 输出到 `docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
+
+**Step 4 — 生成导航索引**：
+1. 在 `docs/prd-{项目名}/modules/` 目录下生成 `README.md`
+2. 列出所有模块的 PRD 链接、架构文档链接（待生成）、原型图链接
+3. 标注下游消费关系（architect → requirement-to-issues → gate_review）
+
+#### 3b. 单文件生成模式（向后兼容）
+
+当模块数 < 3 或用户明确要求单文件模式时：
+
 1. 加载 [prd-template.md](references/prd-template.md) 模板
 2. 按模板的 10 个章节逐一填写：
    - 替换所有 `{xxx}` 占位符为实际内容
@@ -92,12 +136,15 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
    - 建议 3-8 个页面为宜
 3. **生成 HTML 原型文件**：
    - 每个页面生成一个独立的 `.html` 文件
+   - **模块化模式下的命名规范**：使用 `{module_en_slug}-{page-name}.html` 格式命名（如 `task-management-list.html`、`reminder-settings.html`），便于在 Module PRD 中按前缀关联
    - 使用纯 HTML + 内联 CSS，不依赖外部框架或 CDN
    - 遵循 wireframe-guide.md 的灰度配色、系统字体、占位元素规范
    - 页面之间通过相对链接互相跳转，形成可点击的交互流程
-   - 生成一个 `index.html` 作为原型导航首页，列出所有页面及其功能说明
-4. **文件输出位置**：`docs/prd-{项目名}/wireframes/`
-5. **在 PRD 文档中引用**：在「交互设计」章节（6.1）中添加原型图文件链接
+   - 生成一个 `index.html` 作为原型导航首页，列出所有页面及其功能说明，**按模块分组展示**
+4. **文件输出位置**：`docs/prd-{项目名}/wireframes/`（保持扁平结构，不按模块建子文件夹）
+5. **在文档中引用**：
+   - 主 PRD「交互设计」章节（6.1）：添加所有原型图文件链接
+   - 各 Module PRD「交互设计」章节（§4.2）：关联以该模块 `module_en_slug` 为前缀的原型页面
 
 > **注意**：低保真原型为灰度线框图，重点是信息架构和功能布局的清晰表达，不追求美观。如需高保真原型（品牌配色、图标、动效），请使用 `prototype-design` Skill 或 `designer` Agent 在此基础上升级。
 
@@ -119,9 +166,12 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 **默认：对话输出**
 - 在对话中直接输出完整的 PRD Markdown 文档
+- 模块化模式下：先输出主 PRD，然后逐一输出各 Module PRD
 
 **可选：写入本地文件**
-- 将 PRD 写入项目目录下的 `.md` 文件（路径由用户指定或建议 `docs/prd-{项目名}/prd-{项目名}.md`）
+- 主 PRD 写入 `docs/prd-{项目名}/prd-{项目名}.md`
+- Module PRD 写入 `docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
+- 导航索引写入 `docs/prd-{项目名}/modules/README.md`
 
 **可选：发布到飞书**
 - 使用 `feishu-docs` Skill 的 `create-doc` 操作将 PRD 创建为飞书文档
@@ -146,7 +196,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 生成 PRD 后，逐项自检：
 
-- [ ] 10 个章节全部填写（或明确标注「待补充」）
+**通用检查项（所有模式）**：
 - [ ] 功能需求均有优先级标注（P0/P1/P2）
 - [ ] 功能概览表包含 RICE 评分列，且优先级与 RICE 分基本一致（不一致处有说明）
 - [ ] 用户故事遵循 "作为…我想…以便…" 标准格式，且包含验收标准
@@ -158,12 +208,24 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] 原型图覆盖所有 P0 功能的核心页面
 - [ ] 原型图页面之间可通过链接跳转，形成完整操作流程
 - [ ] 使用灰度线框风格，无外部框架或 CDN 依赖
-- [ ] PRD 交互设计章节已引用原型图文件路径
-- [ ] （如选择导出到墨刀）P0 核心页面已通过 modao-prototype Skill 导入墨刀并确认可查看
 - [ ] 若有 `requirement_analyst` 分析报告，已作为附录 A 附加并在 §1.1 中引用
-- [ ] 功能概览表（§4.1）包含 R/I/C/E 各因子明细列
+- [ ] 功能概览表（§4.2）包含 R/I/C/E 各因子明细列
 - [ ] 附录 B 包含完整的 RICE 评分计算过程及取值理由
 - [ ] 【版本管理】文档头版本号与 §11 变更记录最新条目一致
 - [ ] 【版本管理】状态字段已更新（草稿 / 评审中 / 已批准 / 已替代）
 - [ ] 【版本管理】若为迭代更新，版本号已按规则递增且变更记录已追加
 - [ ] 【版本管理】若为 Minor/Major 迭代，已提醒用户检查关联架构文档是否需同步更新
+
+**模块化模式额外检查项**：
+- [ ] 主 PRD §4.1 模块导航表已填写所有模块的 `module_en_slug`、中文名、功能点数、链接
+- [ ] 主 PRD §4.2 全局功能概览表中每行包含 `module_en_slug` + 中文名
+- [ ] 每个模块均已生成独立的 Module PRD（`modules/prd-{module_en_slug}.md`）
+- [ ] Module PRD 文档头包含反向链接到主 PRD
+- [ ] Module PRD 中的用户故事编号格式为 `US-{module_en_slug}-NNN`
+- [ ] Module PRD 中的验收标准按测试类型标注（`[UI]`/`[API]`/`[Unit]`/`[Integration]`）
+- [ ] `modules/README.md` 导航索引已生成，链接正确
+- [ ] `module_en_slug` 符合命名规范（小写英文、`-` 连接）
+- [ ] Wireframe 文件使用 `{module_en_slug}-{page}.html` 命名，Module PRD §4.2 正确引用
+- [ ] 所有功能点在主 PRD 全局汇总表和对应 Module PRD 中都有出现（无遗漏）
+- [ ] Module PRD §5.3 技术参考区域已标注为占位符（待 architect skill 填充）
+- [ ] （如选择导出到墨刀）P0 核心页面已通过 modao-prototype Skill 导入墨刀并确认可查看

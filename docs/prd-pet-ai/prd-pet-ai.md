@@ -84,7 +84,7 @@
 
 | 模块标识 (`module_en_slug`) | 模块名称 | 功能点数 | 最高优先级 | Module PRD | 状态 |
 |-----------------------------|----------|----------|------------|------------|------|
-| `user-auth` | 用户认证 | 4 | P0 | [prd-user-auth.md](modules/prd-user-auth.md) | 草稿 |
+| `user-auth` | 用户认证 | 5 | P0 | [prd-user-auth.md](modules/prd-user-auth.md) | 草稿 |
 | `pet-profile` | 宠物档案 | 5 | P0 | [prd-pet-profile.md](modules/prd-pet-profile.md) | 草稿 |
 | `ai-diagnosis` | AI 初诊 | 5 | P0 | [prd-ai-diagnosis.md](modules/prd-ai-diagnosis.md) | 草稿 |
 | `health-recommendation` | 保健品推荐 | 4 | P0 | [prd-health-recommendation.md](modules/prd-health-recommendation.md) | 草稿 |

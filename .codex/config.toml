@@ -65,3 +65,6 @@ args = ["-y", "@tavily/mcp"]
 
 [mcp_servers.tavily.env]
 TAVILY_API_KEY_ENV = "TAVILY_API_KEY"
+
+[sandbox_workspace_write]
+network_access = true

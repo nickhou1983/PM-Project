@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>保健品推荐列表 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5; padding: 12px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .back-btn { font-size: 20px; color: #555; text-decoration: none; }
+    .header h1 { font-size: 18px; font-weight: 600; flex: 1; }
+    .filter-bar {
+      padding: 10px 16px; border-bottom: 1px solid #e0e0e0;
+      background: #fafafa;
+    }
+    .filter-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+    .filter-chip {
+      white-space: nowrap; padding: 5px 12px;
+      border: 1px solid #d0d0d0; border-radius: 20px;
+      font-size: 12px; color: #555; cursor: pointer; background: #fff;
+      flex-shrink: 0;
+    }
+    .filter-chip.active { background: #555; color: #fff; border-color: #555; }
+    .sort-row {
+      display: flex; gap: 16px; margin-top: 8px; padding-left: 2px;
+    }
+    .sort-btn { font-size: 12px; color: #888; cursor: pointer; }
+    .sort-btn.active { color: #333; font-weight: 600; }
+    .result-count {
+      padding: 8px 24px 4px; font-size: 12px; color: #888;
+    }
+    .content { padding: 8px 16px 80px; }
+    .product-item {
+      display: flex; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0; align-items: flex-start;
+    }
+    .product-img {
+      width: 80px; height: 80px; background: #e0e0e0;
+      border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: #888; text-align: center;
+    }
+    .product-body { flex: 1; }
+    .product-name { font-size: 14px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; }
+    .reason-tag {
+      display: inline-block; background: #555; color: #fff;
+      font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px;
+    }
+    .product-meta { display: flex; align-items: center; gap: 8px; }
+    .price { font-size: 16px; font-weight: 700; }
+    .original-price { font-size: 12px; color: #aaa; text-decoration: line-through; }
+    .sales { font-size: 12px; color: #888; }
+    .btn-add {
+      background: #555; color: #fff; border: none;
+      border-radius: 20px; padding: 6px 14px; font-size: 12px; cursor: pointer;
+      margin-top: 6px; white-space: nowrap;
+    }
+    .ai-banner {
+      background: #e8f4fd; border: 1px solid #b3d9f5;
+      border-radius: 8px; padding: 10px 14px; margin: 0 0 12px;
+      font-size: 13px; color: #1976d2; line-height: 1.5;
+    }
+    .tab-bar {
+      display: flex; border-top: 1px solid #d0d0d0;
+      background: #f5f5f5; position: fixed; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      max-width: 375px; width: 100%;
+    }
+    .tab-bar a {
+      flex: 1; text-align: center; padding: 8px 0;
+      font-size: 11px; color: #888; text-decoration: none;
+      border-top: 2px solid transparent;
+    }
+    .tab-bar a.active { color: #333; border-top-color: #555; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="ai-diagnosis-result.html" class="back-btn">←</a>
+    <h1>保健品推荐</h1>
+    <span style="font-size:20px; cursor:pointer;">🔍</span>
+  </div>
+
+  <!-- 筛选栏 -->
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-chip active">全部</div>
+      <div class="filter-chip">消化健康</div>
+      <div class="filter-chip">皮毛护理</div>
+      <div class="filter-chip">关节骨骼</div>
+      <div class="filter-chip">免疫支持</div>
+      <div class="filter-chip">泌尿健康</div>
+    </div>
+    <div class="sort-row">
+      <span class="sort-btn active">综合排序</span>
+      <span class="sort-btn">销量优先</span>
+      <span class="sort-btn">价格 ↑</span>
+      <span class="sort-btn">价格 ↓</span>
+    </div>
+  </div>
+
+  <div class="result-count">共找到 24 款商品</div>
+
+  <div class="content">
+    <!-- AI 推荐横幅 -->
+    <div class="ai-banner">
+      🤖 AI 已根据「奶茶的食欲不振问题」为您精准推荐以下商品
+    </div>
+
+    <div class="product-item">
+      <div class="product-img">商品图<br>占位</div>
+      <div class="product-body">
+        <div class="product-name">猫咪益生菌粉 · 消化调理 30g</div>
+        <div class="reason-tag">消化问题首选 · 适合英短成年猫</div>
+        <div class="product-meta">
+          <span class="price">¥68</span>
+          <span class="original-price">¥89</span>
+          <span class="sales">月售 1.2k</span>
+        </div>
+        <button class="btn-add" onclick="window.location.href='ecommerce-cart.html'">加入购物车</button>
+      </div>
+    </div>
+
+    <div class="product-item">
+      <div class="product-img">商品图<br>占位</div>
+      <div class="product-body">
+        <div class="product-name">消化酶营养膏 · 猫用 120g</div>
+        <div class="reason-tag">促进消化吸收 · 成年猫适用</div>
+        <div class="product-meta">
+          <span class="price">¥45</span>
+          <span class="sales">月售 856</span>
+        </div>
+        <button class="btn-add" onclick="window.location.href='ecommerce-cart.html'">加入购物车</button>
+      </div>
+    </div>
+
+    <div class="product-item">
+      <div class="product-img">商品图<br>占位</div>
+      <div class="product-body">
+        <div class="product-name">深海鱼油胶囊 · 皮毛闪亮 60粒</div>
+        <div class="reason-tag">常规保健推荐 · 适合英短</div>
+        <div class="product-meta">
+          <span class="price">¥58</span>
+          <span class="original-price">¥72</span>
+          <span class="sales">月售 2.3k</span>
+        </div>
+        <button class="btn-add" onclick="window.location.href='ecommerce-cart.html'">加入购物车</button>
+      </div>
+    </div>
+
+    <div class="product-item">
+      <div class="product-img">商品图<br>占位</div>
+      <div class="product-body">
+        <div class="product-name">化毛膏 · 减少毛球 60g</div>
+        <div class="reason-tag">英短猫高发需求 · 长期使用</div>
+        <div class="product-meta">
+          <span class="price">¥36</span>
+          <span class="sales">月售 3.1k</span>
+        </div>
+        <button class="btn-add" onclick="window.location.href='ecommerce-cart.html'">加入购物车</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tab-bar">
+    <a href="pet-profile-home.html">🐾<br>我的宠物</a>
+    <a href="ai-diagnosis-input.html">🩺<br>AI初诊</a>
+    <a href="health-recommendation-list.html" class="active">💊<br>推荐</a>
+    <a href="ecommerce-product-detail.html">🛒<br>商城</a>
+    <a href="#">👤<br>我的</a>
+  </div>
+</body>
+</html>

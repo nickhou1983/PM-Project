@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录/注册 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .logo-area {
+      text-align: center; padding: 48px 24px 32px;
+      background: #f5f5f5; border-bottom: 1px solid #d0d0d0;
+    }
+    .logo-placeholder {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: #d0d0d0; margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+    }
+    .logo-area h1 { font-size: 22px; font-weight: 700; }
+    .logo-area p { font-size: 13px; color: #888; margin-top: 4px; }
+    .form-area { padding: 32px 24px; }
+    .form-label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+    .input-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .input-field {
+      flex: 1; padding: 12px 14px; border: 1px solid #d0d0d0;
+      border-radius: 8px; font-size: 15px; background: #fff; color: #333;
+    }
+    .btn-send-code {
+      white-space: nowrap; padding: 12px 14px;
+      background: #fff; color: #555; border: 1px solid #aaa;
+      border-radius: 8px; font-size: 13px; cursor: pointer;
+    }
+    .btn-primary {
+      width: 100%; padding: 14px; background: #555; color: #fff;
+      border: none; border-radius: 8px; font-size: 16px;
+      font-weight: 600; cursor: pointer; margin-top: 8px;
+    }
+    .divider { text-align: center; color: #ccc; margin: 24px 0; font-size: 13px; }
+    .third-party { display: flex; gap: 12px; justify-content: center; }
+    .btn-third {
+      flex: 1; padding: 12px; background: #fff; border: 1px solid #d0d0d0;
+      border-radius: 8px; text-align: center; font-size: 13px; color: #555; cursor: pointer;
+    }
+    .tip-text { text-align: center; font-size: 12px; color: #aaa; margin-top: 24px; line-height: 1.6; }
+    .tip-text a { color: #4a90d9; text-decoration: none; }
+    .nav-back { padding: 12px 24px; border-bottom: 1px solid #eee; }
+    .nav-back a { font-size: 13px; color: #4a90d9; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="nav-back"><a href="index.html">← 返回原型导航</a></div>
+
+  <div class="logo-area">
+    <div class="logo-placeholder">🐾</div>
+    <h1>宠物AI助手</h1>
+    <p>AI 初诊 · 精准推荐 · 一站购物</p>
+  </div>
+
+  <div class="form-area">
+    <label class="form-label">手机号</label>
+    <input class="input-field" type="tel" placeholder="请输入手机号" style="width:100%; margin-bottom:16px;">
+
+    <label class="form-label">验证码</label>
+    <div class="input-row">
+      <input class="input-field" type="text" placeholder="请输入 6 位验证码">
+      <button class="btn-send-code">获取验证码</button>
+    </div>
+
+    <button class="btn-primary" onclick="window.location.href='pet-profile-home.html'">
+      登录 / 注册
+    </button>
+
+    <div class="divider">— 或使用其他方式登录 —</div>
+
+    <div class="third-party">
+      <div class="btn-third">💬 微信登录</div>
+      <div class="btn-third"> Apple 登录</div>
+    </div>
+
+    <div class="tip-text">
+      登录即代表您同意
+      <a href="#">《用户服务协议》</a> 和 <a href="#">《隐私政策》</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 初诊输入 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5; padding: 12px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .back-btn { font-size: 20px; cursor: pointer; color: #555; text-decoration: none; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .content { padding: 16px 24px 100px; }
+    .pet-select-bar {
+      background: #f5f5f5; border: 1px solid #d0d0d0;
+      border-radius: 10px; padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .mini-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #d0d0d0; display: flex; align-items: center;
+      justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .pet-select-info { flex: 1; }
+    .pet-select-info .name { font-size: 14px; font-weight: 600; }
+    .pet-select-info .breed { font-size: 12px; color: #888; }
+    .change-pet { font-size: 12px; color: #4a90d9; cursor: pointer; }
+    .section-label {
+      font-size: 14px; font-weight: 600; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .required { color: #e0453a; font-size: 12px; }
+    textarea.input-field {
+      width: 100%; padding: 12px 14px; border: 1px solid #d0d0d0;
+      border-radius: 8px; font-size: 14px; background: #fff;
+      resize: none; font-family: inherit; color: #333; line-height: 1.5;
+    }
+    .char-count { text-align: right; font-size: 12px; color: #aaa; margin-top: 4px; margin-bottom: 16px; }
+    .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .chip {
+      padding: 6px 12px; border: 1px solid #d0d0d0; border-radius: 20px;
+      font-size: 12px; color: #555; cursor: pointer; background: #fff;
+    }
+    .chip.selected { background: #555; color: #fff; border-color: #555; }
+    .select-row { display: flex; gap: 10px; margin-bottom: 16px; }
+    .select-box {
+      flex: 1; padding: 10px 12px; border: 1px solid #d0d0d0;
+      border-radius: 8px; font-size: 13px; color: #555; background: #fff;
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer;
+    }
+    .select-box span { color: #aaa; font-size: 12px; }
+    .disclaimer {
+      background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px;
+      padding: 10px 14px; font-size: 12px; color: #888;
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .btn-submit {
+      width: 100%; padding: 15px; background: #555; color: #fff;
+      border: none; border-radius: 10px; font-size: 16px; font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-bar {
+      display: flex; border-top: 1px solid #d0d0d0;
+      background: #f5f5f5; position: fixed; bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      max-width: 375px; width: 100%;
+    }
+    .tab-bar a {
+      flex: 1; text-align: center; padding: 8px 0;
+      font-size: 11px; color: #888; text-decoration: none;
+      border-top: 2px solid transparent;
+    }
+    .tab-bar a.active { color: #333; border-top-color: #555; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="pet-profile-home.html" class="back-btn">←</a>
+    <h1>AI 初诊</h1>
+  </div>
+
+  <div class="content">
+    <!-- 当前宠物 -->
+    <div class="pet-select-bar">
+      <div class="mini-avatar">🐱</div>
+      <div class="pet-select-info">
+        <div class="name">奶茶</div>
+        <div class="breed">英国短毛猫 · 3岁 · 已绝育</div>
+      </div>
+      <div class="change-pet">切换 ›</div>
+    </div>
+
+    <!-- 症状描述 -->
+    <div class="section-label">
+      描述症状 <span class="required">* 必填</span>
+    </div>
+    <textarea class="input-field" rows="5" placeholder="例如：我家猫咪今天突然不吃饭，而且不爱喝水，有点蔫蔫的，摸肚子也没有明显反应..."></textarea>
+    <div class="char-count">0 / 500</div>
+
+    <!-- 快速症状选择 -->
+    <div class="section-label">常见症状（可多选）</div>
+    <div class="quick-chips">
+      <div class="chip selected">食欲不振</div>
+      <div class="chip">呕吐</div>
+      <div class="chip">腹泻</div>
+      <div class="chip">精神萎靡</div>
+      <div class="chip">掉毛</div>
+      <div class="chip">皮肤瘙痒</div>
+      <div class="chip">咳嗽/打喷嚏</div>
+      <div class="chip">饮水量异常</div>
+      <div class="chip">排尿异常</div>
+    </div>
+
+    <!-- 辅助信息 -->
+    <div class="section-label">持续时间 & 严重程度</div>
+    <div class="select-row">
+      <div class="select-box">
+        <span>持续时间</span>
+        <span>▼</span>
+      </div>
+      <div class="select-box">
+        <span>严重程度</span>
+        <span>▼</span>
+      </div>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="disclaimer">
+      ⚠️ AI 初诊结果仅供参考，不构成医疗诊断建议。<br>如宠物症状严重，请立即就医。
+    </div>
+
+    <!-- 提交按钮 -->
+    <button class="btn-submit" onclick="window.location.href='ai-diagnosis-result.html'">
+      🩺 开始 AI 分析
+    </button>
+  </div>
+
+  <div class="tab-bar">
+    <a href="pet-profile-home.html">🐾<br>我的宠物</a>
+    <a href="ai-diagnosis-input.html" class="active">🩺<br>AI初诊</a>
+    <a href="health-recommendation-list.html">💊<br>推荐</a>
+    <a href="ecommerce-product-detail.html">🛒<br>商城</a>
+    <a href="#">👤<br>我的</a>
+  </div>
+</body>
+</html>

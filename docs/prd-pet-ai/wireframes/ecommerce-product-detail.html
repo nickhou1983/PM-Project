@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商品详情 - 宠物AI一体化 App 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 375px; margin: 0 auto;
+      border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5; padding: 12px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .back-btn { font-size: 20px; color: #555; text-decoration: none; }
+    .header h1 { font-size: 18px; font-weight: 600; flex: 1; }
+    .product-banner {
+      height: 240px; background: #e0e0e0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #888; border-bottom: 1px solid #d0d0d0;
+    }
+    .dot-indicator {
+      display: flex; gap: 6px; justify-content: center;
+      padding: 8px; background: #f5f5f5; border-bottom: 1px solid #e0e0e0;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #d0d0d0;
+    }
+    .dot.active { background: #555; }
+    .content { padding: 16px 24px 100px; }
+    .product-price-row {
+      display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+    }
+    .price-main { font-size: 26px; font-weight: 700; }
+    .price-original { font-size: 14px; color: #aaa; text-decoration: line-through; }
+    .discount-badge {
+      background: #555; color: #fff; font-size: 11px;
+      padding: 2px 6px; border-radius: 4px;
+    }
+    .product-name { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+    .product-sub { font-size: 13px; color: #888; margin-bottom: 10px; }
+    .meta-row {
+      display: flex; gap: 16px; padding: 10px 0;
+      border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 14px; font-size: 13px; color: #888;
+    }
+    .spec-section { margin-bottom: 16px; }
+    .spec-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .spec-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .spec-chip {
+      padding: 6px 14px; border: 1px solid #d0d0d0; border-radius: 6px;
+      font-size: 13px; color: #555; cursor: pointer;
+    }
+    .spec-chip.selected { border-color: #555; font-weight: 600; background: #f5f5f5; }
+    .section-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+    .ai-tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .ai-tag {
+      background: #e8f4fd; border: 1px solid #b3d9f5;
+      color: #1565c0; font-size: 12px; padding: 3px 10px; border-radius: 4px;
+    }
+    .review-item { padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+    .review-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: #d0d0d0; }
+    .reviewer-name { font-size: 13px; font-weight: 500; }
+    .stars { color: #aaa; font-size: 12px; margin-left: auto; }
+    .review-text { font-size: 13px; color: #555; line-height: 1.5; }
+    .review-date { font-size: 11px; color: #bbb; margin-top: 4px; }
+    .bottom-bar {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      max-width: 375px; width: 100%;
+      background: #fff; border-top: 1px solid #d0d0d0;
+      padding: 10px 16px; display: flex; gap: 10px;
+    }
+    .btn-cart {
+      flex: 1; padding: 12px; background: #fff; color: #555;
+      border: 1.5px solid #555; border-radius: 8px; font-size: 14px;
+      font-weight: 600; cursor: pointer;
+    }
+    .btn-buy {
+      flex: 2; padding: 12px; background: #555; color: #fff;
+      border: none; border-radius: 8px; font-size: 14px;
+      font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="health-recommendation-list.html" class="back-btn">←</a>
+    <h1>商品详情</h1>
+    <span style="font-size:20px; cursor:pointer;">⋯</span>
+  </div>
+
+  <!-- 商品主图 -->
+  <div class="product-banner">商品主图占位区域<br>（支持左右滑动查看多张图片）</div>
+  <div class="dot-indicator">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="content">
+    <!-- 价格与名称 -->
+    <div class="product-price-row">
+      <span class="price-main">¥68</span>
+      <span class="price-original">¥89</span>
+      <span class="discount-badge">7.6折</span>
+    </div>
+    <div class="product-name">猫咪益生菌粉 · 消化调理配方</div>
+    <div class="product-sub">30g / 独立分装 30袋 · 品牌：PawCare</div>
+    <div class="meta-row">
+      <span>月售 1,200+</span>
+      <span>评分 4.7 ⭐</span>
+      <span>库存充足</span>
+    </div>
+
+    <!-- AI 推荐标签 -->
+    <div class="section-title">🤖 AI 为您推荐的理由</div>
+    <div class="ai-tag-row">
+      <span class="ai-tag">消化问题首选</span>
+      <span class="ai-tag">适合英短成年猫</span>
+      <span class="ai-tag">适合 2-5 岁猫咪</span>
+    </div>
+
+    <!-- 规格选择 -->
+    <div class="spec-section">
+      <div class="spec-title">选择规格</div>
+      <div class="spec-chips">
+        <div class="spec-chip selected">30g（30袋）</div>
+        <div class="spec-chip">60g（60袋）</div>
+        <div class="spec-chip">90g（90袋）</div>
+      </div>
+    </div>
+
+    <!-- 商品详情（图文）-->
+    <div class="section-title">商品详情</div>
+    <div style="background:#f5f5f5; border-radius:8px; height:120px; display:flex; align-items:center; justify-content:center; color:#888; font-size:13px; margin-bottom:16px;">
+      商品详情图片/图文描述区域
+    </div>
+
+    <!-- 用户评价 -->
+    <div class="section-title">用户评价（128条）</div>
+    <div class="review-item">
+      <div class="review-header">
+        <div class="avatar"></div>
+        <span class="reviewer-name">宠物主小雅</span>
+        <span class="stars">⭐⭐⭐⭐⭐</span>
+      </div>
+      <div class="review-text">买了三袋了，我家英短吃了之后肠胃明显好很多，以前经常软便，现在正常了。味道猫咪接受度也很好，拌饭吃很香～</div>
+      <div class="review-date">2026-03-15 · 英国短毛猫</div>
+    </div>
+    <div class="review-item">
+      <div class="review-header">
+        <div class="avatar"></div>
+        <span class="reviewer-name">Leo的爸爸</span>
+        <span class="stars">⭐⭐⭐⭐</span>
+      </div>
+      <div class="review-text">效果不错，就是价格略贵，建议买大包装更划算。给猫拌粮里吃，没有太大气味。</div>
+      <div class="review-date">2026-02-28 · 布偶猫</div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="btn-cart" onclick="window.location.href='ecommerce-cart.html'">加入购物车</button>
+    <button class="btn-buy" onclick="window.location.href='ecommerce-cart.html'">立即购买</button>
+  </div>
+</body>
+</html>

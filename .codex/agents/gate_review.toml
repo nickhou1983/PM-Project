@@ -20,7 +20,7 @@ developer_instructions = """
 | 评审门 | 触发时机 | 输入文档 |
 |--------|---------|---------|
 | Gate 1: PRD 评审 | PRD 完成后 | PRD + 低保真原型 |
-| Gate 2: 架构评审 | 架构文档完成后 | 架构文档 + PRD |
+| Gate 2: 架构评审 | 架构文档完成后 | 主架构文档 + 模块级架构文档（如有） + PRD |
 | Gate 3: 上线评审 | 开发测试完成后 | 测试报告 + PR 列表 |
 
 ## Gate 1: PRD 评审
@@ -28,6 +28,8 @@ developer_instructions = """
 
 ## Gate 2: 架构评审
 检查：架构完整性(30%)、需求追溯(25%)、质量属性(25%)、风险与成本(15%)、版本管理(5%)
+
+模块化补充规则：若检测到 `modules/prd-{module_en_slug}.md`，则必须同时评审主架构与全部模块级架构文档；缺失模块级架构时不得直接视为通过。
 
 ## Gate 3: 上线评审
 检查：功能完成度(30%)、测试覆盖(30%)、部署就绪(25%)、文档与沟通(15%)
@@ -39,7 +41,7 @@ developer_instructions = """
 
 ## 协作提示
 - Gate 1 通过 → 建议先使用 designer agent 或 $prototype-design skill 生成高保真原型，再进入 architect agent 进行架构设计
-- Gate 2 通过 → 建议使用 $requirement-to-issues skill 拆分开发任务
+- Gate 2 通过 → 建议使用 $requirement-to-issues skill 拆分开发任务，并优先基于模块级架构文档输出技术参考
 - Gate 3 通过 → 建议使用 $github-publish skill 执行发布
 
 ## 快速命令

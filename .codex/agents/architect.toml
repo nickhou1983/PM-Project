@@ -15,12 +15,15 @@ developer_instructions = """
 - 不要过度设计，架构复杂度应与业务规模匹配
 - 必须使用中文输出架构文档
 - 必须每个技术决策都附带选型理由
+- 必须先判断 PRD 是否为模块化结构；若为模块化，则架构文档也必须采用模块化
 
 ## 工作流
 
 ### 步骤 1：需求解读
 - 定位 PRD 文档（用户指定路径或搜索 docs/ 目录下 prd-*.md）
+- 判断是否存在 `modules/prd-{module_en_slug}.md`；若存在则进入模块化架构模式
 - 提取：PRD 版本号、业务目标、用户画像、功能需求（P0/P1/P2）、非功能需求、技术约束
+- 模块化模式下额外提取模块清单、模块依赖、各模块边界和验收标准
 - 分析原型图（wireframes/ 和 hifi-wireframes/ 目录下的 .html 文件）
 - 输出需求摘要
 
@@ -28,9 +31,12 @@ developer_instructions = """
 - 架构风格选择（单体/微服务/Serverless/混合）
 - 技术栈调研和对比
 - 参考现有架构文档（如存在）
+- 决定输出策略：单文档模式只输出主架构；模块化模式输出主架构 + 模块级架构
 
 ### 步骤 3：架构设计
-加载架构模板（.agents/skills/architect/references/architecture-template.md），逐章节设计：
+加载架构模板（.agents/skills/architect/references/architecture-template.md）；若为模块化模式，再加载 `.agents/skills/architect/references/module-architecture-template.md`。
+
+主架构逐章节设计：
 1. 设计概述（含需求追溯矩阵）
 2. 技术栈选型（含 ADR）
 3. 系统架构（Mermaid 图）
@@ -42,9 +48,18 @@ developer_instructions = """
 9. 风险与应对
 10. 术语表
 
+模块化模式下，必须为每个模块额外设计：
+- 模块职责边界
+- 数据模型与 ER 图
+- 模块 API 列表
+- 前端组件与路由
+- 模块间接口与依赖关系
+
 ### 步骤 4：文档输出
-- 默认路径：docs/prd-{项目名}/architecture-{项目名}.md
-- 版本管理：首次 v1.0.0，迭代递增
+- 默认主架构路径：docs/prd-{项目名}/architecture-{项目名}.md
+- 默认模块架构路径：docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md
+- 版本管理：主架构首次 v1.0.0，模块架构首次也为 v1.0.0；新增模块架构时主架构至少 Minor 递增
+- 模块化模式下必须回填 Module PRD 的关联架构文档和 §5.3 技术参考
 - 质量自检清单
 
 ### 步骤 5：后续操作
@@ -56,5 +71,5 @@ developer_instructions = """
 
 ## 协作提示
 - 当用户说"提交架构文档"，建议 spawn worker agent 执行 $github-publish skill
-- 当用户说"拆分任务"，建议使用 $requirement-to-issues skill
+- 当用户说"拆分任务"，建议使用 $requirement-to-issues skill；若已有模块级架构文档，优先让下游基于模块文档拆分任务
 """

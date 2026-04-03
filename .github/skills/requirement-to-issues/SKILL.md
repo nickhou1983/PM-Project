@@ -8,6 +8,8 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 解析 `requirement-doc` Skill 生成的 PRD 文档，提取功能需求按**模块→功能点**两级拆分，创建模块级 Issue（Epic）和功能点级子 Issue（Task），并关联架构文档和里程碑。
 
 > **模块化 PRD 支持**：当 PRD 采用模块化结构（`modules/` 目录下存在独立的 Module PRD），优先从 Module PRD 读取功能详情、用户故事和验收标准，取代从主 PRD §4.2 解析。模块作为 Epic，功能点作为 Task Issue。
+>
+> **模块级架构优先原则**：当存在 `architecture-{项目名}-{module_en_slug}.md` 时，该模块的 Epic 和 Task Issue 的技术参考必须优先使用模块级架构文档中的数据模型、API 与前端组件信息；主架构文档和前后端/数据库子文档仅作为回退来源。
 
 ## 参考文件
 
@@ -61,6 +63,12 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 > **模块化 PRD 检测**：检查 PRD 同目录下是否存在 `modules/` 子目录，且其中包含 `prd-*.md` 文件：
 > - 若**存在**：进入「模块化读取模式」，在步骤 2 中从 Module PRD 文件读取功能详情
 > - 若**不存在**：沿用「单文件读取模式」，从主 PRD §4.2 读取功能详情
+>
+> **模块级架构检测**（模块化模式下执行）：
+> - 检查是否存在主架构文档 `architecture-{项目名}.md`
+> - 对每个模块检查是否存在 `architecture-{项目名}-{module_en_slug}.md`
+> - 若存在，则记录对应版本号并在步骤 3 中作为该模块的首要技术来源
+> - 若不存在，则在预览阶段明确标记该模块使用主架构或子文档回退，提醒用户技术参考不完整
 
 ### 步骤 2：解析功能需求
 
@@ -118,7 +126,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 
    > 故事点为初始估算，供 Sprint Planning 参考。团队应在实际规划时通过 Planning Poker 或讨论调整。在 Issue Body 中标注 `Estimate: {X} SP`。
 
-### 步骤 3：关联上下文
+### 步骤 3：关联上下文（模块级架构优先）
 
 为每个模块补充关联信息：
 
@@ -140,13 +148,15 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
      - `docs/prd-<项目名>/database-design-<项目名>.md`（数据库设计）
    - **检测模块级架构文档**（模块化 PRD 模式）：
      - `docs/prd-<项目名>/architecture-<项目名>-{module_en_slug}.md`（模块级架构设计）
-     - 若存在模块级架构文档，**优先**使用该文档中的数据模型、API 端点、前端组件信息
+       - 若存在模块级架构文档，**必须优先**使用该文档中的数据模型、API 端点、前端组件信息
+       - 若模块级架构文档不存在，则按回退链继续提取，并在预览中标记“缺模块级架构”
    - 若存在，提取与当前模块相关的：
      - **数据模型**：该模块涉及的数据库表和字段（优先顺序：模块级架构文档 > `database-design-*.md` > 主架构文档第 4 章）
      - **API 端点**：该模块对应的 API 路径和方法（优先顺序：模块级架构文档 > `backend-services-*.md` > 主架构文档第 5 章）
      - **前端组件**：该模块涉及的页面路由和组件结构（优先顺序：模块级架构文档 > `frontend-architecture-*.md` > 主架构文档第 3.4 节）
      - **技术栈**：该模块的核心技术选型（架构文档第 2 章）
-   - 将提取的架构信息填入 Issue 的「技术参考」部分，替代仅引用 PRD 第 7 章
+    - 将提取的架构信息填入 Issue 的「技术参考」部分，替代仅引用 PRD 第 7 章
+    - 对每个模块记录技术来源链路：`模块级架构 > 主架构子文档 > 主架构总纲 > PRD 第 7 章`，用于预览和质量检查
 
 ### 步骤 4：解析里程碑与依赖
 
@@ -177,12 +187,12 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 **Body**：按模板结构填写：
 - **模块概述**：模块名称（中英文标识）、功能点数量、最高优先级、模块职责描述
 - **Module PRD 链接**（模块化模式）：指向 `modules/prd-{module_en_slug}.md` 的链接
-- **模块级架构文档链接**（如存在）：指向 `architecture-{项目名}-{module_en_slug}.md` 的链接
+- **模块级架构文档链接**（如存在）：指向 `architecture-{项目名}-{module_en_slug}.md` 的链接；若缺失则显式标记为 `N/A（回退到主架构）`
 - **功能点清单**：该模块下所有功能点的表格（功能点、描述、优先级）
 - **里程碑**：对应的开发阶段和目标日期（来自步骤 4）
 - **前置依赖**：该模块依赖的其他模块（来自步骤 4，含 `module_en_slug` 标识）
 - **关联用户故事**：匹配到的用户故事表格（编号、故事、验收标准、优先级）
-- **技术参考**：来自架构文档的数据模型、API 端点、前端组件信息（来自步骤 3）
+- **技术参考**：优先来自模块级架构文档的数据模型、API 端点、前端组件信息（来自步骤 3）
 - **验收标准汇总**：从用户故事和功能描述中提取所有验收条件，按测试类型分类标注
 
 **Labels**：
@@ -209,7 +219,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - **输入/输出**：输入数据和预期输出
 - **处理逻辑**：核心业务逻辑要点
 - **异常场景**：边界情况和异常处理
-- **技术参考**：该功能点涉及的 API 端点和数据模型
+- **技术参考**：优先引用该模块的模块级架构文档中的 API、数据模型和组件信息；缺失时回退到主架构
 - **验收标准**：该功能点的验收条件，按测试类型标注：
   - `[UI]` — 需要 UI/E2E 测试验证
   - `[API]` — 需要 API 测试验证
@@ -239,6 +249,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
      └── [{项目名}] {功能点5} (P1, {Z} SP)
    ...
 
+    技术参考来源：{模块级架构优先/部分模块回退到主架构}
    Assignee 映射：{已配置/未配置}
    里程碑：{已关联/未关联}
    总估算：{T} Story Points
@@ -340,3 +351,5 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - [ ] Module PRD 中的用户故事编号（`US-{module_en_slug}-NNN`）已正确关联到对应的 Epic
 - [ ] Epic Issue Body 中包含 Module PRD 链接（`modules/prd-{module_en_slug}.md`）
 - [ ] 若存在模块级架构文档，Epic Issue Body 中包含其链接（`architecture-{项目名}-{module_en_slug}.md`）
+- [ ] 若存在模块级架构文档，Epic 和 Task 的技术参考均优先引用模块级架构而非主架构回退项
+- [ ] 若某个模块缺少模块级架构文档，预览中已明确标记回退来源和影响范围

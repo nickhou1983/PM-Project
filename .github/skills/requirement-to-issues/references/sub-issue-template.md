@@ -17,7 +17,8 @@
 **所属模块**：{模块名} (#{模块 Issue 编号})
 **优先级**：{P0/P1/P2}
 **里程碑**：{对应开发阶段名称} — 目标日期 {yyyy-MM-dd}
-**版本来源**：PRD v{版本号} | Architecture v{版本号}
+**版本来源**：PRD v{版本号} | Main Architecture v{版本号} | Module Architecture v{版本号或 N/A}
+**技术来源**：优先 `architecture-{项目名}-{module_en_slug}.md`，缺失时回退到主架构
 
 {功能点的详细描述，2-3 句话说明该功能的核心逻辑和用户价值。}
 
@@ -55,7 +56,7 @@
 - 页面：{页面名} (`{路由路径}`)
 - 核心组件：{组件名}
 
-> 详见架构文档 architecture.md 或对应子文档（frontend-architecture / backend-services / database-design）相关章节。
+> 详见 `architecture-{项目名}-{module_en_slug}.md`；若该模块级架构文档不存在，再引用主架构文档或对应子文档（frontend-architecture / backend-services / database-design）。
 
 ## 验收标准
 

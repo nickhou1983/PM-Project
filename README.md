@@ -141,6 +141,7 @@ node scripts/generate-skills-ppt.js     # Skills 能力总览
 
 - [AGENTS.md](AGENTS.md)：Codex 项目级指令与完整 Agent/Skill 索引。
 - [CONTRIBUTING.md](CONTRIBUTING.md)：贡献方式、提交规范与新增 Agent/Skill 的约定。
+- [docs/pm-assistant-downstream-workflow.md](docs/pm-assistant-downstream-workflow.md)：`pm_assistant` 下游工作流分析报告。
 - [Hands-on/hands-on-guide.md](Hands-on/hands-on-guide.md)：动手实践指南。
 - [docs/ai-era-metrics-framework.md](docs/ai-era-metrics-framework.md)：AI 时代指标框架。
 - [LICENSE](LICENSE)：MIT License。

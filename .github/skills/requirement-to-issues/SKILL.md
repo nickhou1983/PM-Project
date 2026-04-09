@@ -7,6 +7,10 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 
 解析 `requirement-doc` Skill 生成的 PRD 文档，提取功能需求按**模块→功能点**两级拆分，创建模块级 Issue（Epic）和功能点级子 Issue（Task），并关联架构文档和里程碑。
 
+> **模块化 PRD 支持**：当 PRD 采用模块化结构（`modules/` 目录下存在独立的 Module PRD），优先从 Module PRD 读取功能详情、用户故事和验收标准，取代从主 PRD §4.2 解析。模块作为 Epic，功能点作为 Task Issue。
+>
+> **模块级架构优先原则**：当存在 `architecture-{项目名}-{module_en_slug}.md` 时，该模块的 Epic 和 Task Issue 的技术参考必须优先使用模块级架构文档中的数据模型、API 与前端组件信息；主架构文档和前后端/数据库子文档仅作为回退来源。
+
 ## 参考文件
 
 按需加载 `references/` 目录下的模板文件：
@@ -52,13 +56,46 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 **来源 C：飞书文档**
 - 使用 `feishu-docs` Skill 从飞书读取 PRD 文档
 
-> **确认**：获取到 PRD 内容后，验证文档包含第 4 章「功能需求」章节（必须有 4.1 功能概览表）。如缺失则提示用户提供完整的 PRD。
+> **确认**：获取到 PRD 内容后，验证文档包含第 4 章「功能需求」章节（必须有 4.1 功能概览 / 模块导航表）。如缺失则提示用户提供完整的 PRD。
 >
 > **版本记录**：从 PRD 文档头提取精确版本号（如 `v1.0.0`），同时检查同目录下架构文档的版本号。这两个版本号将填入 Issue Body 的「版本来源」字段，确保后续可追溯 Issue 基于哪个版本的文档创建。
+>
+> **模块化 PRD 检测**：检查 PRD 同目录下是否存在 `modules/` 子目录，且其中包含 `prd-*.md` 文件：
+> - 若**存在**：进入「模块化读取模式」，在步骤 2 中从 Module PRD 文件读取功能详情
+> - 若**不存在**：沿用「单文件读取模式」，从主 PRD §4.2 读取功能详情
+>
+> **模块级架构检测**（模块化模式下执行）：
+> - 检查是否存在主架构文档 `architecture-{项目名}.md`
+> - 对每个模块检查是否存在 `architecture-{项目名}-{module_en_slug}.md`
+> - 若存在，则记录对应版本号并在步骤 3 中作为该模块的首要技术来源
+> - 若不存在，则在预览阶段明确标记该模块使用主架构或子文档回退，提醒用户技术参考不完整
 
 ### 步骤 2：解析功能需求
 
-从 PRD 第 4 章提取结构化功能数据：
+从 PRD 提取结构化功能数据。根据步骤 1 的检测结果，选择读取模式：
+
+#### 模块化读取模式（优先）
+
+当 `modules/` 目录存在时：
+
+1. **解析主 PRD §4.1 模块导航表**，提取每个模块的：
+   - `module_en_slug`：英文标识
+   - `module_zh_name`：中文名称
+   - 功能点数量、最高优先级
+   - Module PRD 文件路径
+
+2. **遍历读取每个 Module PRD**，从每个 `modules/prd-{module_en_slug}.md` 中提取：
+   - §2.1 功能概览表：功能点名称、描述、优先级、RICE 评分
+   - §2.2 功能详细描述：输入/输出/处理逻辑/异常场景
+   - §3.1 用户故事：编号、故事、验收标准、优先级
+   - §3.2 验收标准汇总：按测试类型分类
+   - §1.3 相关模块：模块间依赖关系
+
+3. **按模块聚合**：每个 Module PRD 对应一个 Epic，其下的功能点对应 Task Issue
+
+#### 单文件读取模式（向后兼容）
+
+当 `modules/` 目录不存在时，沿用原有逻辑：
 
 1. **解析 4.1 功能概览表**，提取每行的字段：
    - `模块`：功能所属模块名称
@@ -75,6 +112,8 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
    学习系统   → [水平评估(P0), 学习进度(P1), 模拟考试(P1), 历史回放(P2)]
    ```
 
+#### 通用后处理（两种模式共用）
+
 3. **确定模块最高优先级**：取模块内所有功能点中最高的优先级作为该模块 Issue 的优先级标签。
 
 4. **初始故事点估算**：基于功能描述和架构复杂度，为每个功能点给出初始故事点（Story Points）估算：
@@ -87,7 +126,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 
    > 故事点为初始估算，供 Sprint Planning 参考。团队应在实际规划时通过 Planning Poker 或讨论调整。在 Issue Body 中标注 `Estimate: {X} SP`。
 
-### 步骤 3：关联上下文
+### 步骤 3：关联上下文（模块级架构优先）
 
 为每个模块补充关联信息：
 
@@ -107,12 +146,17 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
      - `docs/prd-<项目名>/frontend-architecture-<项目名>.md`（前端架构详设）
      - `docs/prd-<项目名>/backend-services-<项目名>.md`（后端服务详设）
      - `docs/prd-<项目名>/database-design-<项目名>.md`（数据库设计）
+   - **检测模块级架构文档**（模块化 PRD 模式）：
+     - `docs/prd-<项目名>/architecture-<项目名>-{module_en_slug}.md`（模块级架构设计）
+       - 若存在模块级架构文档，**必须优先**使用该文档中的数据模型、API 端点、前端组件信息
+       - 若模块级架构文档不存在，则按回退链继续提取，并在预览中标记“缺模块级架构”
    - 若存在，提取与当前模块相关的：
-     - **数据模型**：该模块涉及的数据库表和字段（优先从 `database-design-*.md` 提取；若无子文档则回退到主架构文档第 4 章）
-     - **API 端点**：该模块对应的 API 路径和方法（优先从 `backend-services-*.md` 提取；若无子文档则回退到主架构文档第 5 章）
-     - **前端组件**：该模块涉及的页面路由和组件结构（优先从 `frontend-architecture-*.md` 提取；若无子文档则回退到主架构文档第 3.4 节）
+     - **数据模型**：该模块涉及的数据库表和字段（优先顺序：模块级架构文档 > `database-design-*.md` > 主架构文档第 4 章）
+     - **API 端点**：该模块对应的 API 路径和方法（优先顺序：模块级架构文档 > `backend-services-*.md` > 主架构文档第 5 章）
+     - **前端组件**：该模块涉及的页面路由和组件结构（优先顺序：模块级架构文档 > `frontend-architecture-*.md` > 主架构文档第 3.4 节）
      - **技术栈**：该模块的核心技术选型（架构文档第 2 章）
-   - 将提取的架构信息填入 Issue 的「技术参考」部分，替代仅引用 PRD 第 7 章
+    - 将提取的架构信息填入 Issue 的「技术参考」部分，替代仅引用 PRD 第 7 章
+    - 对每个模块记录技术来源链路：`模块级架构 > 主架构子文档 > 主架构总纲 > PRD 第 7 章`，用于预览和质量检查
 
 ### 步骤 4：解析里程碑与依赖
 
@@ -138,15 +182,17 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 1. 加载 [issue-template.md](references/issue-template.md) 模板
 2. 为每个模块生成一个 Issue，填充模板中的各项内容：
 
-**标题**：`[{项目名}] {模块名} — 功能需求`
+**标题**：`[{项目名}] {模块中文名} ({module_en_slug}) — 功能需求`
 
 **Body**：按模板结构填写：
-- **模块概述**：模块名称、功能点数量、最高优先级、模块职责描述
+- **模块概述**：模块名称（中英文标识）、功能点数量、最高优先级、模块职责描述
+- **Module PRD 链接**（模块化模式）：指向 `modules/prd-{module_en_slug}.md` 的链接
+- **模块级架构文档链接**（如存在）：指向 `architecture-{项目名}-{module_en_slug}.md` 的链接；若缺失则显式标记为 `N/A（回退到主架构）`
 - **功能点清单**：该模块下所有功能点的表格（功能点、描述、优先级）
 - **里程碑**：对应的开发阶段和目标日期（来自步骤 4）
-- **前置依赖**：该模块依赖的其他模块（来自步骤 4）
+- **前置依赖**：该模块依赖的其他模块（来自步骤 4，含 `module_en_slug` 标识）
 - **关联用户故事**：匹配到的用户故事表格（编号、故事、验收标准、优先级）
-- **技术参考**：来自架构文档的数据模型、API 端点、前端组件信息（来自步骤 3）
+- **技术参考**：优先来自模块级架构文档的数据模型、API 端点、前端组件信息（来自步骤 3）
 - **验收标准汇总**：从用户故事和功能描述中提取所有验收条件，按测试类型分类标注
 
 **Labels**：
@@ -154,7 +200,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - `epic`（模块级标识）
 - `project:{项目名}`（如 `project:VideoPrompt`）
 - `priority:{最高优先级}`（如 `priority:P0`）
-- `module:{模块名}`（如 `module:Prompt生成`）
+- `module:{module_en_slug}`（如 `module:task-management`，使用英文 slug）
 
 **Assignee**（可选）：
 - 若用户提供了模块→负责人映射表，设置 `assignee` 字段
@@ -173,7 +219,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - **输入/输出**：输入数据和预期输出
 - **处理逻辑**：核心业务逻辑要点
 - **异常场景**：边界情况和异常处理
-- **技术参考**：该功能点涉及的 API 端点和数据模型
+- **技术参考**：优先引用该模块的模块级架构文档中的 API、数据模型和组件信息；缺失时回退到主架构
 - **验收标准**：该功能点的验收条件，按测试类型标注：
   - `[UI]` — 需要 UI/E2E 测试验证
   - `[API]` — 需要 API 测试验证
@@ -186,7 +232,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - `task`（功能点级标识）
 - `project:{项目名}`
 - `priority:{功能点优先级}`
-- `module:{所属模块名}`
+- `module:{module_en_slug}`（使用英文 slug，与 Epic 保持一致）
 
 3. 生成完成后，将所有 Issue 以摘要形式展示给用户确认：
 
@@ -203,6 +249,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
      └── [{项目名}] {功能点5} (P1, {Z} SP)
    ...
 
+    技术参考来源：{模块级架构优先/部分模块回退到主架构}
    Assignee 映射：{已配置/未配置}
    里程碑：{已关联/未关联}
    总估算：{T} Story Points
@@ -221,9 +268,9 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
    mcp_github_issue_write:
      owner: <repo-owner>
      repo: <repo-name>
-     title: "[{项目名}] {模块名} — 功能需求"
+     title: "[{项目名}] {模块中文名} ({module_en_slug}) — 功能需求"
      body: <按模板生成的 Issue body>
-     labels: ["enhancement", "epic", "project:{项目名}", "priority:P0", "module:{模块名}"]
+     labels: ["enhancement", "epic", "project:{项目名}", "priority:P0", "module:{module_en_slug}"]
      assignee: <负责人（可选）>
    ```
 
@@ -236,7 +283,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
      repo: <repo-name>
      title: "[{项目名}] {功能点名称}"
      body: <按子 Issue 模板生成的 body>
-     labels: ["enhancement", "task", "project:{项目名}", "priority:P0", "module:{模块名}"]
+     labels: ["enhancement", "task", "project:{项目名}", "priority:P0", "module:{module_en_slug}"]
 
    # 再关联为子 Issue
    mcp_github_sub_issue_write:
@@ -281,19 +328,28 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 
 生成 Issue 前，逐项自检：
 
-- [ ] PRD 第 4.1 功能概览表已完整解析，无遗漏模块
-- [ ] 每个模块的功能点数量与 PRD 一致
+- [ ] PRD 第 4.1 功能概览表 / 模块导航表已完整解析，无遗漏模块
+- [ ] 每个模块的功能点数量与 PRD（或 Module PRD）一致
 - [ ] 功能点的优先级标注正确（P0/P1/P2）
 - [ ] 关联的用户故事与模块功能相关（非强行匹配）
 - [ ] 功能详细描述包含输入、处理逻辑、输出、异常场景（如 PRD 中有）
-- [ ] 若存在架构文档，技术参考部分引用了架构文档的数据模型、API 和组件信息
+- [ ] 若存在架构文档（含模块级架构文档），技术参考部分引用了架构文档的数据模型、API 和组件信息
 - [ ] 里程碑映射合理（P0→早期 Sprint，P1→后续 Sprint，P2→迭代阶段）
 - [ ] 模块间前置依赖关系标注正确
-- [ ] Issue 标题符合 `[{项目名}] {模块名} — 功能需求` 格式（模块级）或 `[{项目名}] {功能点名称}` 格式（子 Issue）
-- [ ] Labels 包含 `enhancement`、类型标签（`epic`/`task`）和正确的优先级标签
+- [ ] Issue 标题符合 `[{项目名}] {模块中文名} ({module_en_slug}) — 功能需求` 格式（模块级）或 `[{项目名}] {功能点名称}` 格式（子 Issue）
+- [ ] Labels 包含 `enhancement`、类型标签（`epic`/`task`）、`module:{module_en_slug}`（英文 slug）和正确的优先级标签
 - [ ] 验收标准按测试类型标注（`[UI]`/`[API]`/`[Unit]`/`[Integration]`）
 - [ ] 每个子 Issue 包含故事点估算（`Estimate: {X} SP`），且数值合理（1/2/3/5/8/13）
 - [ ] 模块级 Issue 包含子 Issue 故事点汇总
 - [ ] 子 Issue 已正确关联到父模块 Issue
 - [ ] 已检查是否存在同名 Issue，避免重复创建
 - [ ] 所有 Issue 经用户确认后才执行创建
+
+**模块化 PRD 额外检查项**：
+- [ ] 模块化读取模式已正确检测 `modules/` 目录
+- [ ] 每个 Module PRD 的功能详情已完整提取（§2.1 + §2.2）
+- [ ] Module PRD 中的用户故事编号（`US-{module_en_slug}-NNN`）已正确关联到对应的 Epic
+- [ ] Epic Issue Body 中包含 Module PRD 链接（`modules/prd-{module_en_slug}.md`）
+- [ ] 若存在模块级架构文档，Epic Issue Body 中包含其链接（`architecture-{项目名}-{module_en_slug}.md`）
+- [ ] 若存在模块级架构文档，Epic 和 Task 的技术参考均优先引用模块级架构而非主架构回退项
+- [ ] 若某个模块缺少模块级架构文档，预览中已明确标记回退来源和影响范围

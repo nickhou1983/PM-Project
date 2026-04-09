@@ -31,13 +31,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+scripts/
 
 # Build outputs
 dist/
 build/
 coverage/
 
+# Codex CLI local caches (keep config and agents in VCS)
+.codex/cache/
+.codex/*.local
+
 # Logs and temp files
 *.log
 *.tmp
 *.temp
+*.pptx
+*.docx
+presentations/

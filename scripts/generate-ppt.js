@@ -624,7 +624,105 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 10 — Appendix A: Agent List
+  // SLIDE 10 — Version Management
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.white };
+    titleBar(s, "版本管理：全链路追踪闭环");
+
+    // ── Top: pipeline flow ──
+    const pipe = [
+      { label: "PM-assistant",     sub: "迭代检测",          color: C.amber },
+      { label: "requirement-doc",  sub: "PRD 版本递增",      color: C.pri },
+      { label: "gate-review",      sub: "Gate 1 版本校验",   color: C.rose },
+      { label: "Architect",        sub: "架构版本 + 关联 PRD", color: C.teal },
+      { label: "gate-review",      sub: "Gate 2 版本校验",   color: C.rose },
+      { label: "req-to-issues",    sub: "版本溯源写入",      color: C.sec },
+    ];
+    const pw = 1.35, pgap = 0.15;
+    const pTotalW = pipe.length * pw + (pipe.length - 1) * pgap;
+    const pStartX = (10 - pTotalW) / 2;
+    const pY = 1.2;
+
+    pipe.forEach((p, i) => {
+      const px = pStartX + i * (pw + pgap);
+      // card
+      s.addShape("rect", { x: px, y: pY, w: pw, h: 0.95, fill: { color: C.white }, shadow: cardShadow() });
+      // top color bar
+      s.addShape("rect", { x: px, y: pY, w: pw, h: 0.06, fill: { color: p.color } });
+      // label
+      s.addText(p.label, {
+        x: px, y: pY + 0.12, w: pw, h: 0.3,
+        fontSize: 9, fontFace: FONT_B, bold: true, color: C.text, align: "center", margin: 0,
+      });
+      // sub
+      s.addText(p.sub, {
+        x: px, y: pY + 0.45, w: pw, h: 0.4,
+        fontSize: 8, fontFace: FONT_B, color: C.muted, align: "center", margin: 0,
+      });
+      // arrow
+      if (i < pipe.length - 1) {
+        s.addImage({ data: I.arrow, x: px + pw + 0.01, y: pY + 0.35, w: 0.18, h: 0.18 });
+      }
+    });
+
+    // ── Left: Semantic Versioning rules ──
+    addCard(s, 0.5, 2.45, 4.3, 2.7);
+    addAccentBar(s, 0.5, 2.45, 2.7, C.pri);
+    s.addText("版本号规则（Semantic Versioning）", {
+      x: 0.8, y: 2.55, w: 3.8, h: 0.35,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+    });
+
+    const verRules = [
+      { ver: "Patch", fmt: "v1.0.X", trigger: "措辞修正、格式调整", color: C.green },
+      { ver: "Minor", fmt: "v1.X.0", trigger: "新增/修改功能、调整优先级", color: C.amber },
+      { ver: "Major", fmt: "vX.0.0", trigger: "产品方向重大调整、范围变更", color: C.rose },
+    ];
+    verRules.forEach((v, i) => {
+      const vy = 3.0 + i * 0.6;
+      // color dot
+      s.addShape("ellipse", { x: 0.85, y: vy + 0.05, w: 0.22, h: 0.22, fill: { color: v.color } });
+      // type + format
+      s.addText(v.ver + "  " + v.fmt, {
+        x: 1.15, y: vy, w: 1.8, h: 0.28,
+        fontSize: 11, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+      });
+      // trigger
+      s.addText(v.trigger, {
+        x: 1.15, y: vy + 0.27, w: 3.4, h: 0.25,
+        fontSize: 9, fontFace: FONT_B, color: C.muted, margin: 0,
+      });
+    });
+
+    // ── Right: Gate checks & traceability ──
+    addCard(s, 5.3, 2.45, 4.2, 2.7);
+    addAccentBar(s, 5.3, 2.45, 2.7, C.rose);
+    s.addText("版本校验与追溯", {
+      x: 5.6, y: 2.55, w: 3.7, h: 0.35,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+    });
+
+    const checks = [
+      { icon: I.shield, t: "Gate 1：PRD 文档头 vs §11 变更记录一致" },
+      { icon: I.shield, t: "Gate 2：「关联 PRD」含精确版本号" },
+      { icon: I.shield, t: "Gate 2：关联版本号与实际 PRD 一致" },
+      { icon: I.tasks,  t: "Issue：版本来源 PRD vX | Arch vX" },
+      { icon: I.github, t: "Git：分支名 + Commit 嵌入版本号" },
+    ];
+    checks.forEach((c, i) => {
+      const cy = 3.0 + i * 0.4;
+      s.addImage({ data: c.icon, x: 5.6, y: cy + 0.02, w: 0.2, h: 0.2 });
+      s.addText(c.t, {
+        x: 5.9, y: cy, w: 3.4, h: 0.3,
+        fontSize: 9, fontFace: FONT_B, color: C.text, margin: 0,
+      });
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 11 — Appendix A: Agent List
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();
@@ -676,7 +774,7 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 11 — Appendix B: Skill List
+  // SLIDE 12 — Appendix B: Skill List
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();
@@ -727,7 +825,74 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 12 — Q&A
+  // SLIDE 13 — Deep Water
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.light };
+    titleBar(s, "研发提效 Agent 已进入深水区");
+
+    s.addText("讨论重心，正在从工具与模型，转向与软件工程的深度结合", {
+      x: 0.5, y: 1.02, w: 9.0, h: 0.32,
+      fontSize: 13, fontFace: FONT_B, italic: true, color: C.muted, margin: 0,
+    });
+
+    addCard(s, 0.5, 1.45, 9.0, 0.72, C.white);
+    addAccentBar(s, 0.5, 1.45, 0.72, C.amber);
+    s.addText("Agent 的下一阶段差异化，不在谁能多接几个工具、谁能换更强的模型，而在谁能把需求、设计、开发、评审与治理真正编进工程系统。", {
+      x: 0.8, y: 1.63, w: 8.35, h: 0.28,
+      fontSize: 11, fontFace: FONT_B, bold: true, color: C.text, margin: 0, align: "left",
+    });
+
+    const deepWaterCards = [
+      {
+        x: 0.5, y: 2.45, w: 4.25, h: 1.15,
+        icon: I.robot, color: C.pri,
+        title: "模型能力进入标配区",
+        desc: "基础写作、生成、调用能力正在趋同，真正的壁垒开始从模型参数，迁移到工程编排能力。",
+      },
+      {
+        x: 5.25, y: 2.45, w: 4.25, h: 1.15,
+        icon: I.link, color: C.sec,
+        title: "核心问题变成流程嵌入",
+        desc: "不是让 Agent 单点更聪明，而是让它嵌入需求、架构、任务、测试、发布等真实研发链路。",
+      },
+      {
+        x: 0.5, y: 3.85, w: 4.25, h: 1.15,
+        icon: I.shield, color: C.rose,
+        title: "生产落地看可靠性治理",
+        desc: "可追溯、可回滚、权限边界、审计与质量门槛，正在替代 Demo 效果，成为进入生产环境的关键。",
+      },
+      {
+        x: 5.25, y: 3.85, w: 4.25, h: 1.15,
+        icon: I.users, color: C.teal,
+        title: "团队协作成为新主战场",
+        desc: "研发提效 Agent 不再只是个人工具，而是要支撑角色分工、版本管理、评审机制与知识沉淀。",
+      },
+    ];
+
+    deepWaterCards.forEach((card) => {
+      addCard(s, card.x, card.y, card.w, card.h, C.white);
+      addAccentBar(s, card.x, card.y, card.h, card.color);
+      s.addImage({ data: card.icon, x: card.x + 0.25, y: card.y + 0.18, w: 0.34, h: 0.34 });
+      s.addText(card.title, {
+        x: card.x + 0.7, y: card.y + 0.13, w: card.w - 0.95, h: 0.25,
+        fontSize: 12, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+      });
+      s.addText(card.desc, {
+        x: card.x + 0.7, y: card.y + 0.45, w: card.w - 0.95, h: 0.48,
+        fontSize: 9.5, fontFace: FONT_B, color: C.muted, margin: 0, lineSpacingMultiple: 1.2,
+      });
+    });
+
+    s.addText("从这个阶段开始，研发提效 Agent 的讨论对象，已经不只是工具栈和模型栈，而是完整的软件工程方法。", {
+      x: 0.65, y: 5.18, w: 8.7, h: 0.24,
+      fontSize: 10, fontFace: FONT_B, color: C.navy, bold: true, align: "center", margin: 0,
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 14 — Q&A
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();

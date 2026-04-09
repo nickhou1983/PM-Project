@@ -43,7 +43,7 @@ export FEISHU_APP_SECRET="xxxxxxxx"       # 应用 App Secret
 **执行认证：**
 
 ```bash
-~/.claude/skills/feishu-docs/scripts/feishu-oauth.sh
+./.agents/skills/feishu-docs/scripts/feishu-oauth.sh
 ```
 
 脚本会自动：
@@ -57,10 +57,10 @@ export FEISHU_APP_SECRET="xxxxxxxx"       # 应用 App Secret
 
 ```bash
 # 自定义端口
-~/.claude/skills/feishu-docs/scripts/feishu-oauth.sh --port 9090
+./.agents/skills/feishu-docs/scripts/feishu-oauth.sh --port 9090
 
 # 自定义权限范围
-~/.claude/skills/feishu-docs/scripts/feishu-oauth.sh --scope "offline_access docx:document:readonly"
+./.agents/skills/feishu-docs/scripts/feishu-oauth.sh --scope "offline_access docx:document:readonly"
 ```
 
 **认证成功后设置环境变量：**
@@ -87,12 +87,14 @@ export FEISHU_MCP_UAT=$(cat ~/.feishu_mcp_token)
 
 ## 辅助脚本
 
+以下命令默认在**仓库根目录**执行。
+
 本 Skill 提供两种脚本调用飞书远程 MCP：
 
 ### Shell 脚本
 
 ```bash
-SCRIPT="$HOME/.claude/skills/feishu-docs/scripts/feishu-mcp.sh"
+SCRIPT="./.agents/skills/feishu-docs/scripts/feishu-mcp.sh"
 ```
 
 ### Python 脚本（推荐）
@@ -100,7 +102,7 @@ SCRIPT="$HOME/.claude/skills/feishu-docs/scripts/feishu-mcp.sh"
 > ✅ **推荐用于创建/更新文档**：Python 的 `json.dumps()` 能可靠处理 Markdown 中的换行、引号、反引号等特殊字符，避免 Shell JSON 转义问题。
 
 ```bash
-PY_SCRIPT="$HOME/.claude/skills/feishu-docs/scripts/feishu-mcp.py"
+PY_SCRIPT="./.agents/skills/feishu-docs/scripts/feishu-mcp.py"
 ```
 
 **基本用法：**
@@ -435,13 +437,13 @@ for i, chunk in enumerate(chunks):
 export FEISHU_MCP_UAT="u-your-token-here"
 
 # 2. 初始化连接
-~/.claude/skills/feishu-docs/scripts/feishu-mcp.sh initialize
+./.agents/skills/feishu-docs/scripts/feishu-mcp.sh initialize
 
 # 3. 搜索文档
-~/.claude/skills/feishu-docs/scripts/feishu-mcp.sh tools/call search-doc '{"query": "编码规范"}'
+./.agents/skills/feishu-docs/scripts/feishu-mcp.sh tools/call search-doc '{"query": "编码规范"}'
 
 # 4. 读取文档
-~/.claude/skills/feishu-docs/scripts/feishu-mcp.sh tools/call fetch-doc '{"doc_id": "xxxxxx"}'
+./.agents/skills/feishu-docs/scripts/feishu-mcp.sh tools/call fetch-doc '{"doc_id": "xxxxxx"}'
 ```
 
 ### Python 脚本（推荐用于文档创建/更新）
@@ -451,14 +453,14 @@ export FEISHU_MCP_UAT="u-your-token-here"
 export FEISHU_MCP_UAT="u-your-token-here"
 
 # 2. 初始化连接
-python3 ~/.claude/skills/feishu-docs/scripts/feishu-mcp.py initialize
+python3 ./.agents/skills/feishu-docs/scripts/feishu-mcp.py initialize
 
 # 3. 搜索文档
-python3 ~/.claude/skills/feishu-docs/scripts/feishu-mcp.py tools/call search-doc '{"query": "编码规范"}'
+python3 ./.agents/skills/feishu-docs/scripts/feishu-mcp.py tools/call search-doc '{"query": "编码规范"}'
 
 # 4. 上传本地 Markdown 文件
-python3 ~/.claude/skills/feishu-docs/scripts/feishu-mcp.py tools/call create-doc --content-file docs/prd.md '{"title": "PRD 文档"}'
+python3 ./.agents/skills/feishu-docs/scripts/feishu-mcp.py tools/call create-doc --content-file docs/prd.md '{"title": "PRD 文档"}'
 
 # 5. 长文档批量上传（自动分批）
-python3 ~/.claude/skills/feishu-docs/scripts/feishu-mcp.py tools/call create-doc --batch-file docs/long-doc.md --title "长文档"
+python3 ./.agents/skills/feishu-docs/scripts/feishu-mcp.py tools/call create-doc --batch-file docs/long-doc.md --title "长文档"
 ```

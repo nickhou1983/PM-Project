@@ -31,7 +31,10 @@ user-invocable: true
 #### 1.1 读取 GitHub Issue
 
 1. 用户提供 Issue 编号或链接
-2. 使用 `mcp_github_issue_read` 读取 Issue 完整内容
+   - 纯编号（如 `#42`）：默认当前仓库
+   - 完整链接（如 `https://github.com/owner/repo/issues/42`）：从 URL 解析 `owner` 和 `repo`
+   - 用户也可显式指定目标仓库：`owner/repo#42`
+2. 使用 `mcp_github_issue_read` 读取 Issue 完整内容（传入解析出的 `owner` 和 `repo` 参数）
 3. 从 Issue body 提取关键信息：
 
 | 提取项 | 来源 | 说明 |
@@ -46,7 +49,9 @@ user-invocable: true
 
 #### 1.2 定位关联文档
 
-根据 Issue 中的模块信息和版本来源，定位并读取关联文档：
+根据 Issue 中的模块信息和版本来源，定位并读取关联文档。
+
+> **跨仓库场景**：当 Issue 中的文档链接为 GitHub 绝对 URL（`https://github.com/...`）时，说明 PRD/架构文档存放在另一个仓库。此时使用 `mcp_github_get_file_contents` 或通过 URL 直接获取文档内容，而非本地文件读取。
 
 1. **架构文档**（优先模块级）：
    - 优先：`docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`

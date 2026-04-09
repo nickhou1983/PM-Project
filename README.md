@@ -33,14 +33,19 @@
 ├── .github/
 │   ├── agents/
 │   │   ├── architect.agent.md
+│   │   ├── code_review.agent.md
+│   │   ├── code_testing.agent.md
 │   │   ├── designer.agent.md
 │   │   ├── gate_review.agent.md
+│   │   ├── planning.agent.md
 │   │   ├── pm_assistant.agent.md
 │   │   ├── post_launch_review.agent.md
 │   │   ├── pr_review_submit.agent.md
+│   │   ├── tdd_developer.agent.md
 │   │   └── plans/
 │   └── skills/
 │       ├── architect/
+│       ├── code-review/
 │       ├── feishu-docs/
 │       ├── github-publish/
 │       ├── microservices/
@@ -48,7 +53,9 @@
 │       ├── playwright-testing/
 │       ├── prototype-design/
 │       ├── requirement-doc/
-│       └── requirement-to-issues/
+│       ├── requirement-to-issues/
+│       ├── security-audit/
+│       └── tdd-coder/
 ├── docs/
 │   └── ai-era-metrics-framework.md
 ├── Hands-on/
@@ -59,9 +66,6 @@
 │   └── README.md
 ├── AGENTS.md
 ├── CONTRIBUTING.md
-├── custom-agents-skills-matrix.md
-├── pm-assistant-downstream-workflow.md
-├── pm-assistant-workflow-one-page.md
 └── README.md
 ```
 
@@ -73,13 +77,16 @@
 | --- | --- |
 | pm_assistant | 需求分析与立项前验证（含飞书查重、竞品分析、商业快评） |
 | architect | 根据 PRD 设计技术架构方案（支持模块级架构设计） |
+| code_review | 代码审查（MUST/SHOULD/NIT 三级分类，5 大维度） |
+| code_testing | 测试编排（单元/集成/API/UI/E2E 多层策略） |
 | designer | 基于 PRD 和低保真 wireframe 生成高保真原型 |
 | gate_review | Stage-Gate 评审门，在 PRD/架构/上线前执行 Go/No-Go 决策 |
+| planning | 任务规划与上下文研究（只研究不执行） |
 | post_launch_review | 上线复盘，收集埋点数据和用户反馈，输出迭代建议 |
 | pr_review_submit | 将审查结果写入 GitHub PR Review |
 | tdd_developer | 基于 GitHub Issue + 架构文档，通过 TDD 流程（Red-Green-Refactor）实现代码 |
 
-> 完整 Agent 角色索引（含 Codex 运行时定义的 14 个 Agent）见 [AGENTS.md](AGENTS.md)。
+> 完整 Agent 角色索引（含 Codex 运行时定义的 15 个 Agent）见 [AGENTS.md](AGENTS.md)。
 
 ### Skills
 
@@ -88,6 +95,9 @@
 | requirement-doc | 生成模块化 PRD（主 PRD + Module PRD）与低保真 wireframe |
 | requirement-to-issues | 将 PRD 按模块拆分为 GitHub Issues（Epic + Task） |
 | architect | 架构设计模板和 ADR（支持模块级架构设计） |
+| code-review | 代码审查规范（5 维度 × MUST/SHOULD/NIT 分级） |
+| security-audit | OWASP Top 10 安全审查 |
+| tdd-coder | TDD 编码方法论（Red-Green-Refactor） |
 | prototype-design | 从低保真升级高保真原型 |
 | github-publish | 管理提交、推送、PR 与发布流程 |
 | feishu-docs | 对接飞书文档查询与同步（MCP） |

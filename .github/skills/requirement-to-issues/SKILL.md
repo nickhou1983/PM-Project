@@ -47,6 +47,18 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 
 确定 PRD 文档来源并获取完整内容：
 
+#### 1.0 确认目标仓库
+
+> **在任何 Issue 创建之前，必须先确定 Issue 的目标仓库。** PRD/架构文档所在仓库（当前仓库）和 Issue 目标仓库可以不同。
+
+1. **询问用户**：Issue 要创建到哪个 GitHub 仓库？
+   - 默认：当前工作区仓库（如 `nickhou1983/PM-Project`）
+   - 可选：用户指定的代码仓库（如 `nickhou1983/my-app`）
+2. **记录目标仓库**：将 `target_owner` 和 `target_repo` 保存，供步骤 5 和步骤 6 使用
+3. **判断跨仓库模式**：若目标仓库 ≠ 当前工作区仓库，启用跨仓库模式：
+   - Issue Body 中的文档链接将使用 GitHub 绝对 URL（而非相对路径）
+   - 预览阶段标注"跨仓库模式：文档在 `{source_owner}/{source_repo}`，Issue 创建到 `{target_owner}/{target_repo}`"
+
 **来源 A：本地文件**
 - 用户提供文件路径（如 `docs/prd-<项目名>/prd-<项目名>.md`），直接读取文件内容
 
@@ -188,6 +200,12 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - **模块概述**：模块名称（中英文标识）、功能点数量、最高优先级、模块职责描述
 - **Module PRD 链接**（模块化模式）：指向 `modules/prd-{module_en_slug}.md` 的链接
 - **模块级架构文档链接**（如存在）：指向 `architecture-{项目名}-{module_en_slug}.md` 的链接；若缺失则显式标记为 `N/A（回退到主架构）`
+
+> **跨仓库模式下的文档链接**：当 Issue 目标仓库与文档所在仓库不同时，所有文档链接必须使用 GitHub 绝对 URL 格式：
+> - Module PRD：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
+> - 模块级架构：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+> - 主架构：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/architecture-{项目名}.md`
+> - 主 PRD：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/prd-{项目名}.md`
 - **功能点清单**：该模块下所有功能点的表格（功能点、描述、优先级）
 - **里程碑**：对应的开发阶段和目标日期（来自步骤 4）
 - **前置依赖**：该模块依赖的其他模块（来自步骤 4，含 `module_en_slug` 标识）
@@ -219,7 +237,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - **输入/输出**：输入数据和预期输出
 - **处理逻辑**：核心业务逻辑要点
 - **异常场景**：边界情况和异常处理
-- **技术参考**：优先引用该模块的模块级架构文档中的 API、数据模型和组件信息；缺失时回退到主架构
+- **技术参考**：优先引用该模块的模块级架构文档中的 API、数据模型和组件信息；缺失时回退到主架构（跨仓库模式下使用 GitHub 绝对 URL，规则同 Epic 文档链接）
 - **验收标准**：该功能点的验收条件，按测试类型标注：
   - `[UI]` — 需要 UI/E2E 测试验证
   - `[API]` — 需要 API 测试验证

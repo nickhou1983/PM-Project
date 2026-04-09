@@ -44,6 +44,7 @@
 | `post_launch_review` | 上线复盘与迭代决策 | read-only |
 | `pr_review_submit` | 将审查结果写入 GitHub PR Review | read-only |
 | `requirement_analyst` | 需求灵感验证（简化版 PM assistant） | read-only |
+| `tdd_developer` | TDD 开发（基于 Issue + 架构文档，Red-Green-Refactor） | workspace-write |
 | `ui_testing` | UI 自动化测试（Playwright MCP） | workspace-write |
 
 ## Skill 索引

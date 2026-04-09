@@ -77,6 +77,7 @@
 | gate_review | Stage-Gate 评审门，在 PRD/架构/上线前执行 Go/No-Go 决策 |
 | post_launch_review | 上线复盘，收集埋点数据和用户反馈，输出迭代建议 |
 | pr_review_submit | 将审查结果写入 GitHub PR Review |
+| tdd_developer | 基于 GitHub Issue + 架构文档，通过 TDD 流程（Red-Green-Refactor）实现代码 |
 
 > 完整 Agent 角色索引（含 Codex 运行时定义的 14 个 Agent）见 [AGENTS.md](AGENTS.md)。
 

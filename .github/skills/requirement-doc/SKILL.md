@@ -15,8 +15,8 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 | 文件 | 内容 | 何时加载 |
 |------|------|----------|
-| [prd-template.md](references/prd-template.md) | 主 PRD 标准文档模板（10 个章节，§4 为模块导航层） | 所有需求文档生成任务 |
-| [module-prd-template.md](references/module-prd-template.md) | 模块 PRD 模板（5 个章节：模块概述、功能需求、用户故事、交互设计、依赖/风险） | 模块化 PRD 生成模式 |
+| [prd-template.md](references/prd-template.md) | 主 PRD 标准文档模板（11 个章节，§4 为模块导航层） | 所有需求文档生成任务 |
+| [module-prd-template.md](references/module-prd-template.md) | 模块 PRD 模板（7 个章节：模块概述、功能需求、用户故事、测试要点、交互设计、依赖/风险、变更记录） | 模块化 PRD 生成模式 |
 | [generation-prompt.md](references/generation-prompt.md) | 模块化 PRD 生成流程（4 步：提取模块→主 PRD→模块 PRD→导航索引） | 模块化 PRD 生成模式 |
 | [wireframe-guide.md](references/wireframe-guide.md) | 低保真原型图生成规范（灰度线框图） | 生成低保真原型图时 |
 
@@ -106,11 +106,12 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 ### 步骤 2：信息整理与追问
 
-1. 加载 [prd-template.md](references/prd-template.md)，了解 10 个章节的结构要求
+1. 加载 [prd-template.md](references/prd-template.md)，了解 11 个章节的结构要求
 2. 将步骤 1 收集到的信息逐一映射到模板的各章节
 3. 识别缺失的关键信息，重点关注：
    - 功能优先级（P0/P1/P2）是否明确
-   - 是否有非功能需求（性能、安全指标）
+   - 是否有非功能需求（性能、安全指标）及其验证方法
+   - 验收测试策略是否明确（UAT 执行者、通过标准）
    - 里程碑和时间节点是否确定
    - 技术选型方向是否有偏好
 4. 将缺失项汇总，向用户追问以补全
@@ -147,8 +148,9 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
    - 填充功能需求（§2）：功能概览表 + 功能详细描述（输入/输出/逻辑/异常）
    - 填充用户故事（§3）：从全局用户故事中筛选该模块相关的故事，编号格式 `US-{module_en_slug}-NNN`
    - 填充验收标准汇总表，按测试类型标注（`[UI]`/`[API]`/`[Unit]`/`[Integration]`）
-   - 填充交互设计（§4）：关联 wireframe 页面（以 `{module_en_slug}-` 为前缀的文件）
-   - 填充依赖/风险/技术参考占位符（§5）
+   - 填充测试要点（§4）：从验收标准推导核心测试场景、边界条件、测试数据需求、测试类型分布
+   - 填充交互设计（§5）：关联 wireframe 页面（以 `{module_en_slug}-` 为前缀的文件）
+   - 填充依赖/风险/技术参考占位符（§6）
 3. 输出到 `docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
 
 **Step 4 — 生成导航索引**：
@@ -161,7 +163,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 当模块数 < 3 或用户明确要求单文件模式时：
 
 1. 加载 [prd-template.md](references/prd-template.md) 模板
-2. 按模板的 10 个章节逐一填写：
+2. 按模板的 11 个章节逐一填写：
    - 替换所有 `{xxx}` 占位符为实际内容
    - 保留模板中的表格结构和格式
    - 确保每个章节都有实质内容或明确标注「待补充」
@@ -277,6 +279,8 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] 功能概览表包含 RICE 评分列，且优先级与 RICE 分基本一致（不一致处有说明）
 - [ ] 用户故事遵循 "作为…我想…以便…" 标准格式，且包含验收标准
 - [ ] 非功能需求包含可量化指标（如响应时间 ≤200ms）
+- [ ] 非功能需求每行包含验证方法（如何验证该指标是否达标）
+- [ ] §5.1 验收测试策略（UAT）已填写（测试范围、执行者、通过标准等）
 - [ ] 里程碑有明确的时间节点
 - [ ] 风险项列出了概率、影响和应对措施
 - [ ] 术语表覆盖所有领域专业术语
@@ -307,9 +311,11 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] Module PRD 文档头包含反向链接到主 PRD
 - [ ] Module PRD 中的用户故事编号格式为 `US-{module_en_slug}-NNN`
 - [ ] Module PRD 中的验收标准按测试类型标注（`[UI]`/`[API]`/`[Unit]`/`[Integration]`）
+- [ ] Module PRD §4 测试要点已填写：核心测试场景、边界条件、测试数据需求、测试类型分布
+- [ ] Module PRD §4.1 核心测试场景覆盖所有 P0 验收标准
 - [ ] `modules/README.md` 导航索引已生成，链接正确
 - [ ] `module_en_slug` 符合命名规范（小写英文、`-` 连接）
-- [ ] Wireframe 文件使用 `{module_en_slug}-{page}.html` 命名，Module PRD §4.2 正确引用
+- [ ] Wireframe 文件使用 `{module_en_slug}-{page}.html` 命名，Module PRD §5.2 正确引用
 - [ ] 所有功能点在主 PRD 全局汇总表和对应 Module PRD 中都有出现（无遗漏）
-- [ ] Module PRD §5.3 技术参考区域已标注为占位符（待 architect skill 填充）
+- [ ] Module PRD §6.3 技术参考区域已标注为占位符（待 architect skill 填充）
 - [ ] （如选择导出到墨刀）P0 核心页面已通过 modao-prototype Skill 导入墨刀并确认可查看

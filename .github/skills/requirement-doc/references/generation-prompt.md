@@ -198,5 +198,5 @@ docs/prd-{project_slug}/modules/README.md
 - [ ] 每个 Module PRD 的反向链接指向主 PRD
 - [ ] 所有功能点在全局汇总表（§4.2）和 Module PRD（§2.1）中都有出现
 - [ ] 用户故事在 Module PRD 中的编号格式为 `US-{module_en_slug}-NNN`
-- [ ] Wireframe 文件在 Module PRD §4.2 中正确关联
+- [ ] Wireframe 文件在 Module PRD §5.2 中正确关联
 - [ ] `module_en_slug` 符合命名规范（小写英文、`-` 连接）

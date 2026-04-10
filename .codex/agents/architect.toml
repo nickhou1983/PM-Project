@@ -59,7 +59,7 @@ developer_instructions = """
 - 默认主架构路径：docs/prd-{项目名}/architecture-{项目名}.md
 - 默认模块架构路径：docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md
 - 版本管理：主架构首次 v1.0.0，模块架构首次也为 v1.0.0；新增模块架构时主架构至少 Minor 递增
-- 模块化模式下必须回填 Module PRD 的关联架构文档和 §5.3 技术参考
+- 模块化模式下必须回填 Module PRD 的关联架构文档和 §6.3 技术参考
 - 质量自检清单
 
 ### 步骤 5：后续操作

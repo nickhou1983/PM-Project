@@ -13,7 +13,7 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
 
 | 文件 | 内容 | 何时加载 |
 |------|------|----------|
-| [architecture-template.md](references/architecture-template.md) | 架构文档标准模板（10 个章节 + 文档索引） | 所有架构设计任务 |
+| [architecture-template.md](references/architecture-template.md) | 架构文档标准模板（12 个章节 + 文档索引） | 所有架构设计任务 |
 | [module-architecture-template.md](references/module-architecture-template.md) | 模块级架构文档模板 | PRD 采用模块化结构时 |
 | [adr-template.md](references/adr-template.md) | 架构决策记录（ADR）模板 | 记录关键技术选型决策时 |
 | [frontend-architecture-template.md](references/frontend-architecture-template.md) | 前端架构详设子文档模板 | 分文档模式时加载 |
@@ -81,7 +81,7 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
     - 主文档 §0 文档索引自动填充各子文档和模块级架构文档路径
 11. **回填模块 PRD**（仅模块化模式）：
     - 更新模块 PRD 文档头中的「关联架构文档」字段
-    - 回填 Module PRD §5.3 技术参考中的数据模型、API 端点、前端组件摘要
+    - 回填 Module PRD §6.3 技术参考中的数据模型、API 端点、前端组件摘要
     - 若批量生成时某个模块失败，继续处理其他模块，并在最终汇总中列出失败模块和原因
 
 ### 后续操作
@@ -112,7 +112,8 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
    - 结束时输出成功模块、失败模块和待人工补充项
 5. **回填要求**：
    - Module PRD 文档头的「关联架构文档」必须指向实际模块架构文件
-   - Module PRD §5.3 必须回填数据模型、API 端点、前端组件摘要
+   - Module PRD §6.3 必须回填数据模型、API 端点、前端组件摘要
+   - 模块架构 §5.2 集成与契约测试设计为必填
 6. **版本管理**：
    - 模块文档独立版本化，首次为 `v1.0.0`
    - 主架构新增模块级架构时至少 Minor 递增
@@ -138,7 +139,7 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
 
 **必检项（所有项目必须通过）**：
 
-- [ ] 10 个章节全部填写
+- [ ] 12 个章节全部填写
 - [ ] 每个技术选型都有选型理由
 - [ ] 架构图使用 Mermaid 且语法正确
 - [ ] 非功能需求有可量化指标，且附 PRD 到技术方案的推导逻辑
@@ -147,7 +148,7 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
 - [ ] 与 PRD 需求无矛盾
 - [ ] 术语表覆盖所有专业术语
 - [ ] 【版本管理】文档头「关联 PRD」字段包含精确版本号（如 `prd-xxx.md v1.0.0`）
-- [ ] 【版本管理】文档头版本号与 §11 变更记录最新条目一致
+- [ ] 【版本管理】文档头版本号与 §12 变更记录最新条目一致
 - [ ] 【版本管理】若为迭代更新，版本号已按规则递增且变更记录已追加
 
 **条件检项（满足条件时必须通过）**：
@@ -162,5 +163,5 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
 - [ ] 若使用分文档模式，主文档 §3.4/§4/§5 为摘要形式且包含子文档链接
 - [ ] 若使用模块级架构模式，模块架构文档头包含「关联 Module PRD」精确版本号
 - [ ] 若使用模块级架构模式，模块架构文档头包含「关联主架构文档」路径和版本
-- [ ] 若使用模块级架构模式，Module PRD §5.3 技术参考区域已回填实际内容
+- [ ] 若使用模块级架构模式，Module PRD §6.3 技术参考区域已回填实际内容
 - [ ] 若使用模块级架构模式，输出路径为 `architecture-{项目名}-{module_en_slug}.md`

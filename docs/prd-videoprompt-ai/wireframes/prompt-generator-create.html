@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提示词生成 - VideoPrompt AI 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 1200px; margin: 0 auto; border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header { background: #f5f5f5; padding: 12px 24px; border-bottom: 1px solid #d0d0d0; display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .nav { display: flex; gap: 16px; }
+    .nav a { color: #888; text-decoration: none; font-size: 14px; padding: 4px 8px; border-radius: 4px; }
+    .nav a.active { color: #333; font-weight: 600; background: #e0e0e0; }
+    .content { padding: 24px; }
+    .card { background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .btn-primary { background: #555; color: #fff; border: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+    .btn-secondary { background: #fff; color: #555; border: 1px solid #aaa; padding: 10px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .input-field { width: 100%; padding: 10px 12px; border: 1px solid #d0d0d0; border-radius: 6px; font-size: 14px; background: #fff; margin-bottom: 12px; }
+    .text-secondary { color: #888; font-size: 12px; }
+    .flex { display: flex; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .gap-16 { gap: 16px; }
+    .mb-12 { margin-bottom: 12px; }
+    .mb-24 { margin-bottom: 24px; }
+    .tab-switch { display: flex; border-bottom: 2px solid #d0d0d0; margin-bottom: 24px; }
+    .tab-switch a { padding: 8px 24px; text-decoration: none; color: #888; font-size: 15px; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+    .tab-switch a.active { color: #333; font-weight: 600; border-bottom-color: #555; }
+    .model-tag { display: inline-block; padding: 4px 12px; border: 1px solid #d0d0d0; border-radius: 20px; font-size: 13px; margin-right: 8px; margin-bottom: 8px; cursor: pointer; background: #fff; }
+    .model-tag.selected { background: #555; color: #fff; border-color: #555; }
+    .result-card { background: #fff; border: 1px solid #d0d0d0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .result-card:hover { border-color: #4a90d9; }
+    .style-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; background: #e8e8e8; margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>VideoPrompt AI</h1>
+    <div class="nav">
+      <a href="prompt-converter-home.html">转换</a>
+      <a href="prompt-generator-create.html" class="active">生成</a>
+      <a href="model-comparison-matrix.html">模型对比</a>
+      <a href="template-library-browse.html">模板库</a>
+      <a href="user-center-profile.html">我的</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="tab-switch">
+      <a href="prompt-converter-home.html">提示词转换</a>
+      <a href="prompt-generator-create.html" class="active">提示词生成</a>
+    </div>
+
+    <!-- 输入区域 -->
+    <div class="card mb-24">
+      <label style="font-size:14px; font-weight:600; display:block; margin-bottom:8px;">描述你想要的视频画面</label>
+      <textarea class="input-field" rows="4" placeholder="用中文或英文描述你想要的视频内容...&#10;&#10;例如：一只金毛犬在夕阳下的沙滩上奔跑，电影质感，慢镜头">一只金毛犬在夕阳下的沙滩上奔跑，电影质感，慢镜头</textarea>
+
+      <div class="mb-12">
+        <label style="font-size:14px; font-weight:600; display:block; margin-bottom:8px;">目标模型</label>
+        <span class="model-tag selected">Kling AI</span>
+        <span class="model-tag">Runway Gen-4</span>
+        <span class="model-tag">Google Veo 3</span>
+      </div>
+
+      <div class="flex gap-16" style="align-items:center;">
+        <button class="btn-primary">✨ 生成提示词</button>
+        <span class="text-secondary">将生成 3 个不同风格的方案</span>
+      </div>
+    </div>
+
+    <!-- 生成结果 -->
+    <div class="flex-between mb-12">
+      <span style="font-size:16px; font-weight:600;">生成结果（3 个方案）</span>
+      <span class="text-secondary">目标模型：Kling AI | 生成耗时 2.1s</span>
+    </div>
+
+    <!-- 方案 1 -->
+    <div class="result-card">
+      <div class="flex-between mb-12">
+        <div>
+          <span style="font-size:14px; font-weight:600;">方案 A</span>
+          <span class="style-badge">🎬 电影感</span>
+          <span class="style-badge">暖色调</span>
+        </div>
+        <div>
+          <button class="btn-secondary" style="padding:6px 12px; font-size:12px;">📋 复制</button>
+          <button class="btn-secondary" style="padding:6px 12px; font-size:12px; margin-left:4px;">💾 保存</button>
+        </div>
+      </div>
+      <div style="font-size:13px; line-height:1.8; padding:12px; background:#f5f5f5; border-radius:6px;">
+        A golden retriever running joyfully on a sandy beach during golden hour sunset, cinematic film grain, slow motion at 120fps, warm amber color grading, tracking shot following the dog from side angle, shallow depth of field with bokeh background, natural golden sunlight casting long shadows --duration 5 --aspect_ratio 16:9 --mode professional
+      </div>
+      <div style="margin-top:8px;">
+        <span class="text-secondary">提示词质量评分：92/100 | 包含 8 个关键要素</span>
+      </div>
+    </div>
+
+    <!-- 方案 2 -->
+    <div class="result-card">
+      <div class="flex-between mb-12">
+        <div>
+          <span style="font-size:14px; font-weight:600;">方案 B</span>
+          <span class="style-badge">📹 纪录片</span>
+          <span class="style-badge">自然光</span>
+        </div>
+        <div>
+          <button class="btn-secondary" style="padding:6px 12px; font-size:12px;">📋 复制</button>
+          <button class="btn-secondary" style="padding:6px 12px; font-size:12px; margin-left:4px;">💾 保存</button>
+        </div>
+      </div>
+      <div style="font-size:13px; line-height:1.8; padding:12px; background:#f5f5f5; border-radius:6px;">
+        Documentary style, a golden retriever running freely on an open beach at dusk, handheld camera movement, natural lighting, realistic color palette, medium shot transitioning to close-up, capturing the dog's expression and movement details --duration 5 --aspect_ratio 16:9 --mode standard
+      </div>
+      <div style="margin-top:8px;">
+        <span class="text-secondary">提示词质量评分：88/100 | 包含 7 个关键要素</span>
+      </div>
+    </div>
+
+    <!-- 方案 3 -->
+    <div class="result-card">
+      <div class="flex-between mb-12">
+        <div>
+          <span style="font-size:14px; font-weight:600;">方案 C</span>
+          <span class="style-badge">🌈 梦幻</span>
+          <span class="style-badge">高饱和</span>
+        </div>
+        <div>
+          <button class="btn-secondary" style="padding:6px 12px; font-size:12px;">📋 复制</button>
+          <button class="btn-secondary" style="padding:6px 12px; font-size:12px; margin-left:4px;">💾 保存</button>
+        </div>
+      </div>
+      <div style="font-size:13px; line-height:1.8; padding:12px; background:#f5f5f5; border-radius:6px;">
+        Dreamy ethereal style, a golden retriever bounding through sparkling ocean waves on a beach at sunset, vibrant saturated colors, lens flare and light leaks, slow motion with speed ramping, aerial drone establishing shot transitioning to ground-level tracking --duration 5 --aspect_ratio 16:9 --mode creative
+      </div>
+      <div style="margin-top:8px;">
+        <span class="text-secondary">提示词质量评分：85/100 | 包含 7 个关键要素</span>
+      </div>
+    </div>
+
+    <!-- 优化建议 -->
+    <div class="card" style="border-left:3px solid #4a90d9;">
+      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">💡 优化建议</div>
+      <ul style="font-size:13px; line-height:1.8; padding-left:20px; color:#555;">
+        <li>建议补充<strong>音频/配乐</strong>描述（如 "ambient ocean waves sound"），提升 Kling AI 生成质量</li>
+        <li>可增加<strong>负面提示词</strong>（如 "no text, no watermark"）来避免不需要的元素</li>
+        <li>建议指定<strong>画面稳定性</strong>参数（"steady cam"），减少生成抖动</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

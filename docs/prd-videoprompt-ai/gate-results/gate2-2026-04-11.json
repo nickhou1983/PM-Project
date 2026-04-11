@@ -1,0 +1,130 @@
+{
+  "gate": "Gate 2",
+  "project": "videoprompt-ai",
+  "date": "2026-04-11",
+  "reviewer": "gate_review Agent",
+  "input_documents": [
+    { "path": "docs/prd-videoprompt-ai/architecture-videoprompt-ai.md", "version": "v1.0.0" },
+    { "path": "docs/prd-videoprompt-ai/architecture-videoprompt-ai-prompt-converter.md", "version": "v1.0.0" },
+    { "path": "docs/prd-videoprompt-ai/architecture-videoprompt-ai-prompt-generator.md", "version": "v1.0.0" },
+    { "path": "docs/prd-videoprompt-ai/architecture-videoprompt-ai-model-comparison.md", "version": "v1.0.0" },
+    { "path": "docs/prd-videoprompt-ai/architecture-videoprompt-ai-template-library.md", "version": "v1.0.0" },
+    { "path": "docs/prd-videoprompt-ai/architecture-videoprompt-ai-user-center.md", "version": "v1.0.0" },
+    { "path": "docs/prd-videoprompt-ai/prd-videoprompt-ai.md", "version": "v1.0.0" }
+  ],
+  "decision": "Conditional Go",
+  "summary": "架构文档整体完整度高（34 项检查 31✅ / 3⚠️ / 0❌），技术栈选型合理附 3 个 ADR，需求追溯矩阵覆盖全部 19 个功能需求，5 个模块级架构齐全。3 项待改进：前端 i18n 方案缺失、合规章节深度不足、关联 PRD 格式不统一。无阻断项，有条件通过。",
+  "dimensions": [
+    {
+      "name": "架构完整性",
+      "weight": 0.30,
+      "items": [
+        { "id": 1, "check": "架构文档 12 个章节（§0-§12）是否全部填写", "result": "pass", "note": "§0-§12 全部填写" },
+        { "id": 2, "check": "技术栈选型是否有理由说明", "result": "pass", "note": "12 项选型均有理由和备选方案" },
+        { "id": 3, "check": "系统架构图（Mermaid）是否清晰", "result": "pass", "note": "分层架构图清晰可读" },
+        { "id": 4, "check": "ER 数据模型是否覆盖核心实体", "result": "pass", "note": "6 大核心实体及关联关系完整" },
+        { "id": 5, "check": "API 设计是否覆盖所有 P0 功能", "result": "pass", "note": "17 个接口覆盖全部 5 个 P0 功能" },
+        { "id": 6, "check": "§2.2 关键技术选型是否有 ADR 支撑", "result": "pass", "note": "3 个 ADR 记录完整" },
+        { "id": 7, "check": "§3.4 前端架构是否包含页面路由、组件架构和状态管理方案", "result": "warn", "note": "路由/组件/状态管理已定义，但缺少 i18n 实现方案" },
+        { "id": 8, "check": "§3.5 服务通信方式是否已明确定义", "result": "pass", "note": "6 种通信关系已定义" },
+        { "id": 9, "check": "是否已存在全部模块级架构文档", "result": "pass", "note": "5 个模块架构文档全部存在" },
+        { "id": 10, "check": "主架构 §0 是否索引了全部模块级架构文档", "result": "pass", "note": "§0 文档索引表列出全部 5 个" },
+        { "id": 11, "check": "各模块级架构是否覆盖数据模型、API、前端组件和依赖接口", "result": "pass", "note": "5 个模块均含 §2-§5 完整内容" }
+      ],
+      "pass_count": 10,
+      "warn_count": 1,
+      "fail_count": 0,
+      "score": 0.909
+    },
+    {
+      "name": "需求追溯",
+      "weight": 0.25,
+      "items": [
+        { "id": 12, "check": "需求追溯矩阵是否完整", "result": "pass", "note": "19 个功能需求全部追溯到架构模块和 API" },
+        { "id": 13, "check": "PRD 非功能需求是否在架构中有对应方案", "result": "pass", "note": "7 项 NFR 均有验证追溯" },
+        { "id": 14, "check": "架构设计是否与 PRD 目标一致（无过度设计）", "result": "pass", "note": "单体架构匹配 MVP 阶段" },
+        { "id": 15, "check": "P0/P1 需求是否都能追溯到主架构或模块级架构", "result": "pass", "note": "全部可追溯" }
+      ],
+      "pass_count": 4,
+      "warn_count": 0,
+      "fail_count": 0,
+      "score": 1.0
+    },
+    {
+      "name": "质量属性",
+      "weight": 0.25,
+      "items": [
+        { "id": 16, "check": "性能方案是否有量化指标和推导逻辑", "result": "pass", "note": "4 项指标均含推导逻辑" },
+        { "id": 17, "check": "安全设计是否覆盖 OWASP Top 10 核心项", "result": "pass", "note": "A01-A10 逐项覆盖" },
+        { "id": 18, "check": "部署方案是否包含 CI/CD 和环境规划", "result": "pass", "note": "三环境 + 完整 CI/CD 流水线" },
+        { "id": 19, "check": "高可用和容灾方案是否有说明", "result": "pass", "note": "双实例 + PG 主从 + LLM 三级降级" },
+        { "id": 20, "check": "§7 测试架构测试分层、框架选型和覆盖率目标", "result": "pass", "note": "三层测试 + 八种框架 + 四维覆盖率" },
+        { "id": 21, "check": "§7.3 数据隔离和敏感数据处理方案", "result": "pass", "note": "事务回滚隔离 + 禁用真实 PII" },
+        { "id": 22, "check": "§7.7 跨模块业务场景和 NFR 验证", "result": "pass", "note": "4 个 E2E 场景 + 7 项 NFR 追溯" },
+        { "id": 23, "check": "§8.3 扩展策略和自动伸缩", "result": "pass", "note": "水平/垂直/HPA 均有方案" },
+        { "id": 24, "check": "§8.4 监控告警三维度覆盖", "result": "pass", "note": "应用/基础设施/业务/日志/外部依赖 5 维" },
+        { "id": 25, "check": "§9.4 合规要求是否明确适用法规", "result": "warn", "note": "缺少具体法规条款引用、数据跨境策略、GDPR 评估" },
+        { "id": 26, "check": "模块级接口依赖和降级策略与主架构一致性", "result": "pass", "note": "依赖关系一致" }
+      ],
+      "pass_count": 10,
+      "warn_count": 1,
+      "fail_count": 0,
+      "score": 0.909
+    },
+    {
+      "name": "风险与成本",
+      "weight": 0.15,
+      "items": [
+        { "id": 27, "check": "技术风险是否已识别并有应对方案", "result": "pass", "note": "6 项风险含概率/影响/应对" },
+        { "id": 28, "check": "架构债务是否有演进路线", "result": "pass", "note": "三阶段演进含触发条件" },
+        { "id": 29, "check": "成本估算是否合理", "result": "pass", "note": "月度 ~$394 含 7 类资源明细" }
+      ],
+      "pass_count": 3,
+      "warn_count": 0,
+      "fail_count": 0,
+      "score": 1.0
+    },
+    {
+      "name": "版本管理",
+      "weight": 0.05,
+      "items": [
+        { "id": 30, "check": "关联 PRD 字段含精确版本号", "result": "warn", "note": "含版本号但未使用 Markdown 链接格式" },
+        { "id": 31, "check": "PRD 版本号与实际一致", "result": "pass", "note": "均为 v1.0.0" },
+        { "id": 32, "check": "文档头版本与 §12 变更记录一致", "result": "pass", "note": "均为 v1.0.0" },
+        { "id": 33, "check": "状态字段是否为有效值", "result": "pass", "note": "草稿" },
+        { "id": 34, "check": "模块级架构文档头是否正确关联", "result": "pass", "note": "5 个模块文档头关联正确" }
+      ],
+      "pass_count": 4,
+      "warn_count": 1,
+      "fail_count": 0,
+      "score": 0.8
+    }
+  ],
+  "blockers": [],
+  "warnings": [
+    {
+      "item_id": 7,
+      "dimension": "架构完整性",
+      "description": "前端架构缺少国际化 (i18n) 实现方案，PRD §5 NFR 要求支持中英双语",
+      "suggestion": "在 §3.4 补充 i18n 方案：选型 next-intl 或 react-i18next，定义翻译文件目录结构，说明 SSR 页面语言检测策略",
+      "deadline": "2026-04-18"
+    },
+    {
+      "item_id": 25,
+      "dimension": "质量属性",
+      "description": "§9.4 合规要求仅提及个人信息保护法和内容安全，缺少具体法规条款、数据跨境策略、GDPR 适用性",
+      "suggestion": "补充：(1) 引用《个人信息保护法》数据出境条款；(2) 评估 LLM API 调用的数据出境风险；(3) GDPR 合规措施",
+      "deadline": "2026-04-18"
+    },
+    {
+      "item_id": 30,
+      "dimension": "版本管理",
+      "description": "架构文档头「关联 PRD」未使用 Markdown 链接格式，与模块架构文档风格不统一",
+      "suggestion": "改为 Markdown 链接形式：[prd-videoprompt-ai.md](prd-videoprompt-ai.md) v1.0.0",
+      "deadline": "2026-04-18"
+    }
+  ],
+  "overall_score": 0.94,
+  "attempt": 1,
+  "previous_attempt_date": null
+}

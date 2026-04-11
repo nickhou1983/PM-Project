@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模型对比 - VideoPrompt AI 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #fff;
+      max-width: 1200px; margin: 0 auto; border: 1px solid #d0d0d0; min-height: 100vh;
+    }
+    .header { background: #f5f5f5; padding: 12px 24px; border-bottom: 1px solid #d0d0d0; display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .nav { display: flex; gap: 16px; }
+    .nav a { color: #888; text-decoration: none; font-size: 14px; padding: 4px 8px; border-radius: 4px; }
+    .nav a.active { color: #333; font-weight: 600; background: #e0e0e0; }
+    .content { padding: 24px; }
+    .card { background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .text-secondary { color: #888; font-size: 12px; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .mb-12 { margin-bottom: 12px; }
+    .mb-24 { margin-bottom: 24px; }
+    .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .matrix-table th, .matrix-table td { padding: 10px 14px; border: 1px solid #d0d0d0; text-align: center; }
+    .matrix-table th { background: #e8e8e8; font-weight: 600; font-size: 14px; }
+    .matrix-table td:first-child { text-align: left; font-weight: 600; background: #f5f5f5; }
+    .best-value { background: #d4edda; font-weight: 600; }
+    .checkbox-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid #d0d0d0; border-radius: 20px; font-size: 13px; margin-right: 8px; cursor: pointer; background: #fff; }
+    .checkbox-tag.checked { background: #555; color: #fff; border-color: #555; }
+    .btn-primary { background: #555; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-size: 14px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>VideoPrompt AI</h1>
+    <div class="nav">
+      <a href="prompt-converter-home.html">转换</a>
+      <a href="prompt-generator-create.html">生成</a>
+      <a href="model-comparison-matrix.html" class="active">模型对比</a>
+      <a href="template-library-browse.html">模板库</a>
+      <a href="user-center-profile.html">我的</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="flex-between mb-24">
+      <h2 style="font-size:20px; font-weight:700;">视频大模型能力矩阵</h2>
+      <span class="text-secondary">数据更新于 2025-07-20</span>
+    </div>
+
+    <!-- 模型选择 -->
+    <div class="card mb-24">
+      <div style="font-size:14px; font-weight:600; margin-bottom:8px;">选择要对比的模型（2-4 个）</div>
+      <div>
+        <span class="checkbox-tag checked">☑ Runway Gen-4</span>
+        <span class="checkbox-tag checked">☑ Kling AI</span>
+        <span class="checkbox-tag checked">☑ Google Veo 3</span>
+        <span class="checkbox-tag">☐ Pika 2.0</span>
+        <span class="checkbox-tag">☐ Luma Dream Machine</span>
+      </div>
+    </div>
+
+    <!-- 对比矩阵 -->
+    <table class="matrix-table">
+      <thead>
+        <tr>
+          <th style="width:160px;">参数</th>
+          <th>Runway Gen-4</th>
+          <th>Kling AI</th>
+          <th>Google Veo 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>最高分辨率</td>
+          <td class="best-value">4K (2160p)</td>
+          <td>1080p</td>
+          <td class="best-value">4K (2160p)</td>
+        </tr>
+        <tr>
+          <td>最大视频时长</td>
+          <td>10s</td>
+          <td>10s</td>
+          <td class="best-value">8s（可扩展）</td>
+        </tr>
+        <tr>
+          <td>生成速度</td>
+          <td>~60s</td>
+          <td class="best-value">~30s</td>
+          <td>~90s</td>
+        </tr>
+        <tr>
+          <td>支持语言</td>
+          <td>英文</td>
+          <td class="best-value">中文 + 英文</td>
+          <td>英文</td>
+        </tr>
+        <tr>
+          <td>运镜控制</td>
+          <td class="best-value">精细（10+ 类型）</td>
+          <td>基础（5 类型）</td>
+          <td>中等（7 类型）</td>
+        </tr>
+        <tr>
+          <td>图生视频</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+        </tr>
+        <tr>
+          <td>文生视频</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅</td>
+        </tr>
+        <tr>
+          <td>风格控制</td>
+          <td class="best-value">高（自定义 LoRA）</td>
+          <td>中（预设风格）</td>
+          <td>高（风格 token）</td>
+        </tr>
+        <tr>
+          <td>API 可用</td>
+          <td>✅</td>
+          <td>✅</td>
+          <td>✅（限制中）</td>
+        </tr>
+        <tr>
+          <td>免费额度</td>
+          <td>125 credits/月</td>
+          <td class="best-value">66 次/天</td>
+          <td>有限</td>
+        </tr>
+        <tr>
+          <td>起步价格</td>
+          <td>$12/月</td>
+          <td class="best-value">¥49/月</td>
+          <td>$20/月（预估）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="text-secondary" style="margin-top:8px;">
+      💡 绿色高亮表示该维度的最优值。数据来源于各模型官方文档，仅供参考。
+    </div>
+  </div>
+</body>
+</html>

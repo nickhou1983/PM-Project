@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原型导航 - VideoPrompt AI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333;
+      background: #fff;
+      max-width: 1200px;
+      margin: 0 auto;
+      border: 1px solid #d0d0d0;
+      min-height: 100vh;
+    }
+    .header {
+      background: #f5f5f5;
+      padding: 16px 24px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header h1 { font-size: 20px; font-weight: 600; }
+    .content { padding: 24px; }
+    .card {
+      background: #f5f5f5;
+      border: 1px solid #d0d0d0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .nav-link {
+      color: #4a90d9;
+      text-decoration: none;
+    }
+    .nav-link:hover { text-decoration: underline; }
+    .text-secondary { color: #888; font-size: 12px; }
+    .mb-12 { margin-bottom: 12px; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .module-group { margin-bottom: 24px; }
+    .module-group h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #d0d0d0;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-p0 { background: #555; color: #fff; }
+    .badge-p1 { background: #d0d0d0; color: #333; }
+    .badge-p2 { background: #e8e8e8; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>VideoPrompt AI — 原型导航</h1>
+    <span class="text-secondary">v1.0.0 低保真原型</span>
+  </div>
+  <div class="content">
+    <p class="text-secondary mb-12">
+      低保真原型图（wireframe），展示页面布局与核心交互流程。点击页面名称进入。
+    </p>
+
+    <div class="card">
+      <h3 style="font-size:16px; margin-bottom:8px;">核心用户流程</h3>
+      <p class="text-secondary" style="line-height:1.8;">
+        <strong>流程 1（提示词转换）</strong>：首页输入提示词 → 自动识别源模型 → 选择目标模型 → 一键转换 → 预览对比 → 复制/保存<br>
+        <strong>流程 2（提示词生成）</strong>：输入自然语言描述 → 选择目标模型 → AI 生成 → 多方案选择 → 复制/保存<br>
+        <strong>流程 3（模板使用）</strong>：浏览模板库 → 搜索/筛选 → 查看详情 → 一键使用
+      </p>
+    </div>
+
+    <!-- prompt-converter 模块 -->
+    <div class="module-group">
+      <h3>📝 提示词转换 (prompt-converter)</h3>
+      <div class="card flex-between">
+        <div>
+          <a href="prompt-converter-home.html" class="nav-link" style="font-size:15px; font-weight:600;">首页 / 工作台</a>
+          <p class="text-secondary" style="margin-top:4px;">产品首页，提示词输入区域 + 模型选择 + 一键转换入口</p>
+        </div>
+        <span class="badge badge-p0">P0</span>
+      </div>
+      <div class="card flex-between">
+        <div>
+          <a href="prompt-converter-result.html" class="nav-link" style="font-size:15px; font-weight:600;">转换结果页</a>
+          <p class="text-secondary" style="margin-top:4px;">左右对比源提示词与转换结果，支持编辑微调和复制</p>
+        </div>
+        <span class="badge badge-p0">P0</span>
+      </div>
+    </div>
+
+    <!-- prompt-generator 模块 -->
+    <div class="module-group">
+      <h3>✨ 提示词生成 (prompt-generator)</h3>
+      <div class="card flex-between">
+        <div>
+          <a href="prompt-generator-create.html" class="nav-link" style="font-size:15px; font-weight:600;">提示词生成页</a>
+          <p class="text-secondary" style="margin-top:4px;">自然语言输入 + 目标模型选择 + 多方案生成结果展示</p>
+        </div>
+        <span class="badge badge-p0">P0</span>
+      </div>
+    </div>
+
+    <!-- model-comparison 模块 -->
+    <div class="module-group">
+      <h3>📊 模型对比 (model-comparison)</h3>
+      <div class="card flex-between">
+        <div>
+          <a href="model-comparison-matrix.html" class="nav-link" style="font-size:15px; font-weight:600;">模型对比页</a>
+          <p class="text-secondary" style="margin-top:4px;">模型能力矩阵展示 + 多模型并排参数对比</p>
+        </div>
+        <span class="badge badge-p1">P1</span>
+      </div>
+    </div>
+
+    <!-- template-library 模块 -->
+    <div class="module-group">
+      <h3>📚 模板库 (template-library)</h3>
+      <div class="card flex-between">
+        <div>
+          <a href="template-library-browse.html" class="nav-link" style="font-size:15px; font-weight:600;">模板库页</a>
+          <p class="text-secondary" style="margin-top:4px;">模板分类浏览、搜索筛选、模板卡片展示</p>
+        </div>
+        <span class="badge badge-p1">P1</span>
+      </div>
+    </div>
+
+    <!-- user-center 模块 -->
+    <div class="module-group">
+      <h3>👤 用户中心 (user-center)</h3>
+      <div class="card flex-between">
+        <div>
+          <a href="user-center-profile.html" class="nav-link" style="font-size:15px; font-weight:600;">个人中心页</a>
+          <p class="text-secondary" style="margin-top:4px;">使用历史记录、订阅管理、个人设置</p>
+        </div>
+        <span class="badge badge-p1">P1</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 ---
 description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持三个评审门：PRD 评审（PRD 完成后）、架构评审（架构设计完成后）、上线评审（发布前）。Use when: 需求评审、架构评审、上线前检查、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
 name: "gate_review"
-tools: [read, search, web, agent, todo]
+tools: [read, search, web, agent, todo, edit]
 argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
 ---
 

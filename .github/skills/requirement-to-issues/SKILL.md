@@ -138,6 +138,30 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 
    > 故事点为初始估算，供 Sprint Planning 参考。团队应在实际规划时通过 Planning Poker 或讨论调整。在 Issue Body 中标注 `Estimate: {X} SP`。
 
+   **故事点估算推导依据**（每个功能点的估算必须附带推导过程）：
+
+   在 Issue Body 的「故事点估算」区域，除标注 `Estimate: {X} SP` 外，必须附带以下推导表格：
+
+   ```markdown
+   **Estimate: {X} SP**
+
+   | 复杂度因子 | 评估 | 说明 |
+   |-----------|------|------|
+   | API 端点数 | {N} 个 | {列出涉及的 API} |
+   | 数据模型变更 | 是/否 | {涉及哪些表/字段} |
+   | 前端页面/组件数 | {N} 个 | {核心页面列表} |
+   | 第三方集成 | 是/否 | {集成对象和方式} |
+   | 算法/业务逻辑复杂度 | 低/中/高 | {复杂度来源} |
+   | 类似功能参考 | 有/无 | {项目内类似功能及其实际耗时} |
+   ```
+
+   > **推导规则**：
+   > - API 端点 ≤ 1 且无第三方集成 → 基础分 1-2 SP
+   > - API 端点 2-3 且涉及数据模型变更 → 基础分 3 SP
+   > - 涉及第三方集成或算法逻辑 → 基础分 5 SP
+   > - 涉及新技术引入或多个高复杂因子 → 基础分 8 SP
+   > - 推导过程不对用户展示为复杂表格，而是以简洁的 1-2 行说明嵌入 Issue Body
+
 ### 步骤 3：关联上下文（模块级架构优先）
 
 为每个模块补充关联信息：
@@ -186,6 +210,30 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
      - 视频管理模块依赖视频生成模块（需要有视频才能管理）
      - 所有功能模块依赖用户系统模块（需要认证）
    - 在 Issue Body 中标注前置依赖模块
+
+3. **生成模块依赖图**
+
+   基于步骤 4.2 的依赖分析，生成 Mermaid 格式的模块依赖图，明确各模块的前置/并行关系和建议开发顺序：
+
+   ```mermaid
+   graph TD
+     A[用户系统<br/>user-system<br/>P0 | Sprint 1] --> B[Prompt 生成<br/>prompt-gen<br/>P0 | Sprint 1]
+     A --> C[视频管理<br/>video-mgmt<br/>P1 | Sprint 2]
+     B --> D[视频生成<br/>video-gen<br/>P0 | Sprint 1]
+     D --> C
+     style A fill:#e8f5e9
+     style B fill:#e8f5e9
+     style D fill:#e8f5e9
+     style C fill:#fff9c4
+   ```
+
+   **依赖图输出规则**：
+   - 每个节点标注：模块中文名、`module_en_slug`、最高优先级、所属里程碑
+   - 箭头方向表示「被依赖 → 依赖方」（A→B 表示 B 依赖 A）
+   - P0 模块用绿色标注（`fill:#e8f5e9`），P1 用黄色（`fill:#fff9c4`），P2 用灰色（`fill:#f5f5f5`）
+   - 无入边的模块可最先开发，标注为「可并行启动」
+   - 在预览摘要中展示依赖图，帮助用户理解开发顺序
+   - 将依赖图嵌入第一个创建的 Epic Issue 的 Body 顶部（作为项目总览）
 
 ### 步骤 5：生成 Issue 内容
 

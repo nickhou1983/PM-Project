@@ -40,6 +40,7 @@
 | `designer` | 高保真原型设计（基于 PRD + wireframe） | workspace-write |
 | `gate_review` | Stage-Gate 评审门（PRD/架构/上线三个 Gate） | read-only |
 | `new_employee_mentor` | 新员工导师（路由分发器，分析意图后路由到合适的 Agent） | workspace-write |
+| `pm_workflow_evaluator` | 工作流健康度评估（跨阶段流程扫描、量化仪表板、瓶颈识别） | workspace-write |
 | `planning` | 任务规划与上下文研究（只研究不执行） | read-only |
 | `post_launch_review` | 上线复盘与迭代决策 | read-only |
 | `pr_review_submit` | 将审查结果写入 GitHub PR Review | read-only |

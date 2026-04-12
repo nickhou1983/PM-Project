@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优化结果与调参 - Seedance Prompt Studio 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #f0f0f0; min-height: 100vh;
+    }
+    .app-shell {
+      max-width: 1200px; margin: 0 auto; background: #fff;
+      min-height: 100vh; display: flex; flex-direction: column; border: 1px solid #d0d0d0;
+    }
+    .topnav {
+      background: #f5f5f5; border-bottom: 1px solid #d0d0d0;
+      padding: 0 24px; height: 52px; display: flex; align-items: center;
+      justify-content: space-between; flex-shrink: 0;
+    }
+    .logo { font-size: 16px; font-weight: 700; color: #333; }
+    .logo-sub { color: #888; font-weight: 400; font-size: 13px; margin-left: 8px; }
+    .nav-links { display: flex; gap: 0; }
+    .nav-link {
+      padding: 0 16px; height: 52px; line-height: 52px;
+      font-size: 14px; color: #666; text-decoration: none;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-link.active { color: #333; font-weight: 600; border-bottom-color: #555; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .quota-badge {
+      background: #f0f0f0; border: 1px solid #d0d0d0; border-radius: 12px;
+      padding: 3px 10px; font-size: 12px; color: #666;
+    }
+    .btn-user {
+      width: 32px; height: 32px; background: #e0e0e0;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #555;
+    }
+    .main-content { flex: 1; display: flex; }
+    /* Left panel */
+    .input-panel {
+      width: 380px; border-right: 1px solid #d0d0d0;
+      padding: 20px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0;
+    }
+    .panel-label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-preview {
+      background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 6px;
+      padding: 10px; font-size: 13px; color: #555; line-height: 1.6; max-height: 80px;
+      overflow: hidden; position: relative;
+    }
+    .input-preview-fade {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 20px;
+      background: linear-gradient(transparent, #f5f5f5);
+    }
+    .section-divider { border: none; border-top: 1px solid #e8e8e8; margin: 4px 0; }
+    .param-section-title { font-size: 13px; font-weight: 600; color: #444; }
+    /* Param Controls */
+    .param-group { display: flex; flex-direction: column; gap: 6px; }
+    .param-label { font-size: 12px; color: #666; display: flex; justify-content: space-between; }
+    .param-label-value { color: #333; font-weight: 600; }
+    .param-slider {
+      -webkit-appearance: none; width: 100%; height: 4px;
+      background: linear-gradient(to right, #555 60%, #ddd 60%);
+      border-radius: 2px; cursor: pointer;
+    }
+    .param-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px;
+      background: #555; border-radius: 50%; cursor: pointer;
+    }
+    /* Camera type chips */
+    .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      background: #f0f0f0; border: 1px solid #d0d0d0; border-radius: 20px;
+      padding: 4px 10px; font-size: 12px; color: #555; cursor: pointer;
+    }
+    .chip.selected { background: #555; color: #fff; border-color: #555; }
+    .chip:hover:not(.selected) { background: #e5e5e5; }
+    /* Style tags */
+    .style-chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* Action buttons */
+    .btn-regenerate {
+      width: 100%; padding: 10px; background: #fff; color: #555;
+      border: 1px solid #aaa; border-radius: 6px; font-size: 13px;
+      cursor: pointer; margin-top: 4px;
+    }
+    .btn-regenerate:hover { background: #f5f5f5; }
+    /* Right panel */
+    .output-panel {
+      flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 16px; overflow-y: auto;
+    }
+    .result-header {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .result-title { font-size: 18px; font-weight: 600; }
+    .result-actions { display: flex; gap: 8px; }
+    .btn-copy {
+      padding: 7px 14px; background: #555; color: #fff;
+      border: none; border-radius: 6px; font-size: 13px; cursor: pointer;
+    }
+    .btn-save {
+      padding: 7px 14px; background: #fff; color: #555;
+      border: 1px solid #aaa; border-radius: 6px; font-size: 13px; cursor: pointer;
+    }
+    .btn-preview {
+      padding: 7px 14px; background: #fff; color: #4A90D9;
+      border: 1px solid #4A90D9; border-radius: 6px; font-size: 13px; cursor: pointer;
+    }
+    /* Prompt result card */
+    .prompt-card {
+      background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;
+    }
+    .prompt-full {
+      font-size: 14px; line-height: 1.8; color: #333;
+      background: #fff; border: 1px solid #e8e8e8; border-radius: 6px;
+      padding: 12px; font-family: "Courier New", monospace; margin-bottom: 12px;
+    }
+    .dims-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dim-item {
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px;
+    }
+    .dim-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 12px;
+      font-size: 11px; font-weight: 600; margin-bottom: 4px;
+    }
+    .dim-tag.subject { background: #e8f4fd; color: #2980b9; }
+    .dim-tag.scene { background: #e8f8f5; color: #1a9c7b; }
+    .dim-tag.camera { background: #fef9e7; color: #b7950b; }
+    .dim-tag.light { background: #fdf2f8; color: #8e44ad; }
+    .dim-tag.motion { background: #fff3e0; color: #e67e22; }
+    .dim-tag.style { background: #f0f0f0; color: #555; }
+    .dim-content { font-size: 13px; color: #444; line-height: 1.5; }
+    /* Quality score */
+    .score-card {
+      background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;
+    }
+    .score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .score-title { font-size: 14px; font-weight: 600; }
+    .score-badge {
+      background: #555; color: #fff; border-radius: 20px;
+      padding: 4px 12px; font-size: 18px; font-weight: 700;
+    }
+    .score-dims { display: flex; gap: 12px; margin-bottom: 12px; }
+    .score-dim { flex: 1; }
+    .score-dim-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .score-bar-wrap { height: 6px; background: #e0e0e0; border-radius: 3px; }
+    .score-bar { height: 6px; background: #555; border-radius: 3px; }
+    .suggestion-list { display: flex; flex-direction: column; gap: 6px; }
+    .suggestion-item {
+      display: flex; gap: 8px; align-items: flex-start;
+      font-size: 13px; color: #555; line-height: 1.5;
+    }
+    .suggestion-icon { color: #888; flex-shrink: 0; margin-top: 1px; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Top Nav -->
+  <nav class="topnav">
+    <div style="display:flex;align-items:center;gap:24px;">
+      <span class="logo">Seedance Prompt Studio <span class="logo-sub">Beta</span></span>
+      <div class="nav-links">
+        <a href="prompt-optimizer-editor.html" class="nav-link active">✨ 优化器</a>
+        <a href="template-library-browse.html" class="nav-link">📚 模板库</a>
+        <a href="history-management-list.html" class="nav-link">🕐 历史</a>
+        <a href="api-preview-panel.html" class="nav-link">🎬 视频预览</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="quota-badge">今日剩余预览 3/3</span>
+      <div class="btn-user">U</div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <!-- Left: Param Panel -->
+    <div class="input-panel">
+      <div class="panel-label">原始输入</div>
+      <div class="input-preview">
+        夕阳下的沙漠骆驼商队，金色光芒穿透沙尘，商队缓缓移动，充满史诗感和西域风情...
+        <div class="input-preview-fade"></div>
+      </div>
+      <a href="prompt-optimizer-editor.html" style="font-size:12px;color:#4A90D9;text-decoration:none;">← 重新输入</a>
+
+      <hr class="section-divider">
+      <div class="param-section-title">🎛️ 参数调校</div>
+
+      <!-- Camera type -->
+      <div class="param-group">
+        <div class="param-label">镜头类型</div>
+        <div class="chip-group">
+          <span class="chip selected">推镜</span>
+          <span class="chip">拉镜</span>
+          <span class="chip">平移</span>
+          <span class="chip">俯拍</span>
+          <span class="chip">仰射</span>
+          <span class="chip">跟随</span>
+          <span class="chip">特写</span>
+          <span class="chip">全景</span>
+          <span class="chip">航拍</span>
+        </div>
+      </div>
+
+      <!-- Light mood slider -->
+      <div class="param-group">
+        <div class="param-label">
+          <span>光影情绪</span>
+          <span class="param-label-value">柔和自然</span>
+        </div>
+        <input type="range" class="param-slider" min="1" max="7" value="3">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa;">
+          <span>柔和自然</span><span>戏剧高对比</span>
+        </div>
+      </div>
+
+      <!-- Speed -->
+      <div class="param-group">
+        <div class="param-label">运动速度</div>
+        <div class="chip-group">
+          <span class="chip selected">慢动作</span>
+          <span class="chip">正常速度</span>
+          <span class="chip">快节奏</span>
+        </div>
+      </div>
+
+      <!-- Style Tags -->
+      <div class="param-group">
+        <div class="param-label">视觉风格</div>
+        <div class="style-chip-group">
+          <span class="chip selected">电影感</span>
+          <span class="chip selected">写实</span>
+          <span class="chip">动漫</span>
+          <span class="chip">赛博朋克</span>
+          <span class="chip">复古</span>
+          <span class="chip">极简</span>
+          <span class="chip">水墨</span>
+          <span class="chip">写意</span>
+        </div>
+      </div>
+
+      <button class="btn-regenerate">🔄 基于参数重新优化</button>
+    </div>
+
+    <!-- Right: Result Panel -->
+    <div class="output-panel">
+      <div class="result-header">
+        <div class="result-title">✅ 优化结果</div>
+        <div class="result-actions">
+          <button class="btn-copy">📋 一键复制</button>
+          <button class="btn-save">💾 保存历史</button>
+          <button class="btn-preview" onclick="location.href='api-preview-panel.html'">🎬 生成视频预览</button>
+        </div>
+      </div>
+
+      <!-- Full Prompt -->
+      <div class="prompt-card">
+        <div style="font-size:12px;color:#888;margin-bottom:8px;">完整提示词（可直接粘贴到 Seedance/Runway）</div>
+        <div class="prompt-full">
+          A camel caravan moving slowly across a vast desert at golden hour sunset. Ancient merchants with colorful robes leading their camels through undulating sand dunes. Warm golden light piercing through swirling dust clouds, casting long dramatic shadows. Slow push-in shot with cinematic depth. Gentle motion blur on the caravan. Epic and mystical atmosphere, Silk Road aesthetic. Shot on anamorphic lens, shallow depth of field, cinematic color grade.
+        </div>
+
+        <div style="font-size:12px;color:#888;margin-bottom:8px;">维度拆解</div>
+        <div class="dims-grid">
+          <div class="dim-item">
+            <span class="dim-tag subject">🎭 主体</span>
+            <div class="dim-content">Ancient merchants with colorful robes, camel caravan</div>
+          </div>
+          <div class="dim-item">
+            <span class="dim-tag scene">🌍 场景</span>
+            <div class="dim-content">Vast desert, undulating sand dunes at golden hour</div>
+          </div>
+          <div class="dim-item">
+            <span class="dim-tag camera">📷 镜头</span>
+            <div class="dim-content">Slow push-in shot, anamorphic lens, shallow DOF</div>
+          </div>
+          <div class="dim-item">
+            <span class="dim-tag light">💡 光影</span>
+            <div class="dim-content">Warm golden light, dramatic shadows, dust particles</div>
+          </div>
+          <div class="dim-item">
+            <span class="dim-tag motion">🏃 运动</span>
+            <div class="dim-content">Camel slowly moving, gentle motion blur</div>
+          </div>
+          <div class="dim-item">
+            <span class="dim-tag style">🎨 风格</span>
+            <div class="dim-content">Cinematic, Silk Road aesthetic, epic atmosphere</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quality Score -->
+      <div class="score-card">
+        <div class="score-header">
+          <div class="score-title">📊 提示词质量评分</div>
+          <div class="score-badge">87</div>
+        </div>
+        <div class="score-dims">
+          <div class="score-dim">
+            <div class="score-dim-label">维度覆盖率</div>
+            <div class="score-bar-wrap"><div class="score-bar" style="width:100%"></div></div>
+            <div style="font-size:11px;color:#555;margin-top:3px;">6/6 ✓</div>
+          </div>
+          <div class="score-dim">
+            <div class="score-dim-label">语义清晰度</div>
+            <div class="score-bar-wrap"><div class="score-bar" style="width:85%"></div></div>
+            <div style="font-size:11px;color:#555;margin-top:3px;">85%</div>
+          </div>
+          <div class="score-dim">
+            <div class="score-dim-label">Seedance 兼容性</div>
+            <div class="score-bar-wrap"><div class="score-bar" style="width:80%"></div></div>
+            <div style="font-size:11px;color:#555;margin-top:3px;">80%</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#888;margin-bottom:8px;">💡 改进建议</div>
+        <div class="suggestion-list">
+          <div class="suggestion-item">
+            <span class="suggestion-icon">→</span>
+            <span>建议在镜头描述中加入具体焦段（如 "24mm wide angle"），可提升 Seedance 画面构图准确性</span>
+          </div>
+          <div class="suggestion-item">
+            <span class="suggestion-icon">→</span>
+            <span>「移动速度」可以补充参考词（如 "walking pace" 或 "0.5x slow motion"），效果更精准</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

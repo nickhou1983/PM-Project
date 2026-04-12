@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模板库 - Seedance Prompt Studio 原型</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #333; background: #f0f0f0; min-height: 100vh;
+    }
+    .app-shell {
+      max-width: 1200px; margin: 0 auto; background: #fff;
+      min-height: 100vh; display: flex; flex-direction: column; border: 1px solid #d0d0d0;
+    }
+    .topnav {
+      background: #f5f5f5; border-bottom: 1px solid #d0d0d0;
+      padding: 0 24px; height: 52px; display: flex; align-items: center;
+      justify-content: space-between; flex-shrink: 0;
+    }
+    .logo { font-size: 16px; font-weight: 700; color: #333; }
+    .logo-sub { color: #888; font-weight: 400; font-size: 13px; margin-left: 8px; }
+    .nav-links { display: flex; gap: 0; }
+    .nav-link {
+      padding: 0 16px; height: 52px; line-height: 52px;
+      font-size: 14px; color: #666; text-decoration: none;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-link.active { color: #333; font-weight: 600; border-bottom-color: #555; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-user {
+      width: 32px; height: 32px; background: #e0e0e0;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #555;
+    }
+    /* Tab bar */
+    .library-tabs {
+      display: flex; background: #fafafa; border-bottom: 1px solid #e0e0e0;
+      padding: 0 24px;
+    }
+    .tab-item {
+      padding: 0 20px; height: 45px; line-height: 45px; font-size: 14px;
+      color: #666; cursor: pointer; border-bottom: 2px solid transparent;
+    }
+    .tab-item.active { color: #333; font-weight: 600; border-bottom-color: #555; }
+    /* Search + filters row */
+    .shelf-bar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 24px; border-bottom: 1px solid #eee;
+    }
+    .search-wrap {
+      flex: 1; display: flex; align-items: center; gap: 8px;
+      background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 6px;
+      padding: 8px 12px;
+    }
+    .search-icon { color: #aaa; font-size: 14px; }
+    .search-input {
+      background: none; border: none; outline: none;
+      font-size: 14px; color: #333; flex: 1;
+    }
+    .search-input::placeholder { color: #aaa; }
+    .sort-select {
+      background: #f5f5f5; border: 1px solid #d0d0d0; border-radius: 6px;
+      padding: 7px 10px; font-size: 13px; color: #555; cursor: pointer;
+    }
+    /* Category chips */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 24px;
+      border-bottom: 1px solid #eee; align-items: center;
+    }
+    .filter-label { font-size: 12px; color: #888; white-space: nowrap; }
+    .filter-chip {
+      background: #f0f0f0; border: 1px solid #d0d0d0; border-radius: 20px;
+      padding: 4px 12px; font-size: 12px; color: #555; cursor: pointer;
+    }
+    .filter-chip.active { background: #555; color: #fff; border-color: #555; }
+    .filter-divider { width: 1px; height: 18px; background: #d0d0d0; margin: 0 4px; }
+    /* Card grid */
+    .card-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; padding: 20px 24px;
+    }
+    .template-card {
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+      padding: 16px; display: flex; flex-direction: column; gap: 10px;
+      cursor: pointer; transition: box-shadow 0.15s;
+    }
+    .template-card:hover { border-color: #aaa; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .card-title { font-size: 14px; font-weight: 600; color: #333; line-height: 1.4; }
+    .card-fav { color: #ccc; font-size: 18px; cursor: pointer; flex-shrink: 0; margin-left: 8px; }
+    .card-fav.liked { color: #e74c3c; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .card-tag {
+      background: #f0f0f0; border-radius: 12px;
+      padding: 2px 8px; font-size: 11px; color: #666;
+    }
+    .card-tag.highlight { background: #e8f4fd; color: #2980b9; }
+    .card-preview {
+      font-size: 12px; line-height: 1.6; color: #666;
+      background: #f9f9f9; border-radius: 4px; padding: 8px;
+      font-family: "Courier New", monospace;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid #f0f0f0; padding-top: 8px;
+    }
+    .card-stats { font-size: 11px; color: #aaa; }
+    .card-actions { display: flex; gap: 6px; }
+    .btn-sm-primary {
+      padding: 5px 10px; background: #555; color: #fff;
+      border: none; border-radius: 4px; font-size: 12px; cursor: pointer;
+    }
+    .btn-sm-secondary {
+      padding: 5px 10px; background: #fff; color: #555;
+      border: 1px solid #aaa; border-radius: 4px; font-size: 12px; cursor: pointer;
+    }
+    /* Pagination */
+    .pagination {
+      display: flex; justify-content: center; align-items: center; gap: 8px;
+      padding: 20px 24px; border-top: 1px solid #eee;
+    }
+    .page-btn {
+      padding: 6px 12px; border: 1px solid #d0d0d0; border-radius: 4px;
+      background: #fff; font-size: 13px; color: #555; cursor: pointer;
+    }
+    .page-btn.active { background: #555; color: #fff; border-color: #555; }
+    .page-info { font-size: 12px; color: #888; }
+    /* My template button */
+    .btn-create {
+      padding: 7px 14px; background: #555; color: #fff;
+      border: none; border-radius: 6px; font-size: 13px; cursor: pointer;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Top Nav -->
+  <nav class="topnav">
+    <div style="display:flex;align-items:center;gap:24px;">
+      <span class="logo">Seedance Prompt Studio <span class="logo-sub">Beta</span></span>
+      <div class="nav-links">
+        <a href="prompt-optimizer-editor.html" class="nav-link">✨ 优化器</a>
+        <a href="template-library-browse.html" class="nav-link active">📚 模板库</a>
+        <a href="history-management-list.html" class="nav-link">🕐 历史</a>
+        <a href="api-preview-panel.html" class="nav-link">🎬 视频预览</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="btn-create">+ 创建我的模板</button>
+      <div class="btn-user">U</div>
+    </div>
+  </nav>
+
+  <!-- Tab Bar -->
+  <div class="library-tabs">
+    <div class="tab-item active">⭐ 官方精选</div>
+    <div class="tab-item">🌐 社区模板</div>
+    <div class="tab-item">❤️ 我的收藏</div>
+    <div class="tab-item">📝 我的模板</div>
+  </div>
+
+  <!-- Search + Sort -->
+  <div class="shelf-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" placeholder="搜索模板名称或关键词（支持中英文）">
+    </div>
+    <select class="sort-select">
+      <option>最热门</option>
+      <option>最新发布</option>
+      <option>最多收藏</option>
+    </select>
+  </div>
+
+  <!-- Filter Chips -->
+  <div class="filter-bar">
+    <span class="filter-label">主题:</span>
+    <span class="filter-chip active">全部</span>
+    <span class="filter-chip">🧑 人物</span>
+    <span class="filter-chip">🌿 自然</span>
+    <span class="filter-chip">🏙️ 城市</span>
+    <span class="filter-chip">🚀 科幻</span>
+    <span class="filter-chip">💼 商业</span>
+    <span class="filter-chip">🐾 动物</span>
+    <div class="filter-divider"></div>
+    <span class="filter-label">风格:</span>
+    <span class="filter-chip active">全部</span>
+    <span class="filter-chip">写实</span>
+    <span class="filter-chip">电影感</span>
+    <span class="filter-chip">动漫</span>
+    <span class="filter-chip">极简</span>
+    <span class="filter-chip">水墨国风</span>
+    <div class="filter-divider"></div>
+    <span class="filter-label">时长:</span>
+    <span class="filter-chip active">全部</span>
+    <span class="filter-chip">5s</span>
+    <span class="filter-chip">10s</span>
+  </div>
+
+  <!-- Card Grid -->
+  <div class="card-grid">
+    <!-- Card 1 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">黄金时刻城市航拍</div>
+        <span class="card-fav liked">♥</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">城市</span>
+        <span class="card-tag">电影感</span>
+        <span class="card-tag">航拍</span>
+        <span class="card-tag">Golden Hour</span>
+      </div>
+      <div class="card-preview">Aerial drone shot over a modern city skyline at golden hour. Glass skyscrapers reflecting warm orange light. Slow gentle pan revealing the urban landscape...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 3,241 次使用 · ♥ 892</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">古风仙境水墨意境</div>
+        <span class="card-fav">♡</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">自然</span>
+        <span class="card-tag">水墨国风</span>
+        <span class="card-tag">仙侠</span>
+      </div>
+      <div class="card-preview">Ink wash painting style ancient Chinese landscape. Misty mountains reflected in still water. A lone scholar in a bamboo boat drifting through morning fog...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 2,887 次使用 · ♥ 764</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">赛博朋克夜市霓虹</div>
+        <span class="card-fav">♡</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">城市</span>
+        <span class="card-tag">科幻</span>
+        <span class="card-tag">霓虹</span>
+        <span class="card-tag">写实</span>
+      </div>
+      <div class="card-preview">Cyberpunk night market scene with neon signs glowing in rain. Street food vendors with holographic menus. Puddles reflecting colorful lights as crowds pass by...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 2,642 次使用 · ♥ 703</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">产品精致特写展示</div>
+        <span class="card-fav">♡</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">商业</span>
+        <span class="card-tag">极简</span>
+        <span class="card-tag">特写</span>
+        <span class="card-tag">产品广告</span>
+      </div>
+      <div class="card-preview">Elegant close-up product shot. Minimalist white background. Slow 360-degree rotation revealing intricate product details. Studio lighting with soft shadows...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 2,310 次使用 · ♥ 601</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">海底世界探索</div>
+        <span class="card-fav liked">♥</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">自然</span>
+        <span class="card-tag">写实</span>
+        <span class="card-tag">海底</span>
+        <span class="card-tag">自然纪录片</span>
+      </div>
+      <div class="card-preview">Underwater exploration of a coral reef ecosystem. Colorful tropical fish darting through coral formations. Sun rays penetrating clear turquoise water creating light shafts...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 1,998 次使用 · ♥ 521</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">舞蹈写真人像</div>
+        <span class="card-fav">♡</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">人物</span>
+        <span class="card-tag">电影感</span>
+        <span class="card-tag">慢动作</span>
+        <span class="card-tag">写实</span>
+      </div>
+      <div class="card-preview">A ballet dancer in flowing white dress, slow motion spin in a sunlit studio. Fabric billowing gracefully as she pirouettes. Dust particles visible in warm light beams...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 1,756 次使用 · ♥ 442</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">太空星云宇宙航行</div>
+        <span class="card-fav">♡</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">科幻</span>
+        <span class="card-tag">太空</span>
+        <span class="card-tag">星云</span>
+      </div>
+      <div class="card-preview">A spacecraft traveling through a colorful nebula. Gas clouds in purple and teal towering like mountains. Stars slowly drifting as the ship accelerates into the void...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 1,692 次使用 · ♥ 409</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="template-card">
+      <div class="card-header">
+        <div class="card-title">美食特写诱惑镜头</div>
+        <span class="card-fav">♡</span>
+      </div>
+      <div class="card-tags">
+        <span class="card-tag highlight">商业</span>
+        <span class="card-tag">写实</span>
+        <span class="card-tag">美食</span>
+        <span class="card-tag">特写</span>
+      </div>
+      <div class="card-preview">Extreme close-up of sizzling food. Steam rising from a freshly prepared dish. Fork slowly cutting into a juicy steak, juice glistening under warm studio lighting...</div>
+      <div class="card-footer">
+        <span class="card-stats">⬇️ 1,531 次使用 · ♥ 387</span>
+        <div class="card-actions">
+          <button class="btn-sm-secondary">预览</button>
+          <button class="btn-sm-primary" onclick="location.href='prompt-optimizer-editor.html'">应用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 9 — Placeholder / Load More hint -->
+    <div class="template-card" style="border-style:dashed;background:#fafafa;">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px 0;color:#aaa;">
+        <div style="font-size:32px;">+</div>
+        <div style="font-size:13px;">贡献模板</div>
+        <div style="font-size:12px;text-align:center;">将你精心调校的提示词<br>分享给社区</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button class="page-btn">← 上一页</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <span style="padding:0 4px;color:#aaa;">…</span>
+    <button class="page-btn">12</button>
+    <button class="page-btn">下一页 →</button>
+    <span class="page-info">共 142 个模板</span>
+  </div>
+</div>
+</body>
+</html>

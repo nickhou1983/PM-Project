@@ -280,7 +280,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
   4. 在 PR 描述中简要说明需求背景和文档结构，并指定相关团队成员进行 Review
 
 **可选：导出到墨刀**
-- 使用 `modao-prototype` Skill 将核心页面原型导入墨刀，用于产品评审和团队协作展示：
+- 使用 `prototype-publish` Skill 将核心页面原型发布到墨刀或 Figma，用于产品评审和团队协作展示：
   1. 从 PRD 功能需求中提取 P0 核心页面列表
   2. 按功能链路分组（每组 3-5 页），逐组生成 HTML 原型并导入墨刀
   3. 导入完成后汇总结果，便于在墨刀中进行评审
@@ -336,4 +336,4 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] Wireframe 文件使用 `{module_en_slug}-{page}.html` 命名，Module PRD §5.2 正确引用
 - [ ] 所有功能点在主 PRD 全局汇总表和对应 Module PRD 中都有出现（无遗漏）
 - [ ] Module PRD §6.3 技术参考区域已标注为占位符（待 architect skill 填充）
-- [ ] （如选择导出到墨刀）P0 核心页面已通过 modao-prototype Skill 导入墨刀并确认可查看
+- [ ] （如选择导出到墨刀）P0 核心页面已通过 prototype-publish Skill 导入墨刀并确认可查看

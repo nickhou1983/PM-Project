@@ -50,7 +50,7 @@
 │       ├── feishu-docs/
 │       ├── github-publish/
 │       ├── microservices/
-│       ├── modao-prototype/
+│       ├── modao-prototype/  (prototype-publish)
 │       ├── playwright-testing/
 │       ├── prototype-design/
 │       ├── requirement-doc/
@@ -103,7 +103,7 @@
 | prototype-design | 从低保真升级高保真原型 |
 | github-publish | 管理提交、推送、PR 与发布流程 |
 | feishu-docs | 对接飞书文档查询与同步（MCP） |
-| modao-prototype | 生成并导入墨刀原型（MCP） |
+| prototype-publish | 压生成并发布墨刀/Figma 原型（支持墨刀 MCP 和 Figma MCP 双路径） |
 | microservices | 微服务设计、治理与部署规范 |
 | playwright-testing | Playwright UI/E2E 测试规范 |
 

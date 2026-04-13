@@ -89,24 +89,93 @@
 |------|------|------|
 | PRD 文档 | `docs/prd-{项目名}/prd-{项目名}.md` | 唯一需求源 |
 | 仓库 HTML wireframes | `docs/prd-{项目名}/wireframes/` | 唯一可版本化原型源 |
-| 墨刀原型 | 墨刀个人空间 | 评审展示与协作载体 |
+| 墨刀原型 | 墨刀个人空间 | 快速评审展示载体 |
+| Figma frames | Figma 文件 | 设计深度协作与 Code Connect 载体 |
 
 ### 同步原则
 
-- **仓库 → 墨刀**：通过本 Skill 导入，是正向同步
-- **墨刀 → 仓库**：如在墨刀中做了修改，需手动将变更同步回仓库 wireframes
-- **避免双源漂移**：以仓库 wireframes 为基线，墨刀为展示镜像
+- **仓库 → 平台**：通过本 Skill 导入，是正向同步
+- **平台 → 仓库**：如在平台中做了修改，需手动将变更同步回仓库 wireframes
+- **避免双源漂移**：以仓库 wireframes 为基线，墨刀/Figma 为展示镜像
 
 ### 典型工作流
 
 ```
 PRD 定稿
   ↓
-requirement-doc 生成 HTML wireframes（仓库内）
+requirement-doc 或 prototype-design 生成 HTML（仓库内）
   ↓
-modao-prototype 将核心页面导入墨刀（展示层）
+prototype-publish 将核心页面导入墨刀或 Figma（展示层）
   ↓
-在墨刀中评审、收集反馈
+在平台中评审、收集反馈
   ↓
 将确认的变更同步回仓库 wireframes 和 PRD
 ```
+
+---
+
+## 4. Figma 导入指南
+
+### 4.1 MCP 配置（一次性）
+
+在 VS Code 用户级 MCP 配置中添加官方 Figma MCP server：
+
+```json
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--stdio"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "${env:FIGMA_ACCESS_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+> **Token 权限要求**：Figma → Settings → Security → Personal Access Tokens，需勾选 **File content: Read + Write**。
+
+### 4.2 generate_figma_design 工具说明
+
+| 项目 | 说明 |
+|------|------|
+| 工具名 | `generate_figma_design` |
+| 输入 | 可访问的 HTTP URL（页面地址）+ 目标 Figma 文件 URL |
+| 输出 | 在 Figma canvas 上创建可编辑的 frame（截图转 Figma layers） |
+| 限制 | 不支持 `file://` 路径；CSS 动效/JS 交互不保留；Prototype 跳转需手动设置 |
+| 计费 | 当前 Beta 免费，未来转为按使用量付费 |
+
+### 4.3 本地 HTTP server 启动
+
+导入前需启动本地 server：
+
+```bash
+# 低保真 wireframes
+npx serve docs/prd-{项目名}/wireframes -p 3001
+
+# 高保真 hifi-wireframes
+npx serve docs/prd-{项目名}/hifi-wireframes -p 3001
+```
+
+访问示例：`http://localhost:3001/login.html`
+
+> 导入完成后记得关闭 server（`Ctrl+C`）。
+
+### 4.4 逐页导入建议
+
+按与墨刀相同的功能链路分组策略（见 §2），每次导入一个页面，调用：
+
+```
+generate_figma_design(
+  url: "http://localhost:3001/{page}.html",
+  figma_file_url: "https://www.figma.com/file/{file_id}/{file_name}"
+)
+```
+
+### 4.5 导入后 Figma 内整理（建议步骤）
+
+1. 将 frames 按模块拖入对应 **Page**（如：用户访问、内容生产、账户）
+2. 重命名 frames 为业务语义名称（如：`首页`、`登录页`）
+3. 用 Figma Prototype 功能设置页面间跳转连接
+4. 邀请设计师协作标注和细化

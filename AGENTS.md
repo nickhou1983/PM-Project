@@ -61,7 +61,7 @@ Skill 存放在 `.agents/skills/`（指向 `.github/skills/` 的符号链接）�
 | `feishu-docs` | 飞书文档查询/操作 (MCP) |
 | `github-publish` | GitHub 发布工作流 |
 | `microservices` | 微服务架构/部署规范 |
-| `modao-prototype` | 墨刀原型导入 (MCP) |
+| `prototype-publish` | 原型平台发布（支持墨刀 MCP 和 Figma MCP 双路径） |
 | `playwright-testing` | Playwright 测试规范 |
 | `prototype-design` | 高保真原型设计 |
 | `requirement-doc` | PRD 生成（支持模块化：主 PRD + Module PRD） |

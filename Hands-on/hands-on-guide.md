@@ -89,7 +89,7 @@ PM-Project/
 | `requirement-doc` | 生成 PRD 与低保真 wireframe |
 | `requirement-to-issues` | 将 PRD 需求拆分为 GitHub Issues |
 | `prototype-design` | 从低保真升级为高保真原型 |
-| `modao-prototype` | 生成 HTML 原型并导入墨刀平台 |
+| `prototype-publish` | 生成 HTML 原型并发布到墨刀或 Figma 平台 |
 | `architect` | 技术架构设计模板与 ADR |
 | `microservices` | 微服务架构/部署/CI-CD 规范 |
 | `coding-standards` | 全栈编码规范与最佳实践 |
@@ -109,7 +109,7 @@ pm_assistant ──调用──→ feishu-docs（查重）
                     └→ Tavily MCP（竞品检索）
 
 designer ──调用──→ prototype-design（高保真生成）
-               └→ modao-prototype（导入墨刀）
+               └→ prototype-publish（导入墨刀）
 
 architect ──调用──→ architect Skill（架构模板）
                 └→ microservices（微服务规范）
@@ -180,7 +180,7 @@ flowchart LR
 | PRD 生成 | `requirement-doc` | PRD + 低保真 wireframe | `docs/prd-{项目名}/prd-{项目名}.md` + `wireframes/*.html` |
 | PRD 评审 | `gate_review` Gate 1 | Go/No-Go 评审报告 | 输出到终端 |
 | 高保真原型 | `designer` + `prototype-design` | 高保真 HTML 原型 | `docs/prd-{项目名}/hifi-wireframes/*.html` |
-| 墨刀导入 | `modao-prototype` | 墨刀个人空间原型 | 墨刀平台 |
+| 墨刀导入 | `prototype-publish` | 墨刀个人空间原型 | 墨刀平台 |
 | 架构设计 | `architect` | 架构文档 + 子文档 | `docs/prd-{项目名}/architecture-{项目名}.md` |
 | 架构评审 | `gate_review` Gate 2 | Go/No-Go 评审报告 | 输出到终端 |
 | 任务拆分 | `requirement-to-issues` | GitHub Epic / Task / Sub-Issue | GitHub Issues |
@@ -416,7 +416,7 @@ tool_timeout_sec = 60
 flowchart LR
     A["Step 1<br/>启动 Codex App<br/>选择 pm_assistant"] --> B["Step 2<br/>pm_assistant<br/>输出价值评估报告"]
     B --> C["Step 3<br/>requirement-doc<br/>生成 PRD + wireframe"]
-    C --> D["Step 4<br/>modao-prototype<br/>导入墨刀"]
+    C --> D["Step 4<br/>prototype-publish<br/>导入墨刀"]
     D --> E["Step 5<br/>在墨刀中<br/>查看结果"]
 ```
 
@@ -518,7 +518,7 @@ start docs/prd-todo-app/wireframes/index.html
 
 #### Step 4：将原型导入墨刀
 
-在 Codex App 中输入指令，调用 `modao-prototype` Skill：
+在 Codex App 中输入指令，调用 `prototype-publish` Skill：
 
 ```text
 将 docs/prd-todo-app/wireframes/ 下的低保真原型导入墨刀。
@@ -572,7 +572,7 @@ Agent 会依次调用墨刀 MCP 的三个工具完成导入：
 你已经成功走通了从需求灵感到原型导入墨刀的完整链路：
 
 ```text
-需求灵感 → pm_assistant 价值评估 → requirement-doc 生成 PRD + wireframe → modao-prototype 导入墨刀
+需求灵感 → pm_assistant 价值评估 → requirement-doc 生成 PRD + wireframe → prototype-publish 导入墨刀
 ```
 
 **本次实操涵盖了**：
@@ -581,7 +581,7 @@ Agent 会依次调用墨刀 MCP 的三个工具完成导入：
 |------|---------------------|--------|
 | 需求分析 | `pm_assistant` Agent | 价值评估报告 |
 | PRD 生成 | `requirement-doc` Skill | PRD 文档 + 低保真 wireframe |
-| 原型导入 | `modao-prototype` Skill | 墨刀个人空间中的原型 |
+| 原型导入 | `prototype-publish` Skill | 墨刀个人空间中的原型 |
 
 #### 后续探索
 

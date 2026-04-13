@@ -159,7 +159,7 @@ description: "高保真原型设计 Skill（设计师角色）。基于 PM 产�
 - 若使用方式 B 生成，完成后**询问用户**是否需要将原型导入墨刀
 - 若用户确认导入：调用 `import_html` 工具，优先使用 `gen_html` 返回的 key，否则传入 HTML 文件内容
 - 若用户不需要导入：仅保留本地 `hifi-wireframes/` 文件
-- 若使用方式 A 生成，可通过 `modao-prototype` Skill 将原型导入墨刀
+- 若使用方式 A 生成，可通过 `prototype-publish` Skill 将原型发布到墨刀或 Figma
 
 **可选：提交到 GitHub**
 - 使用 `github-publish` Skill 将高保真原型文件提交到 GitHub

@@ -33,7 +33,7 @@ pm_assistant (立项验证)
 ├── requirement_analyst [Agent]     ← pm_assistant 的轻量替代，快速验证
 ├── new_employee_mentor [Agent]     ← 新员工路由分发器，分析意图后路由到合适 Agent
 ├── feishu-docs [Skill]             ← 贯穿全流程（查重、同步、知识库）
-├── modao-prototype [Skill]         ← 原型导入墨刀（评审展示）
+├── prototype-publish [Skill]       ← 原型发布到墨刀/Figma（评审展示）
 ├── ui_testing [Agent]              ← 上线前 UI/E2E 自动化测试
 └── microservices [Skill]           ← 微服务场景下的架构/部署规范
 ```
@@ -109,7 +109,7 @@ pm_assistant (立项验证)
 |------|------|------|
 | **designer** | Agent | 协调原型升级流程，加载 prototype-design Skill 执行 |
 | **prototype-design** | Skill | 将低保真 wireframe 升级为高保真 Hi-Fi HTML 原型 |
-| **modao-prototype** | Skill | （可选）将原型导入墨刀平台用于团队评审 |
+| **prototype-publish** | Skill | （可选）将原型发布到墨刀或 Figma，用于团队评审 |
 
 **输入 → 输出**：
 
@@ -273,7 +273,7 @@ pm_assistant (立项验证)
 | feishu-docs | 贯穿 | 飞书文档搜索/读取/创建/同步 | 飞书 MCP |
 | requirement-doc | 1-需求 | 模块化 PRD 生成 + 低保真 wireframe | 无 |
 | prototype-design | 3-设计 | 高保真 HTML 原型生成 | modao MCP（可选） |
-| modao-prototype | 3-设计 | 原型导入墨刀平台 | 墨刀 MCP |
+| prototype-publish | 3-设计 | 原型发布到墨刀或 Figma | 墨刀 MCP / Figma MCP |
 | architect | 4-架构 | 架构文档模板 + ADR | 无 |
 | microservices | 4-架构 | 微服务设计/部署规范 | 无 |
 | requirement-to-issues | 6-拆分 | PRD → GitHub Issues（Epic + Task） | GitHub MCP |
@@ -323,7 +323,7 @@ post_launch_review 复盘报告
 | MCP 服务 | 消费方 | 用途 | 认证方式 |
 |---------|--------|------|---------|
 | 飞书 MCP | feishu-docs, pm_assistant | 文档查重、知识库检索、文档同步 | OAuth 2.0 (FEISHU_MCP_UAT) |
-| 墨刀 MCP | modao-prototype, prototype-design | 原型生成与导入 | Token (MODAO_TOKEN) |
+| 墨刀 MCP | prototype-publish, prototype-design | 原型生成与导入 | Token (MODAO_TOKEN) |
 | GitHub MCP | requirement-to-issues, github-publish, pr_review_submit | Issue 管理、PR 操作、代码搜索 | GitHub Token |
 | Playwright MCP | ui_testing | 浏览器自动化 UI 测试 | 本地运行 |
 

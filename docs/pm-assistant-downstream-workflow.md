@@ -17,14 +17,16 @@ pm_assistant (立项验证)
         → architect [Agent] + architect [Skill] (主架构 + 模块级架构)
           → gate_review [Agent] Gate 2 (架构评审)
             → requirement-to-issues [Skill] (按模块拆分 GitHub Issues)
-              → 开发阶段 (代码实现)
-                → code_review [Agent] (代码审查)
-                → code_testing [Agent] (测试策略执行)
-                  → gate_review [Agent] Gate 3 (上线评审)
-                    → github-publish [Skill] (提交 PR + 合并)
-                      → pr_review_submit [Agent] (写入 PR Review)
-                        → post_launch_review [Agent] (上线复盘)
-                          → pm_workflow_evaluator [Agent] (工作流健康度评估)
+              → gate_review [Agent] Gate 2.5 (Issues 质量评审)
+                → planning [Agent] (任务规划与上下文研究)
+                  → tdd_developer [Agent] + tdd-coder [Skill] (TDD 编码)
+                    → code_review [Agent] (代码审查)
+                    → code_testing [Agent] (测试策略执行)
+                      → gate_review [Agent] Gate 3 (上线评审)
+                        → github-publish [Skill] (提交 PR + 合并)
+                          → pr_review_submit [Agent] (写入 PR Review)
+                            → post_launch_review [Agent] (上线复盘)
+                              → pm_workflow_evaluator [Agent] (工作流健康度评估)
 ```
 
 ### 辅助支线
@@ -87,17 +89,18 @@ pm_assistant (立项验证)
 
 | 角色 | 类型 | 职责 |
 |------|------|------|
-| **gate_review** | Agent | 执行 PRD 评审，逐项检查 19 条清单（5 个维度），输出 Go/No-Go 决策 |
+| **gate_review** | Agent | 执行 PRD 评审，逐项检查 27 条核心清单（5 + 1 个维度 A–E + 模块 PRD 逐项检查 F），输出 Go/No-Go 决策 |
 
 **评审清单**（权重分布）：
 
 | 维度 | 权重 | 检查项数 | 核心关注 |
-|------|------|---------|---------|
-| 需求完整性 | 30% | 5 项 | PRD 10 章节、用户故事、P0/P1/P2 优先级 |
-| 商业合理性 | 25% | 4 项 | 立项验证报告、竞品分析≥3 个、差异化优势 |
-| 可行性 | 25% | 4 项 | 里程碑节点、风险应对、MVP 收敛性 |
-| 原型质量 | 15% | 3 项 | P0 页面覆盖、跳转完整、核心路径可走通 |
-| 版本管理 | 5% | 3 项 | 版本号一致性、状态字段、变更记录 |
+|------|------|---------|------|
+| A. 需求完整性 | 30% | 10 项 | PRD 11 章节、用户故事、P0/P1/P2 优先级、NFR 量化与验证方法、§5.1 UAT 策略、用户画像数据来源、Module PRD 文件存在性、RICE 评分、§6.2 异常场景 |
+| B. 商业合理性 | 25% | 5 项 | 立项验证报告、竞品分析≥3 个、差异化优势、数据支撑痛点、商业模式 |
+| C. 可行性 | 25% | 6 项 | 里程碑节点、风险应对、MVP 收敛性、关键技术依赖已验证、外部依赖 SLA、团队资源匹配 |
+| D. 原型质量 | 15% | 3 项 | P0 页面覆盖、跳转完整、核心路径可走通 |
+| E. 版本管理 | 5% | 3 项 | 文档头与变更记录版本一致、状态字段合法、迭代版本含变更内容 |
+| F. 模块 PRD 质量 | 附加 | F1–F8 逐模块 | 模块职责边界、优先级与主 PRD 一致、P0 有验收标准 AC、测试案例（≥3 条）、交互流程/状态机、外部依赖与 fallback 策略、版本同步（P0 模块缺项 → ❌） |
 
 **决策输出**：Go（进入设计阶段）/ Conditional Go（条件通过）/ No-Go（打回修改）
 
@@ -140,7 +143,7 @@ pm_assistant (立项验证)
   - `architecture-{项目名}.md`（主架构，10 个章节）
   - `architecture-{项目名}-{module_en_slug}.md`（模块级架构，仅模块化模式）
 
-**架构文档 10 章节**：设计概述 → 技术栈选型 → 系统架构 → 数据模型 → API 设计 → 部署方案 → 非功能需求 → 安全设计 → 测试策略 → 附录
+**架构文档 12 个章节（§§0–§§12）**：文档头信息（§§0）→ 设计概述 → 技术栈选型 → 系统架构 → 数据模型 → API 设计 → 部署方案 → 测试架构 → 非功能需求 → 安全设计 → 成本与风险 → 上线计划 → 附录（§§12）
 
 **关键设计决策**：
 
@@ -187,13 +190,37 @@ pm_assistant (立项验证)
 
 ---
 
+### 阶段 6.5：Issues 质量评审（Gate 2.5）
+
+| 角色 | 类型 | 职责 |
+|------|------|------|
+| **gate_review** | Agent | 执行 Issues 质量评审，确保 GitHub Issues 与 PRD/架构可追溯，开发启动前最后一道关卡 |
+
+**触发时机**：`requirement-to-issues` Skill 执行完成后、开发工作正式启动前
+
+**评审清单**（4 个维度，16 条检查项）：
+
+| 维度 | 权重 | 检查项数 | 核心关注 |
+|------|------|---------|------|
+| A. 需求覆盖完整性 | 30% | 4 项 | P0 Issue 无遗漏、P1 Issue 已说明、功能点数偏差≤20%、模块 Epic 完整 |
+| B. 可追溯性 | 25% | 4 项 | Epic 引 PRD 章节、Task 关联 Epic、Task 引用架构章节、标签体系（epic/task+priority+module）完整 |
+| C. Issue 质量 | 30% | 5 项 | SP 估算含推导表格、SP≥8 有拆分说明、SP=13 已完成拆分、P0 有验收标准、阻塞依赖已标注 |
+| D. 排期与版本 | 15% | 3 项 | P0 分配 Milestone、P0 分配 Assignee、PRD 版本与 Issue 引用版本一致 |
+
+**决策输出**：Go → 批准开发启动 / Conditional Go → 条件通过 / No-Go → 返工补充
+
+---
+
 ### 阶段 7：开发 → 审查 → 发布
 
 | 角色 | 类型 | 职责 |
 |------|------|------|
-| **code_review** | Agent (Codex) | MUST/SHOULD/NIT 三级代码审查 |
-| **code_testing** | Agent (Codex) | 测试策略编排（单元/集成/API/UI/E2E 多层测试），驱动 playwright-testing Skill |
-| **ui_testing** | Agent (Codex) | Playwright UI/E2E 自动化测试（4 类：组件/E2E/视觉回归/无障碍） |
+| **planning** | Agent | 开发前任务规划：读取 Issue + 架构文档 → 分析依赖关系 → 输出可执行实施计划（只研究不执行） |
+| **tdd_developer** | Agent | TDD 编码执行：基于 Issue + 架构文档，通过 Red → Green → Refactor 循环实现代码，消费 planning 产出的上下文 |
+| **tdd-coder** | Skill | TDD 方法论规范（Red-Green-Refactor、Stub/Mock 策略、多语言测试框架选型） |
+| **code_review** | Agent | MUST/SHOULD/NIT 三级代码审查 |
+| **code_testing** | Agent | 测试策略编排（单元/集成/API/UI/E2E 多层测试），驱动 playwright-testing Skill |
+| **ui_testing** | Agent | Playwright UI/E2E 自动化测试（4 类：组件/E2E/视觉回归/无障碍） |
 | **gate_review** | Agent | Gate 3 上线评审（测试报告 + PR 列表 → Go/No-Go） |
 | **github-publish** | Skill | 完整发布流程：分支创建 → 代码提交 → PR 生成 → 审查 → 合并 |
 | **pr_review_submit** | Agent | 将 code_review 结果写入 GitHub PR（行级评论 + APPROVE/REQUEST_CHANGES） |
@@ -201,8 +228,12 @@ pm_assistant (立项验证)
 **协作关系**：
 
 ```text
+Issues 确认 → planning (任务规划)
+              ↓
+         tdd_developer (Red → Green → Refactor)
+              ↓
 开发完成 → code_review (审查) → pr_review_submit (写入 PR)
-        → ui_testing (UI 测试)
+        → code_testing / ui_testing (测试)
         → gate_review Gate 3 (上线评审)
           → github-publish (合并 PR)
 ```
@@ -252,21 +283,24 @@ pm_assistant (立项验证)
 
 ## 3. Agent 与 Skill 完整索引
 
-### Agent 索引（9 个）
+### Agent 索引（11 个核心 Agent）
 
 | Agent | 阶段 | 运行时 | 权限 | 核心职责 |
-|-------|------|--------|------|---------|
+|-------|------|--------|------|------|
 | pm_assistant | 0-立项 | GitHub + Codex | read-only | 需求验证、飞书查重、竞品分析、商业/UI/技术快评 |
 | requirement_analyst | 0-立项（轻量） | Codex | read-only | pm_assistant 简化版，4 步快速验证 |
 | designer | 3-设计 | GitHub + Codex | workspace-write | 协调 prototype-design Skill，升级高保真原型 |
 | architect | 4-架构 | GitHub + Codex | workspace-write | 技术架构设计，支持模块化架构 |
-| gate_review | 2/5/7-评审 | GitHub + Codex | read-only | Gate 1/2/3 评审，Go/No-Go 决策 |
-| code_testing | 7-测试 | Codex | workspace-write | 测试策略编排（单元/集成/API/UI/E2E 多层） |
+| gate_review | 2/5/6.5/7-评审 | GitHub + Codex | read-only | Gate 1/2/2.5/3 评审，Go/No-Go 决策 |
+| planning | 6.5后-开发前 | GitHub + Codex | read-only | 任务规划与上下文研究，为 tdd_developer 提供实施计划 |
+| tdd_developer | 7-开发 | GitHub + Codex | workspace-write | TDD 编码执行，Red-Green-Refactor 循环，消费 Issue + 架构文档 |
+| code_review | 7-审查 | GitHub + Codex | read-only | MUST/SHOULD/NIT 三级代码审查 |
+| code_testing | 7-测试 | GitHub + Codex | workspace-write | 测试策略编排（单元/集成/API/UI/E2E 多层） |
 | post_launch_review | 8-复盘 | GitHub + Codex | read-only | 上线数据分析、迭代建议 |
 | pm_workflow_evaluator | 9-健康度 | GitHub + Codex | workspace-write | 跨阶段流程扫描、7 维度量化评分、瓶颈识别 |
 | pr_review_submit | 7-发布 | GitHub | read-only | 将审查结果写入 GitHub PR Review |
 
-### Skill 索引（9 个）
+### Skill 索引（10 个）
 
 | Skill | 阶段 | 核心能力 | MCP 依赖 |
 |-------|------|---------|----------|
@@ -277,6 +311,7 @@ pm_assistant (立项验证)
 | architect | 4-架构 | 架构文档模板 + ADR | 无 |
 | microservices | 4-架构 | 微服务设计/部署规范 | 无 |
 | requirement-to-issues | 6-拆分 | PRD → GitHub Issues（Epic + Task） | GitHub MCP |
+| tdd-coder | 7-开发 | TDD 方法论（Red-Green-Refactor）、测试框架选型 | 无 |
 | github-publish | 7-发布 | 分支/PR/合并完整流程 | GitHub MCP |
 | playwright-testing | 7-测试 | UI/E2E 测试规范 | Playwright MCP |
 
@@ -335,7 +370,7 @@ post_launch_review 复盘报告
 |------|------|
 | **模块化优先** | ≥3 个功能模块时自动启用模块化 PRD + 模块级架构，下游 Skill 优先消费模块级文档 |
 | **版本追踪** | 文档头精确记录关联上游版本号，变更记录含来源标识，确保 PRD ↔ 架构 ↔ Issue 版本一致 |
-| **Stage-Gate 质量关卡** | 3 个评审门（PRD/架构/上线），每门有量化检查清单和权重评分，High Risk 项一票否决 |
+| **Stage-Gate 质量关卡** | 4 个评审门（Gate 1 PRD / Gate 2 架构 / Gate 2.5 Issues / Gate 3 上线），每门有量化检查清单和权重评分，High Risk 项一票否决 |
 | **角色分离** | Agent 负责决策和协调，Skill 负责方法论和执行模板，Agent 不做 Skill 的事 |
 | **迭代闭环** | post_launch_review 复盘 → pm_assistant 迭代分析 → 增量更新，形成 Build-Measure-Learn 循环 |
 | **渐进细化** | pm_assistant 只做快评（UI 复杂度/技术可行性），正式设计交由 designer 和 architect |

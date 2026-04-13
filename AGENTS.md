@@ -69,14 +69,112 @@ Skill 存放在 `.agents/skills/`（指向 `.github/skills/` 的符号链接）�
 | `security-audit` | OWASP Top 10 安全审查 |
 | `tdd-coder` | TDD 编码方法论（Red-Green-Refactor） |
 
+## Designer Agent 与原型设计 Skills
+
+### 角色定位
+
+`designer` Agent 处于产品经理（PM）之后、架构师之前，负责将低保真 wireframe 升级为高保真 Hi-Fi 原型：
+
+```
+requirement-doc (PM)  → 低保真 wireframe + PRD
+        ↓
+designer              → 高保真 Hi-Fi 原型（hifi-wireframes/）
+        ↓
+architect             → 技术架构方案
+```
+
+### 约束
+
+- 不修改 PRD 的业务需求内容，只聚焦视觉设计
+- 不使用 Figma/Sketch 等外部设计工具，所有原型均为 HTML + CSS 实现
+- 必须保留低保真 wireframe 中的信息架构和功能布局
+- 所有页面必须使用同一套主题变量（统一设计语言）
+
+### prototype-design Skill — 高保真原型生成
+
+`prototype-design` Skill 定义两种生成方式：
+
+| 方式 | 触发词 | 特点 | 适用场景 |
+|------|--------|------|----------|
+| **方式 A（默认）** | 无特殊要求 | 直接写 HTML，遵循 `hifi-guide.md` 三套主题系统 | 严格品牌一致性、精确视觉控制 |
+| **方式 B（可选）** | "用 gen_html 生成"、"快速生成" | 调用 `modao-proto-mcp` MCP `gen_html` 工具 | 快速原型验证、不要求主题精确 |
+
+**三套预设主题**（方式 A 适用）：
+
+| 主题 | 适用产品类型 |
+|------|-------------|
+| 科技蓝 (Tech Blue) | 工具/效率/SaaS/AI/开发 |
+| 自然绿 (Nature Green) | 健康/环保/社区/生活/宠物/运动 |
+| 渐变紫 (Gradient Purple) | 创意/娱乐/内容/社交 |
+
+输出目录：`docs/prd-{项目名}/hifi-wireframes/`，命名规则与低保真 wireframe 保持一致。
+
+### prototype-publish Skill (modao-prototype) — 原型平台发布
+
+`prototype-publish` Skill（即 `modao-prototype` Skill）负责将 HTML 原型发布到外部平台供评审协作，支持双路径：
+
+#### 路径 A：墨刀（推荐，当前可直接使用）
+
+调用 `modao-proto-mcp` MCP 的三个工具：
+
+| 工具 | 用途 |
+|------|------|
+| `gen_description` | 将简短需求扩写为结构化设计说明（可选） |
+| `gen_html` | 根据设计说明生成 HTML 原型 |
+| `import_html` | 将 HTML 原型导入墨刀平台 |
+
+> 墨刀 MCP 已在 VS Code 用户级 `mcp.json` 中配置，Token 已注入，**可直接使用**。
+
+#### 路径 B：Figma（需额外配置）
+
+调用官方 `figma` MCP 的 `generate_figma_design` 工具，将本地 HTML 渲染结果转为 Figma frames。
+
+**当前状态与前置条件**：
+
+| 条件 | 状态 | 说明 |
+|------|------|------|
+| Figma MCP 已配置 | ✅ | `mcp.json` 中已配置 `https://mcp.figma.com/mcp` |
+| Personal Access Token | ❌ **缺失** | 需在 `mcp.json` 的 `headers` 中配置 `X-Figma-Token` |
+| 本地 server 公网可达 | ❌ **需处理** | `generate_figma_design` 由 Figma 云端执行，无法访问 `localhost` |
+
+**配置 Figma Token（激活 Figma 路径必须）**：
+
+```json
+"figma": {
+    "url": "https://mcp.figma.com/mcp",
+    "type": "http",
+    "headers": {
+        "X-Figma-Token": "YOUR_PERSONAL_ACCESS_TOKEN"
+    }
+}
+```
+
+**解决 localhost 问题**（二选一）：
+- 使用 `ngrok` / `localtunnel` 将 `localhost:3001` 暴露为公网 URL
+- 将 wireframe HTML 先部署到 GitHub Pages
+
+> **注意**：`generate_figma_design` 将 HTML 视觉布局转为 Figma layers，CSS 动效和 JS 交互不保留。Prototype 跳转链接需在 Figma 内手动设置。
+
+### 快速命令参考
+
+| 命令 | 触发的 Agent/Skill |
+|------|------------------|
+| "将 wireframe 升级为高保真" | `designer` → `prototype-design` |
+| "用科技蓝主题生成高保真" | `designer` → `prototype-design`（方式 A + 指定主题） |
+| "导入墨刀" | `prototype-publish`（路径 A） |
+| "发布原型到 Figma" | `prototype-publish`（路径 B，需先配置 Token） |
+
 ## MCP 服务依赖
 
-以下 MCP 服务需要在 `.codex/config.toml` 中配置：
+以下 MCP 服务需要在 `.codex/config.toml`（Codex）或 VS Code 用户级 `mcp.json` 中配置：
 
-- **飞书 (Feishu)** — 文档查重、知识库检索、文档同步
-- **墨刀 (Modao)** — 原型生成与导入
-- **Playwright** — 浏览器自动化 UI 测试
-- **GitHub** — PR 管理、Issue 操作、代码搜索
+| MCP 服务 | 配置位置 | 状态 | 用途 |
+|---------|---------|------|------|
+| **飞书 (Feishu)** | `.codex/config.toml` | 需配置 Token | 文档查重、知识库检索、文档同步 |
+| **墨刀 (Modao)** | `mcp.json` | ✅ 已配置 | 原型生成与导入（`gen_html` + `import_html`） |
+| **Figma** | `mcp.json` | ⚠️ 缺 Token | 高保真原型导出到 Figma frames |
+| **Playwright** | `mcp.json` | ✅ 已配置 | 浏览器自动化 UI 测试 |
+| **GitHub** | `.codex/config.toml` | 需配置 Token | PR 管理、Issue 操作、代码搜索 |
 
 ## 工作流约定
 

@@ -39,6 +39,7 @@
 │   │   ├── gate_review.agent.md
 │   │   ├── planning.agent.md
 │   │   ├── pm_assistant.agent.md
+│   │   ├── pm_workflow_evaluator.agent.md
 │   │   ├── post_launch_review.agent.md
 │   │   ├── pr_review_submit.agent.md
 │   │   ├── tdd_developer.agent.md
@@ -82,11 +83,12 @@
 | designer | 基于 PRD 和低保真 wireframe 生成高保真原型 |
 | gate_review | Stage-Gate 评审门，在 PRD/架构/上线前执行 Go/No-Go 决策 |
 | planning | 任务规划与上下文研究（只研究不执行） |
+| pm_workflow_evaluator | 工作流健康度评估（跨阶段流程扫描、量化仪表板、瓶颈识别） |
 | post_launch_review | 上线复盘，收集埋点数据和用户反馈，输出迭代建议 |
 | pr_review_submit | 将审查结果写入 GitHub PR Review |
 | tdd_developer | 基于 GitHub Issue + 架构文档，通过 TDD 流程（Red-Green-Refactor）实现代码 |
 
-> 完整 Agent 角色索引（含 Codex 运行时定义的 15 个 Agent）见 [AGENTS.md](AGENTS.md)。
+> 完整 Agent 角色索引（含 Codex 运行时定义的 16 个 Agent）见 [AGENTS.md](AGENTS.md)。
 
 ### Skills
 

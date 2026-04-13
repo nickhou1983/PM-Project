@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模板库 — 视频提示词工坊</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --color-primary: #7C3AED;
+      --color-primary-hover: #6D28D9;
+      --color-primary-light: #F5F3FF;
+      --color-secondary: #EC4899;
+      --color-secondary-light: #FDF2F8;
+      --color-accent: #F59E0B;
+      --color-surface: #FFFFFF;
+      --color-surface-alt: #FAF5FF;
+      --color-border: #E9D5FF;
+      --color-border-hover: #D8B4FE;
+      --color-text-primary: #1E1B4B;
+      --color-text-secondary: #6B7280;
+      --color-text-tertiary: #9CA3AF;
+      --color-success: #10B981;
+      --gradient-primary: linear-gradient(135deg, #7C3AED, #EC4899);
+      --font-display: 'DM Sans', 'Noto Sans SC', sans-serif;
+      --font-body: 'Noto Sans SC', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.12);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --transition-slow: 300ms ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      color: var(--color-text-primary);
+      background: var(--color-surface-alt);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === Navbar === */
+    .nav {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-left { display: flex; align-items: center; gap: 20px; }
+    .logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none;
+    }
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--gradient-primary);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+    .logo-mark i { color: #fff; width: 16px; height: 16px; }
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 15px; font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-link {
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 500;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: all var(--transition-fast);
+    }
+    .nav-link:hover { background: var(--color-primary-light); color: var(--color-primary); }
+    .nav-link.active { background: var(--color-primary-light); color: var(--color-primary); }
+    .nav-right { display: flex; gap: 10px; align-items: center; }
+    .nav-back {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; color: var(--color-text-tertiary);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    .nav-back:hover { color: var(--color-primary); }
+    .nav-back i { width: 14px; height: 14px; }
+    .avatar {
+      width: 32px; height: 32px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+      flex-shrink: 0; cursor: pointer;
+    }
+
+    /* === Page === */
+    .page { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+    /* === Top Search Bar === */
+    .search-bar {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeInUp 0.4s both;
+    }
+    .search-row {
+      display: flex; gap: 12px; margin-bottom: 14px;
+    }
+    .search-field {
+      flex: 1;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface-alt);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      cursor: text;
+    }
+    .search-field:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+    }
+    .search-field i { width: 16px; height: 16px; color: var(--color-text-tertiary); flex-shrink: 0; }
+    .search-input {
+      flex: 1; border: none; outline: none;
+      font-family: var(--font-body);
+      font-size: 13px; color: var(--color-text-primary);
+      background: transparent;
+    }
+    .search-input::placeholder { color: var(--color-text-tertiary); }
+    .model-filters { display: flex; gap: 6px; }
+    .filter-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: 12px; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      color: var(--color-text-secondary);
+      background: var(--color-surface);
+      transition: all var(--transition-fast);
+    }
+    .filter-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+    .filter-btn.active {
+      border-color: var(--color-primary);
+      background: var(--gradient-primary);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(124,58,237,0.25);
+    }
+    /* Category tabs */
+    .category-row {
+      display: flex; gap: 6px;
+      overflow-x: auto; padding-bottom: 2px;
+    }
+    .category-row::-webkit-scrollbar { height: 3px; }
+    .category-row::-webkit-scrollbar-thumb {
+      background: var(--color-border);
+      border-radius: var(--radius-full);
+    }
+    .cat-tab {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; white-space: nowrap;
+      color: var(--color-text-secondary);
+      background: transparent;
+      border: 1px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .cat-tab:hover { background: var(--color-primary-light); color: var(--color-primary); }
+    .cat-tab.active {
+      background: var(--color-text-primary);
+      color: #fff;
+      border-color: var(--color-text-primary);
+    }
+
+    /* === Style Filter Bar === */
+    .filter-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 16px; flex-wrap: wrap;
+      animation: fadeInUp 0.4s 0.05s both;
+    }
+    .filter-label {
+      font-size: 11px; font-weight: 700;
+      color: var(--color-text-tertiary);
+      letter-spacing: 0.05em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .style-btn {
+      padding: 5px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer; background: var(--color-surface);
+      transition: all var(--transition-fast);
+    }
+    .style-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+    }
+    .style-btn.selected {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* === Stats + Sort Row === */
+    .stats-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+      animation: fadeInUp 0.4s 0.1s both;
+    }
+    .stats-text {
+      font-size: 12px; color: var(--color-text-tertiary);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .stats-text i { width: 13px; height: 13px; }
+    .sort-select {
+      padding: 6px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 12px; color: var(--color-text-secondary);
+      background: var(--color-surface);
+      cursor: pointer; outline: none;
+      transition: border-color var(--transition-fast);
+    }
+    .sort-select:hover { border-color: var(--color-primary); }
+
+    /* === Card Grid === */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    .template-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition-slow);
+      animation: fadeInUp 0.5s both;
+    }
+    .template-card:nth-child(1) { animation-delay: 0.15s; }
+    .template-card:nth-child(2) { animation-delay: 0.2s; }
+    .template-card:nth-child(3) { animation-delay: 0.25s; }
+    .template-card:nth-child(4) { animation-delay: 0.3s; }
+    .template-card:nth-child(5) { animation-delay: 0.35s; }
+    .template-card:nth-child(6) { animation-delay: 0.4s; }
+    .template-card:nth-child(7) { animation-delay: 0.45s; }
+    .template-card:nth-child(8) { animation-delay: 0.5s; }
+    .template-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    .card-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .thumb-cyberpunk { background: linear-gradient(135deg, #0f0035, #1a0050, #6d28d9, #c026d3); }
+    .thumb-forest { background: linear-gradient(135deg, #052e16, #065f46, #059669); }
+    .thumb-portrait { background: linear-gradient(135deg, #3b0764, #7c3aed, #c4b5fd); }
+    .thumb-abst { background: linear-gradient(135deg, #1e1b4b, #312e81, #4f46e5); }
+    .thumb-cityscape { background: linear-gradient(135deg, #0c1445, #1e3a5f, #0ea5e9); }
+    .thumb-macro { background: linear-gradient(135deg, #431407, #9a3412, #f97316); }
+    .thumb-ink { background: linear-gradient(135deg, #0a0a0a, #111827, #374151); }
+    .thumb-sf { background: linear-gradient(135deg, #0f172a, #1e3a5f, #0891b2, #6ee7b7); }
+    .thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.15);
+    }
+    .card-model-badge {
+      position: absolute; top: 8px; left: 8px;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      color: #fff;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .model-kling { background: rgba(124,58,237,0.7); }
+    .model-sora { background: rgba(59,130,246,0.7); }
+    .model-runway { background: rgba(236,72,153,0.7); }
+    .card-fav {
+      position: absolute; top: 8px; right: 8px;
+      width: 30px; height: 30px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .card-fav i { width: 15px; height: 15px; color: var(--color-text-tertiary); }
+    .card-fav.active i { color: var(--color-secondary); fill: var(--color-secondary); }
+    .card-fav:hover { background: #fff; transform: scale(1.1); }
+    .thumb-play-hint {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+    .template-card:hover .thumb-play-hint { opacity: 1; }
+    .play-circle {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(4px);
+    }
+    .play-circle i { color: #fff; width: 18px; height: 18px; }
+    .card-body { padding: 12px 14px; }
+    .card-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-tags { display: flex; gap: 4px; }
+    .card-tag {
+      font-size: 10px; font-weight: 500;
+      padding: 2px 7px;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border-radius: var(--radius-full);
+    }
+    .card-tag-pink {
+      background: var(--color-secondary-light);
+      color: var(--color-secondary);
+    }
+    .card-uses {
+      display: flex; align-items: center; gap: 3px;
+      font-size: 11px; color: var(--color-text-tertiary);
+    }
+    .card-uses i { width: 11px; height: 11px; }
+
+    /* === Detail Modal === */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(30,27,75,0.55);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200;
+    }
+    .modal {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      width: 580px; max-height: 88vh;
+      overflow: hidden; display: flex; flex-direction: column;
+      box-shadow: 0 24px 48px rgba(124,58,237,0.2), 0 8px 16px rgba(0,0,0,0.1);
+      border: 1px solid var(--color-border);
+      animation: fadeInUp 0.3s both;
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 16px; font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .modal-close {
+      width: 30px; height: 30px;
+      background: var(--color-surface-alt);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      border: 1px solid var(--color-border);
+    }
+    .modal-close:hover { background: var(--color-border); }
+    .modal-close i { width: 14px; height: 14px; color: var(--color-text-secondary); }
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .modal-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      border-radius: var(--radius-md);
+      margin-bottom: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+    .modal-thumb-inner {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-thumb-inner i { color: rgba(255,255,255,0.4); width: 36px; height: 36px; }
+    .modal-section-title {
+      font-size: 11px; font-weight: 700;
+      color: var(--color-text-tertiary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .modal-tags {
+      display: flex; gap: 6px; flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .modal-tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px; font-weight: 500;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border: 1px solid rgba(124,58,237,0.2);
+    }
+    .modal-prompt {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-size: 13px; line-height: 1.75;
+      color: var(--color-text-primary);
+      margin-bottom: 18px;
+      font-family: 'Noto Sans SC', monospace;
+    }
+    .modal-params-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 18px;
+    }
+    .modal-param {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+    }
+    .modal-param-key {
+      font-size: 10px; font-weight: 700;
+      color: var(--color-text-tertiary);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .modal-param-val {
+      font-size: 13px; font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--color-border);
+      display: flex; gap: 10px;
+    }
+    .btn-apply {
+      flex: 1; padding: 11px;
+      background: var(--gradient-primary);
+      color: #fff; border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(124,58,237,0.35);
+      transition: opacity var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-apply i { width: 16px; height: 16px; }
+    .btn-fav-modal {
+      padding: 11px 16px;
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: all var(--transition-fast);
+    }
+    .btn-fav-modal:hover { border-color: var(--color-secondary); color: var(--color-secondary); }
+    .btn-fav-modal i { width: 15px; height: 15px; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="nav-left">
+      <a class="logo" href="index.html">
+        <div class="logo-mark"><i data-lucide="video"></i></div>
+        <span class="logo-text">视频提示词工坊</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="prompt-builder-editor.html">构建器</a>
+        <a class="nav-link active" href="template-library-browse.html">模板库</a>
+        <a class="nav-link" href="history-share-list.html">我的记录</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="index.html" class="nav-back">
+        <i data-lucide="arrow-left"></i> 原型导航
+      </a>
+      <div class="avatar">段</div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <div class="search-row">
+        <div class="search-field">
+          <i data-lucide="search"></i>
+          <input type="text" class="search-input" placeholder="搜索模板名称、标签、场景…" aria-label="搜索模板">
+        </div>
+        <div class="model-filters">
+          <button class="filter-btn active">全部模型</button>
+          <button class="filter-btn">Kling</button>
+          <button class="filter-btn">Sora</button>
+          <button class="filter-btn">Runway</button>
+        </div>
+      </div>
+      <!-- Category tabs -->
+      <div class="category-row">
+        <div class="cat-tab active">全部</div>
+        <div class="cat-tab">人物 / 剧情</div>
+        <div class="cat-tab">自然风景</div>
+        <div class="cat-tab">城市 / 建筑</div>
+        <div class="cat-tab">科幻 / 奇幻</div>
+        <div class="cat-tab">美食 / 产品</div>
+        <div class="cat-tab">抽象 / 艺术</div>
+        <div class="cat-tab">动态纹理</div>
+      </div>
+    </div>
+
+    <!-- Style filter -->
+    <div class="filter-row">
+      <span class="filter-label">风格</span>
+      <button class="style-btn selected">写实</button>
+      <button class="style-btn">电影感</button>
+      <button class="style-btn">动漫风</button>
+      <button class="style-btn">水墨</button>
+      <button class="style-btn">赛博朋克</button>
+      <button class="style-btn">极简</button>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <span class="stats-text">
+        <i data-lucide="layout-grid"></i>
+        共 238 个模板，当前展示 8 个
+      </span>
+      <select class="sort-select" title="排序方式">
+        <option>最受欢迎</option>
+        <option>最新上传</option>
+        <option>使用次数</option>
+      </select>
+    </div>
+
+    <!-- Card Grid -->
+    <div class="card-grid">
+      <!-- Card 1 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-cyberpunk"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-kling">Kling</span>
+          <div class="card-fav active"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">赛博朋克雨夜街道</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag">赛博朋克</span>
+              <span class="card-tag">城市</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 3.2k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-forest"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-sora">Sora</span>
+          <div class="card-fav"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">晨光中的森林小径</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag">自然</span>
+              <span class="card-tag">写实</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 2.8k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-portrait"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-runway">Runway</span>
+          <div class="card-fav"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">电影感女性特写</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag">人物</span>
+              <span class="card-tag card-tag-pink">电影感</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 2.1k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-abst"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-kling">Kling</span>
+          <div class="card-fav"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">抽象流动光粒子</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag">抽象</span>
+              <span class="card-tag">艺术</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 1.9k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-cityscape"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-sora">Sora</span>
+          <div class="card-fav active"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">未来城市低空飞行</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag card-tag-pink">科幻</span>
+              <span class="card-tag">城市</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 1.7k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-macro"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-runway">Runway</span>
+          <div class="card-fav"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">美食微距旋转产品</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag">美食</span>
+              <span class="card-tag">产品</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 1.4k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-ink"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-kling">Kling</span>
+          <div class="card-fav"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">水墨山水云海</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag">水墨</span>
+              <span class="card-tag">自然</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 1.2k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <div style="position:absolute;inset:0;" class="thumb-sf"></div>
+          <div class="thumb-overlay"></div>
+          <span class="card-model-badge model-sora">Sora</span>
+          <div class="card-fav"><i data-lucide="heart"></i></div>
+          <div class="thumb-play-hint"><div class="play-circle"><i data-lucide="play"></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">深海发光生物特写</div>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag card-tag-pink">奇幻</span>
+              <span class="card-tag">科幻</span>
+            </div>
+            <span class="card-uses"><i data-lucide="play-circle"></i> 980</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detail -->
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">赛博朋克雨夜街道</span>
+        <div class="modal-close"><i data-lucide="x"></i></div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-thumb">
+          <div class="modal-thumb-inner thumb-cyberpunk" style="border-radius:var(--radius-md);">
+            <i data-lucide="video"></i>
+          </div>
+        </div>
+        <div class="modal-section-title">标签</div>
+        <div class="modal-tags">
+          <span class="modal-tag">Kling v2.x</span>
+          <span class="modal-tag">赛博朋克</span>
+          <span class="modal-tag">城市夜景</span>
+          <span class="modal-tag">特写</span>
+          <span class="modal-tag">推镜</span>
+          <span class="modal-tag">霓虹灯光</span>
+        </div>
+        <div class="modal-section-title">Prompt 模板</div>
+        <div class="modal-prompt">A cyberpunk-style rainy city street at night, illuminated by neon lights reflecting on wet pavement. Close-up shot, push-in camera movement, 8 seconds. Highly photorealistic, dramatic neon lighting with vivid colors, film grain texture, cinematic quality.</div>
+        <div class="modal-section-title">参数</div>
+        <div class="modal-params-grid">
+          <div class="modal-param">
+            <div class="modal-param-key">镜头类型</div>
+            <div class="modal-param-val">特写（Close-up）</div>
+          </div>
+          <div class="modal-param">
+            <div class="modal-param-key">运镜方式</div>
+            <div class="modal-param-val">推镜（Push In）</div>
+          </div>
+          <div class="modal-param">
+            <div class="modal-param-key">视频时长</div>
+            <div class="modal-param-val">8 秒</div>
+          </div>
+          <div class="modal-param">
+            <div class="modal-param-key">画面风格</div>
+            <div class="modal-param-val">赛博朋克</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-apply">
+          <i data-lucide="zap"></i> 应用到构建器
+        </button>
+        <button class="btn-fav-modal">
+          <i data-lucide="heart"></i> 收藏
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    // Filter btn toggle
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.closest('.model-filters').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    // Style btn toggle
+    document.querySelectorAll('.style-btn').forEach(btn => {
+      btn.addEventListener('click', () => btn.classList.toggle('selected'));
+    });
+    // Cat tab toggle
+    document.querySelectorAll('.cat-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    // Fav toggle
+    document.querySelectorAll('.card-fav').forEach(fav => {
+      fav.addEventListener('click', e => { e.stopPropagation(); fav.classList.toggle('active'); });
+    });
+  </script>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 ---
-description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持三个评审门：PRD 评审（PRD 完成后）、架构评审（架构设计完成后）、上线评审（发布前）。Use when: 需求评审、架构评审、上线前检查、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
+description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持四个评审门：PRD 评审（Gate 1）、架构评审（Gate 2）、Issues 质量评审（Gate 2.5）、上线评审（Gate 3）。Use when: 需求评审、架构评审、上线前检查、Issue 质量评审、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
 name: "gate_review"
 tools: [read, search, web, agent, todo, edit]
 argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
@@ -19,12 +19,13 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 
 ## 评审门类型
 
-本 Agent 支持三个评审门，根据用户指定的阶段或自动识别输入文档类型来选择：
+本 Agent 支持四个评审门，根据用户指定的阶段或自动识别输入文档类型来选择：
 
 | 评审门 | 触发时机 | 输入文档 | 决策影响 |
-|--------|---------|---------|---------|
+|--------|---------|---------|----------|
 | **Gate 1: PRD 评审** | PRD 文档完成后、进入架构设计前 | PRD + 低保真原型 | 是否进入架构阶段 |
 | **Gate 2: 架构评审** | 架构文档完成后、进入开发前 | 主架构文档 + 模块级架构文档（如有） + PRD | 是否进入开发阶段 |
+| **Gate 2.5: Issues 质量评审** | requirement-to-issues 执行完成后、开发启动前 | GitHub Issues 列表 + PRD（含 Module PRD）+ 架构文档 | 是否批准开发启动 |
 | **Gate 3: 上线评审** | 开发测试完成后、正式发布前 | 测试报告 + PR 列表 | 是否批准上线 |
 
 ---
@@ -169,6 +170,51 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 
 ---
 
+## Gate 2.5: Issues 质量评审
+
+> **触发时机**：`requirement-to-issues` Skill 执行完成后、开发工作正式启动前
+> **输入**：GitHub Issues 列表 + PRD（含 Module PRD）+ 架构文档
+
+### 检查清单
+
+#### A. 需求覆盖完整性（权重 30%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 1 | PRD 所有 P0 功能点是否都有对应的 GitHub Task Issue，无遗漏 | ✅/⚠️/❌ | P0 缺失 → ❌ |
+| 2 | PRD 所有 P1 功能点是否有对应 Issue，或明确标注「推迟至下迭代」说明 | ✅/⚠️/❌ | 未说明 → ⚠️ |
+| 3 | Task Issue 总数与 PRD §4 功能点数量偏差是否 ≤ 20% | ✅/⚠️/❌ | 偏差 > 20% 需在 Issue 或说明中解释 |
+| 4 | 若 PRD 为模块化，每个模块是否都有对应的 Module Epic Issue | ✅/⚠️/❌ | 缺失模块 Epic → ❌ |
+
+#### B. 可追溯性（权重 25%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 5 | 每个 Module Epic Issue 是否引用了对应的 PRD 模块章节（含文件路径或章节编号） | ✅/⚠️/❌ | |
+| 6 | 每个 Task Issue 是否关联到父 Module Epic（通过 GitHub issue 引用或 Projects 层级） | ✅/⚠️/❌ | |
+| 7 | Task Issue 描述中是否引用了对应的架构章节（§3 后端 / §4 数据模型 / §5 API 等） | ✅/⚠️/❌ | |
+| 8 | Issue 标签体系是否完整：`epic/task` + `priority:P0/P1/P2` + 模块 label 三维均已覆盖 | ✅/⚠️/❌ | |
+
+#### C. Issue 质量（权重 30%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 9 | Story Point 估算是否基于 5 因子评估（API 端点/数据模型/前端页面/第三方集成/业务复杂度）并在 Issue 中呈现推导表格 | ✅/⚠️/❌ | |
+| 10 | SP ≥ 8 的 Issue 是否有拆分说明，或有明确「不拆分」的理由 | ✅/⚠️/❌ | 无说明 → ⚠️ |
+| 11 | SP = 13 的 Issue 是否已完成拆分（不得保留未拆分的 13SP Issue） | ✅/⚠️/❌ | 存在未拆分 → ❌ |
+| 12 | 所有 P0 Task Issue 是否包含明确的验收标准（Acceptance Criteria） | ✅/⚠️/❌ | P0 缺失 AC → ❌ |
+| 13 | Issue 间阻塞依赖关系是否已标注（blocked by / depends on） | ✅/⚠️/❌ | |
+
+#### D. 排期与版本（权重 15%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 14 | 所有 P0 Issue 是否已分配 Milestone | ✅/⚠️/❌ | 未分配 → ⚠️ |
+| 15 | P0 Issue 是否已分配责任人（Assignee） | ✅/⚠️/❌ | |
+| 16 | Issue 引用的 PRD 版本与当前 PRD 文档头版本是否一致（避免基于过期需求开发） | ✅/⚠️/❌ | 版本不一致 → ❌ |
+
+---
+
 ## Gate 3: 上线评审
 
 ### 检查清单
@@ -234,7 +280,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 
 > **评审对象**：{文档/功能名称}
 > **评审日期**：{当前日期}
-> **评审门**：Gate {1/2/3} — {PRD 评审 / 架构评审 / 上线评审}
+> **评审门**：Gate {1/2/2.5/3} — {PRD 评审 / 架构评审 / Issues 质量评审 / 上线评审}
 
 ---
 
@@ -277,6 +323,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 > 💡 评审通过后，可继续推进：
 > - Gate 1 通过 → 先使用 `designer` Agent 或 `prototype-design` Skill 生成高保真原型，再进入 `architect` Agent
 > - Gate 2 通过 → 使用 `requirement-to-issues` Skill 拆分开发任务，并优先消费模块级架构文档
+> - Gate 2.5 通过 → 正式启动开发，建议按 P0 Milestone 排序认领 Issue
 > - Gate 3 通过 → 使用 `github-publish` Skill 执行发布
 ```
 
@@ -286,13 +333,13 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 
 ### 输出路径
 
-将 JSON 文件写入 `docs/prd-{项目名}/gate-results/gate{1|2|3}-{YYYY-MM-DD}.json`。
+将 JSON 文件写入 `docs/prd-{项目名}/gate-results/gate{1|2|2.5|3}-{YYYY-MM-DD}.json`。
 
 ### JSON Schema
 
 ```json
 {
-  "gate": "Gate 1 | Gate 2 | Gate 3",
+  "gate": "Gate 1 | Gate 2 | Gate 2.5 | Gate 3",
   "project": "{项目名}",
   "date": "YYYY-MM-DD",
   "reviewer": "gate_review Agent",

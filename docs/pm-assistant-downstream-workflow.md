@@ -1,11 +1,11 @@
 # PM-Assistant 下游工作流分析报告
 
-> 分析时间：2026-04-09
+> 分析时间：2026-04-13
 > 分析范围：pm_assistant Agent 及其下游全链路 Agent / Skill 协作关系
 
 ## 1. 工作流全景总览
 
-`pm_assistant` 是整个产品开发流程的 **入口 Agent**，定位为"立项前过滤器"。从它出发，工作流经过 **7 个 Agent** 和 **9 个 Skill** 的协作，覆盖从灵感验证到上线复盘的完整生命周期。
+`pm_assistant` 是整个产品开发流程的 **入口 Agent**，定位为"立项前过滤器"。从它出发，工作流经过 **9 个 Agent** 和 **9 个 Skill** 的协作，覆盖从灵感验证到上线复盘、工作流健康评估的完整生命周期。
 
 ### 核心链路
 
@@ -19,16 +19,19 @@ pm_assistant (立项验证)
             → requirement-to-issues [Skill] (按模块拆分 GitHub Issues)
               → 开发阶段 (代码实现)
                 → code_review [Agent] (代码审查)
+                → code_testing [Agent] (测试策略执行)
                   → gate_review [Agent] Gate 3 (上线评审)
                     → github-publish [Skill] (提交 PR + 合并)
                       → pr_review_submit [Agent] (写入 PR Review)
                         → post_launch_review [Agent] (上线复盘)
+                          → pm_workflow_evaluator [Agent] (工作流健康度评估)
 ```
 
 ### 辅助支线
 
 ```text
 ├── requirement_analyst [Agent]     ← pm_assistant 的轻量替代，快速验证
+├── new_employee_mentor [Agent]     ← 新员工路由分发器，分析意图后路由到合适 Agent
 ├── feishu-docs [Skill]             ← 贯穿全流程（查重、同步、知识库）
 ├── modao-prototype [Skill]         ← 原型导入墨刀（评审展示）
 ├── ui_testing [Agent]              ← 上线前 UI/E2E 自动化测试
@@ -189,6 +192,7 @@ pm_assistant (立项验证)
 | 角色 | 类型 | 职责 |
 |------|------|------|
 | **code_review** | Agent (Codex) | MUST/SHOULD/NIT 三级代码审查 |
+| **code_testing** | Agent (Codex) | 测试策略编排（单元/集成/API/UI/E2E 多层测试），驱动 playwright-testing Skill |
 | **ui_testing** | Agent (Codex) | Playwright UI/E2E 自动化测试（4 类：组件/E2E/视觉回归/无障碍） |
 | **gate_review** | Agent | Gate 3 上线评审（测试报告 + PR 列表 → Go/No-Go） |
 | **github-publish** | Skill | 完整发布流程：分支创建 → 代码提交 → PR 生成 → 审查 → 合并 |
@@ -222,9 +226,33 @@ pm_assistant (立项验证)
 
 ---
 
+### 阶段 9：工作流健康度评估（可选，复盘后触发）
+
+| 角色 | 类型 | 职责 |
+|------|------|------|
+| **pm_workflow_evaluator** | Agent | 跨阶段扫描 pm_assistant 下游全流程产物，从 7 个维度输出量化仪表板，识别瓶颈并写入分析报告 |
+
+**7 维度评分体系**：
+
+| 维度 | 权重 | 评估内容 |
+|------|------|----------|
+| 工作流完整性 | 20% | 各阶段产物是否存在且格式合规 |
+| 跨阶段可追溯性 | 25% | PRD ↔ 架构 ↔ Issue ↔ PR 版本链完整度 |
+| 产物版本一致性 | 15% | 各产物版本号是否对齐 |
+| Gate 决策执行力 | 15% | Gate 评审结论是否被忠实执行 |
+| 需求质量信号 | 10% | 需求变更率、变更原因分析 |
+| AI 协作效率 | 10% | AI Agent 使用覆盖率、Acceptance Rate 等 |
+| 迭代健康度 | 5% | 复盘建议转化率、闭环完整性 |
+
+**输出**：`docs/prd-{项目名}/analysis-report-eval-{YYYYMMDD}.md`
+
+**与 gate_review 的区别**：gate_review 评单次产物质量（单阶段），pm_workflow_evaluator 评跨阶段流程健康度和一致性。
+
+---
+
 ## 3. Agent 与 Skill 完整索引
 
-### Agent 索引（7 个）
+### Agent 索引（9 个）
 
 | Agent | 阶段 | 运行时 | 权限 | 核心职责 |
 |-------|------|--------|------|---------|
@@ -233,7 +261,9 @@ pm_assistant (立项验证)
 | designer | 3-设计 | GitHub + Codex | workspace-write | 协调 prototype-design Skill，升级高保真原型 |
 | architect | 4-架构 | GitHub + Codex | workspace-write | 技术架构设计，支持模块化架构 |
 | gate_review | 2/5/7-评审 | GitHub + Codex | read-only | Gate 1/2/3 评审，Go/No-Go 决策 |
+| code_testing | 7-测试 | Codex | workspace-write | 测试策略编排（单元/集成/API/UI/E2E 多层） |
 | post_launch_review | 8-复盘 | GitHub + Codex | read-only | 上线数据分析、迭代建议 |
+| pm_workflow_evaluator | 9-健康度 | GitHub + Codex | workspace-write | 跨阶段流程扫描、7 维度量化评分、瓶颈识别 |
 | pr_review_submit | 7-发布 | GitHub | read-only | 将审查结果写入 GitHub PR Review |
 
 ### Skill 索引（9 个）
@@ -309,3 +339,4 @@ post_launch_review 复盘报告
 | **角色分离** | Agent 负责决策和协调，Skill 负责方法论和执行模板，Agent 不做 Skill 的事 |
 | **迭代闭环** | post_launch_review 复盘 → pm_assistant 迭代分析 → 增量更新，形成 Build-Measure-Learn 循环 |
 | **渐进细化** | pm_assistant 只做快评（UI 复杂度/技术可行性），正式设计交由 designer 和 architect |
+| **流程健康度** | pm_workflow_evaluator 在复盘后跨阶段扫描全流程产物，与 gate_review 互补：前者评流程健康度，后者评单次产物质量 |

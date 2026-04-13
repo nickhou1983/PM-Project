@@ -1,11 +1,11 @@
 # AI 时代产品团队度量体系框架
 
-> **版本**: v1.0.0  
-> **日期**: 2026-04-08  
-> **状态**: 草稿  
+> **版本**: v1.1.0  
+> **日期**: 2026-04-13  
+> **状态**: 活跃  
 > **适用范围**: 产品经理 / 开发工程师 / 测试工程师  
 > **AI 工具背景**: GitHub Copilot  
-> **关联工作流**: [pm-assistant-workflow-one-page.md](../pm-assistant-workflow-one-page.md) | [custom-agents-skills-matrix.md](../custom-agents-skills-matrix.md)
+> **关联工作流**: [pm-assistant-downstream-workflow.md](pm-assistant-downstream-workflow.md)
 
 ---
 
@@ -212,6 +212,9 @@ flowchart TD
     I -.- M7["📊 测试覆盖率\n📊 安全扫描通过率\n📊 缺陷发现率"]
     J -.- M8["📊 Gate 3 首次通过率\n📊 P0 Issue 关闭率"]
     L -.- M9["📊 目标达成率\n📊 迭代建议转化率\n📊 NPS 变化"]
+
+    L --> N[pm_workflow_evaluator]
+    N -.- M10["📊 工作流完整性\n📊 跨阶段可追溯性\n📊 Gate决策执行力\n📊 7维度健康度评分"]
 ```
 
 ### 3.2 逐阶段度量详解
@@ -755,6 +758,7 @@ git log --since="90 days ago" --format=format: --name-only | \
 | `gate_review` Gate 3 | 评审 | 各维度评分、Go/No-Go 决策 | Issue 状态、测试报告 |
 | `github-publish` | 发布 | 发布时间、版本号 | Gate 3 通过 |
 | `post_launch_review` | 复盘 | 业务/技术/用户/事故数据、迭代建议 | PRD §8 目标值 |
+| `pm_workflow_evaluator` | 跨阶段评估 | 7 维度健康度评分（工作流完整性/可追溯性/版本一致性/Gate 执行力/需求质量/AI 协作效率/迭代健康度）、analysis-report-eval 报告 | 全流程产物（pm_assistant 下游所有阶段）|
 
 ---
 

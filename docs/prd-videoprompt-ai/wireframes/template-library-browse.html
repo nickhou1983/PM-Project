@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模板库 - 视频提示词工坊</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #F5F5F5; color: #333; }
+    /* Nav */
+    .nav { background: #FFF; border-bottom: 1px solid #D0D0D0; padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-left { display: flex; align-items: center; gap: 16px; }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #333; }
+    .logo-mark { width: 28px; height: 28px; background: #555; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 12px; font-weight: 700; }
+    .logo-text { font-size: 15px; font-weight: 600; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-link { padding: 6px 12px; border-radius: 5px; font-size: 13px; color: #666; text-decoration: none; cursor: pointer; }
+    .nav-link:hover { background: #F0F0F0; }
+    .nav-link.active { background: #F0F0F0; color: #333; font-weight: 500; }
+    .nav-right { display: flex; gap: 8px; align-items: center; }
+    .nav-back { font-size: 12px; color: #4A90D9; text-decoration: none; }
+    .avatar { width: 32px; height: 32px; background: #D0D0D0; border-radius: 50%; }
+    /* Page layout */
+    .page { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    /* Search + filters */
+    .top-bar { background: #FFF; border: 1px solid #D0D0D0; border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; }
+    .search-row { display: flex; gap: 12px; margin-bottom: 14px; }
+    .search-box { flex: 1; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid #D0D0D0; border-radius: 6px; background: #FFF; }
+    .search-icon { color: #AAAAAA; font-size: 14px; }
+    .search-input { flex: 1; border: none; outline: none; font-size: 13px; color: #333; font-family: inherit; background: transparent; }
+    .search-input::placeholder { color: #AAAAAA; }
+    .model-filter { display: flex; gap: 6px; }
+    .filter-btn { padding: 7px 12px; border: 1px solid #D0D0D0; border-radius: 5px; font-size: 12px; cursor: pointer; color: #666; background: #FFF; white-space: nowrap; }
+    .filter-btn.active { border-color: #555; background: #555; color: #FFF; }
+    /* Category tabs */
+    .category-row { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
+    .category-row::-webkit-scrollbar { height: 3px; }
+    .category-row::-webkit-scrollbar-thumb { background: #D0D0D0; border-radius: 3px; }
+    .cat-tab { padding: 6px 14px; border-radius: 16px; font-size: 12px; cursor: pointer; white-space: nowrap; color: #555; background: #F5F5F5; border: 1px solid transparent; }
+    .cat-tab.active { background: #333; color: #FFF; }
+    /* Style tags row */
+    .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-label { font-size: 12px; color: #888; white-space: nowrap; }
+    .tag-btn { padding: 4px 10px; border: 1px solid #D0D0D0; border-radius: 3px; font-size: 12px; color: #666; cursor: pointer; background: #FFF; }
+    .tag-btn.selected { background: #E8E8E8; border-color: #888; color: #333; font-weight: 500; }
+    /* Stats row */
+    .stats-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .stats-text { font-size: 12px; color: #888; }
+    .sort-select { padding: 5px 10px; border: 1px solid #D0D0D0; border-radius: 4px; font-size: 12px; color: #555; background: #FFF; font-family: inherit; }
+    /* Card grid */
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .template-card { background: #FFF; border: 1px solid #D0D0D0; border-radius: 8px; overflow: hidden; cursor: pointer; transition: border-color 0.15s; }
+    .template-card:hover { border-color: #888; }
+    .card-thumb { width: 100%; aspect-ratio: 16/9; background: #E0E0E0; display: flex; align-items: center; justify-content: center; color: #AAAAAA; font-size: 12px; position: relative; }
+    .card-thumb-label { font-size: 11px; color: #AAAAAA; }
+    .card-model-badge { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.5); color: #FFF; font-size: 10px; padding: 2px 7px; border-radius: 3px; }
+    .card-fav { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #888; cursor: pointer; }
+    .card-fav.active { color: #333; }
+    .card-body { padding: 12px 14px; }
+    .card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; }
+    .card-tags { display: flex; gap: 5px; }
+    .card-tag { font-size: 10px; padding: 2px 6px; background: #F0F0F0; border-radius: 3px; color: #666; }
+    .card-uses { font-size: 11px; color: #AAAAAA; }
+    /* Modal overlay */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .modal { background: #FFF; border-radius: 10px; width: 560px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
+    .modal-header { padding: 18px 20px; border-bottom: 1px solid #E8E8E8; display: flex; align-items: center; justify-content: space-between; }
+    .modal-header h3 { font-size: 15px; font-weight: 600; }
+    .modal-close { width: 28px; height: 28px; background: #F0F0F0; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #666; font-size: 14px; }
+    .modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+    .modal-thumb { width: 100%; aspect-ratio: 16/9; background: #E0E0E0; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .modal-thumb span { color: #AAAAAA; font-size: 12px; }
+    .modal-section-title { font-size: 12px; font-weight: 500; color: #888; margin-bottom: 8px; }
+    .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .modal-tag { padding: 4px 8px; background: #F0F0F0; border-radius: 4px; font-size: 12px; color: #555; }
+    .modal-prompt { background: #F9F9F9; border: 1px solid #E0E0E0; border-radius: 6px; padding: 14px; font-size: 13px; line-height: 1.7; color: #333; margin-bottom: 16px; }
+    .modal-params-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .modal-param { background: #F0F0F0; border-radius: 5px; padding: 8px 12px; }
+    .modal-param-key { font-size: 11px; color: #888; margin-bottom: 3px; }
+    .modal-param-val { font-size: 13px; color: #333; font-weight: 500; }
+    .modal-footer { padding: 14px 20px; border-top: 1px solid #E8E8E8; display: flex; gap: 10px; }
+    .btn-apply { flex: 1; padding: 10px; background: #555; color: #FFF; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .btn-fav-modal { padding: 10px 16px; background: #FFF; color: #666; border: 1px solid #D0D0D0; border-radius: 6px; font-size: 13px; cursor: pointer; }
+    /* Empty state */
+    .empty-state { text-align: center; padding: 60px 24px; color: #AAAAAA; }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-text { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-left">
+      <a class="logo" href="index.html">
+        <div class="logo-mark">VP</div>
+        <span class="logo-text">视频提示词工坊</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="prompt-builder-editor.html">构建器</a>
+        <a class="nav-link active" href="#">模板库</a>
+        <a class="nav-link" href="history-share-list.html">我的记录</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="index.html" class="nav-back">← 原型导航</a>
+      <div class="avatar"></div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <!-- Top bar: Search + Model Filter -->
+    <div class="top-bar">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="搜索模板名称、标签、场景..." aria-label="搜索模板">
+        </div>
+        <div class="model-filter">
+          <button class="filter-btn active">全部模型</button>
+          <button class="filter-btn">Kling</button>
+          <button class="filter-btn">Sora</button>
+          <button class="filter-btn">Runway</button>
+        </div>
+      </div>
+      <!-- Category tabs -->
+      <div class="category-row">
+        <div class="cat-tab active">全部</div>
+        <div class="cat-tab">人物/剧情</div>
+        <div class="cat-tab">自然风景</div>
+        <div class="cat-tab">城市/建筑</div>
+        <div class="cat-tab">科幻/奇幻</div>
+        <div class="cat-tab">美食/产品</div>
+        <div class="cat-tab">抽象/艺术</div>
+        <div class="cat-tab">动态纹理</div>
+      </div>
+    </div>
+
+    <!-- Style filter row -->
+    <div class="filter-bar">
+      <span class="filter-label">风格筛选：</span>
+      <button class="tag-btn selected">写实</button>
+      <button class="tag-btn">电影感</button>
+      <button class="tag-btn">动漫风</button>
+      <button class="tag-btn">水墨</button>
+      <button class="tag-btn">赛博朋克</button>
+      <button class="tag-btn">极简</button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <span class="stats-text">共 238 个模板，当前展示 18 个</span>
+      <select class="sort-select" title="排序方式">
+        <option>最受欢迎</option>
+        <option>最新上传</option>
+        <option>使用次数</option>
+      </select>
+    </div>
+
+    <!-- Card grid -->
+    <div class="card-grid">
+      <!-- Card 1 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <span class="card-thumb-label">[ 效果预览图 ]</span>
+          <span class="card-model-badge">Kling</span>
+          <span class="card-fav active">♥</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">赛博朋克雨夜街道</div>
+          <div class="card-meta">
+            <div class="card-tags">
+              <span class="card-tag">赛博朋克</span>
+              <span class="card-tag">城市</span>
+            </div>
+            <span class="card-uses">3.2k 次使用</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <span class="card-thumb-label">[ 效果预览图 ]</span>
+          <span class="card-model-badge">Sora</span>
+          <span class="card-fav">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">晨光中的森林小径</div>
+          <div class="card-meta">
+            <div class="card-tags">
+              <span class="card-tag">自然</span>
+              <span class="card-tag">写实</span>
+            </div>
+            <span class="card-uses">2.8k 次使用</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <span class="card-thumb-label">[ 效果预览图 ]</span>
+          <span class="card-model-badge">Runway</span>
+          <span class="card-fav">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">电影感人物特写</div>
+          <div class="card-meta">
+            <div class="card-tags">
+              <span class="card-tag">电影感</span>
+              <span class="card-tag">人物</span>
+            </div>
+            <span class="card-uses">2.1k 次使用</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <span class="card-thumb-label">[ 效果预览图 ]</span>
+          <span class="card-model-badge">Kling</span>
+          <span class="card-fav">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">水墨山水流云</div>
+          <div class="card-meta">
+            <div class="card-tags">
+              <span class="card-tag">水墨</span>
+              <span class="card-tag">抽象</span>
+            </div>
+            <span class="card-uses">1.9k 次使用</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <span class="card-thumb-label">[ 效果预览图 ]</span>
+          <span class="card-model-badge">Sora</span>
+          <span class="card-fav">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">产品广告 - 极简桌面</div>
+          <div class="card-meta">
+            <div class="card-tags">
+              <span class="card-tag">产品</span>
+              <span class="card-tag">极简</span>
+            </div>
+            <span class="card-uses">1.5k 次使用</span>
+          </div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="template-card">
+        <div class="card-thumb">
+          <span class="card-thumb-label">[ 效果预览图 ]</span>
+          <span class="card-model-badge">Runway</span>
+          <span class="card-fav">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">科幻宇宙飞行</div>
+          <div class="card-meta">
+            <div class="card-tags">
+              <span class="card-tag">科幻</span>
+              <span class="card-tag">奇幻</span>
+            </div>
+            <span class="card-uses">1.3k 次使用</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load more -->
+    <div style="text-align:center; margin-top:28px;">
+      <button style="padding:10px 32px; border:1px solid #D0D0D0; border-radius:6px; background:#FFF; font-size:13px; color:#555; cursor:pointer; font-family:inherit;">加载更多模板</button>
+    </div>
+  </div>
+
+  <!-- Modal (template detail) -->
+  <div class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>赛博朋克雨夜街道</h3>
+        <div class="modal-close">✕</div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-thumb"><span>[ 效果预览图 ]</span></div>
+        <div class="modal-section-title">标签</div>
+        <div class="modal-tags">
+          <span class="modal-tag">Kling v2.x</span>
+          <span class="modal-tag">赛博朋克</span>
+          <span class="modal-tag">城市/建筑</span>
+          <span class="modal-tag">写实</span>
+          <span class="modal-tag">8 秒</span>
+        </div>
+        <div class="modal-section-title">Prompt 预览</div>
+        <div class="modal-prompt">
+          霓虹灯下的雨夜城市街道，特写镜头，推镜运镜，赛博朋克风格，高度写实，电影质感，彩色灯光在积水路面倒映，时长8秒。主体：街道空镜，无人物。
+        </div>
+        <div class="modal-section-title">参数概览</div>
+        <div class="modal-params-grid">
+          <div class="modal-param"><div class="modal-param-key">镜头类型</div><div class="modal-param-val">特写</div></div>
+          <div class="modal-param"><div class="modal-param-key">运镜</div><div class="modal-param-val">推镜</div></div>
+          <div class="modal-param"><div class="modal-param-key">风格</div><div class="modal-param-val">赛博朋克</div></div>
+          <div class="modal-param"><div class="modal-param-key">时长</div><div class="modal-param-val">8 秒</div></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-fav-modal">♡ 收藏</button>
+        <button class="btn-apply">应用此模板 →</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

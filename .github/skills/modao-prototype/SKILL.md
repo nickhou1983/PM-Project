@@ -53,7 +53,7 @@ description: "原型平台发布 Skill。将 HTML 原型发布到墨刀（Modao�
 - 按功能链路分组（建议每组 3-5 个页面）
 
 **来源 B：从已有 wireframes 转换**
-- 读取 `docs/prd-{项目名}/wireframes/` 下的 HTML 文件
+- 读取 `projects/prd-{项目名}/wireframes/` 下的 HTML 文件
 - 选择需要导入墨刀的页面子集
 
 **来源 C：直接描述**
@@ -105,8 +105,8 @@ description: "原型平台发布 Skill。将 HTML 原型发布到墨刀（Modao�
 #### 路径 B：导入 Figma
 
 1. **启动本地 HTTP server**（`generate_figma_design` 需要 URL，不支持 `file://`）
-   - 低保真原型：`npx serve docs/prd-{项目名}/wireframes -p 3001`
-   - 高保真原型：`npx serve docs/prd-{项目名}/hifi-wireframes -p 3001`
+   - 低保真原型：`npx serve projects/prd-{项目名}/wireframes -p 3001`
+   - 高保真原型：`npx serve projects/prd-{项目名}/hifi-wireframes -p 3001`
 2. **调用 Figma MCP 的 `generate_figma_design` 工具**：
    - 输入：`http://localhost:3001/{page}.html` + 目标 Figma 文件 URL
    - 输出：Figma canvas 上生成可编辑的 frame

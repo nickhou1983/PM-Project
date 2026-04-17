@@ -60,7 +60,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
    - 预览阶段标注"跨仓库模式：文档在 `{source_owner}/{source_repo}`，Issue 创建到 `{target_owner}/{target_repo}`"
 
 **来源 A：本地文件**
-- 用户提供文件路径（如 `docs/prd-<项目名>/prd-<项目名>.md`），直接读取文件内容
+- 用户提供文件路径（如 `projects/prd-<项目名>/prd-<项目名>.md`），直接读取文件内容
 
 **来源 B：对话上下文**
 - 用户在对话中直接粘贴或引用了 PRD 内容
@@ -177,13 +177,13 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
    - 提取与该模块功能相关的技术选型、架构信息或 API 接口定义
 
 4. **关联架构文档**（如存在）
-   - 检测 PRD 同目录下是否存在架构文档（主文档路径：`docs/prd-<项目名>/architecture.md` 或 `docs/prd-<项目名>/architecture-<项目名>.md`）
+   - 检测 PRD 同目录下是否存在架构文档（主文档路径：`projects/prd-<项目名>/architecture.md` 或 `projects/prd-<项目名>/architecture-<项目名>.md`）
    - 同时检测是否存在子文档（分文档模式）：
-     - `docs/prd-<项目名>/frontend-architecture-<项目名>.md`（前端架构详设）
-     - `docs/prd-<项目名>/backend-services-<项目名>.md`（后端服务详设）
-     - `docs/prd-<项目名>/database-design-<项目名>.md`（数据库设计）
+     - `projects/prd-<项目名>/frontend-architecture-<项目名>.md`（前端架构详设）
+     - `projects/prd-<项目名>/backend-services-<项目名>.md`（后端服务详设）
+     - `projects/prd-<项目名>/database-design-<项目名>.md`（数据库设计）
    - **检测模块级架构文档**（模块化 PRD 模式）：
-     - `docs/prd-<项目名>/architecture-<项目名>-{module_en_slug}.md`（模块级架构设计）
+     - `projects/prd-<项目名>/architecture-<项目名>-{module_en_slug}.md`（模块级架构设计）
        - 若存在模块级架构文档，**必须优先**使用该文档中的数据模型、API 端点、前端组件信息
        - 若模块级架构文档不存在，则按回退链继续提取，并在预览中标记“缺模块级架构”
    - 若存在，提取与当前模块相关的：
@@ -250,10 +250,10 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 - **模块级架构文档链接**（如存在）：指向 `architecture-{项目名}-{module_en_slug}.md` 的链接；若缺失则显式标记为 `N/A（回退到主架构）`
 
 > **跨仓库模式下的文档链接**：当 Issue 目标仓库与文档所在仓库不同时，所有文档链接必须使用 GitHub 绝对 URL 格式：
-> - Module PRD：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
-> - 模块级架构：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
-> - 主架构：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/architecture-{项目名}.md`
-> - 主 PRD：`https://github.com/{source_owner}/{source_repo}/blob/main/docs/prd-{项目名}/prd-{项目名}.md`
+> - Module PRD：`https://github.com/{source_owner}/{source_repo}/blob/main/projects/prd-{项目名}/modules/prd-{module_en_slug}.md`
+> - 模块级架构：`https://github.com/{source_owner}/{source_repo}/blob/main/projects/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+> - 主架构：`https://github.com/{source_owner}/{source_repo}/blob/main/projects/prd-{项目名}/architecture-{项目名}.md`
+> - 主 PRD：`https://github.com/{source_owner}/{source_repo}/blob/main/projects/prd-{项目名}/prd-{项目名}.md`
 - **功能点清单**：该模块下所有功能点的表格（功能点、描述、优先级）
 - **里程碑**：对应的开发阶段和目标日期（来自步骤 4）
 - **前置依赖**：该模块依赖的其他模块（来自步骤 4，含 `module_en_slug` 标识）

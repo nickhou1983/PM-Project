@@ -24,7 +24,7 @@ developer_instructions = """
 1. 用 mcp_github_issue_read 读取 Issue（支持跨仓库：完整链接自动解析 owner/repo，纯编号默认当前仓库），提取：功能描述、模块、优先级、验收标准、技术参考、Story Points、版本来源
 2. 定位关联文档（跨仓库场景下，Issue 中的 GitHub 绝对 URL 链接用 mcp_github_get_file_contents 获取）：
    - 架构文档（优先模块级 architecture-{项目名}-{module_en_slug}.md，回退主架构）
-   - Module PRD（docs/prd-{项目名}/modules/prd-{module_en_slug}.md）
+   - Module PRD（projects/prd-{项目名}/modules/prd-{module_en_slug}.md）
    - 原型图（wireframes/ 和 hifi-wireframes/）
 3. 分析项目技术栈和已有测试框架
 4. 输出结构化需求摘要

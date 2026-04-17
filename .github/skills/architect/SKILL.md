@@ -82,16 +82,16 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
    - 遍历每个 Module PRD，为每个模块设计数据模型、API、前端组件、服务职责、模块间接口
    - 模块级文档只覆盖该模块边界内的详细设计，跨模块约束引用主架构
 11. **输出文档**：
-    - 始终写入 `docs/prd-{项目名}/architecture-{项目名}.md`
-    - 若为模块化模式，额外写入 `docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+    - 始终写入 `projects/prd-{项目名}/architecture-{项目名}.md`
+    - 若为模块化模式，额外写入 `projects/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
     - 文档头必须包含精确版本号
     - 若目标路径已存在文档，则根据变更范围递增版本（Patch: 措辞/格式；Minor: 新增模块/API/调整部署；Major: 架构风格变更/核心技术栈替换）
     - 模块级架构文档独立维护版本；首次创建为 `v1.0.0`
     - 若本次新增或重建模块级架构文档，主架构版本至少 Minor 递增
     - 分文档模式额外输出：
-      - `docs/prd-{项目名}/frontend-architecture-{项目名}.md`
-      - `docs/prd-{项目名}/backend-services-{项目名}.md`
-      - `docs/prd-{项目名}/database-design-{项目名}.md`
+      - `projects/prd-{项目名}/frontend-architecture-{项目名}.md`
+      - `projects/prd-{项目名}/backend-services-{项目名}.md`
+      - `projects/prd-{项目名}/database-design-{项目名}.md`
     - 主文档 §0 文档索引自动填充各子文档和模块级架构文档路径
 12. **回填模块 PRD**（仅模块化模式）：
     - 更新模块 PRD 文档头中的「关联架构文档」字段
@@ -109,11 +109,11 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
 
 ### 模块化模式细则
 
-当检测到 `docs/prd-{项目名}/modules/` 目录时，以下规则默认生效：
+当检测到 `projects/prd-{项目名}/modules/` 目录时，以下规则默认生效：
 
 1. **输出结构固定**：
-   - 主架构：`docs/prd-{项目名}/architecture-{项目名}.md`
-   - 模块架构：`docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+   - 主架构：`projects/prd-{项目名}/architecture-{项目名}.md`
+   - 模块架构：`projects/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
 2. **主从职责分离**：
    - 主架构负责跨模块技术栈、公共能力、共享数据、部署、安全、运维
    - 模块架构负责模块数据模型、API、前端组件、服务职责、上下游接口

@@ -47,5 +47,7 @@ coverage/
 *.tmp
 *.temp
 *.pptx
-*.docx
 presentations/
+
+# project-specific PRD outputs — track in VCS
+# projects/

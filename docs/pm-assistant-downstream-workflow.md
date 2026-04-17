@@ -70,10 +70,10 @@ pm_assistant (立项验证)
 
 - 输入：pm_assistant 价值评估报告、用户补充描述
 - 输出：
-  - `docs/prd-{项目名}/prd-{项目名}.md`（主 PRD，§4 为模块导航层）
-  - `docs/prd-{项目名}/modules/prd-{module_en_slug}.md`（模块 PRD）
-  - `docs/prd-{项目名}/modules/README.md`（模块导航索引）
-  - `docs/prd-{项目名}/wireframes/*.html`（低保真原型）
+  - `projects/prd-{项目名}/prd-{项目名}.md`（主 PRD，§4 为模块导航层）
+  - `projects/prd-{项目名}/modules/prd-{module_en_slug}.md`（模块 PRD）
+  - `projects/prd-{项目名}/modules/README.md`（模块导航索引）
+  - `projects/prd-{项目名}/wireframes/*.html`（低保真原型）
 
 **关键机制**：
 
@@ -123,7 +123,7 @@ pm_assistant (立项验证)
 **输入 → 输出**：
 
 - 输入：PRD + 低保真 wireframes（来自 requirement-doc）
-- 输出：`docs/prd-{项目名}/hifi-wireframes/*.html`
+- 输出：`projects/prd-{项目名}/hifi-wireframes/*.html`
 
 **设计规范**：
 
@@ -303,7 +303,7 @@ Issues 确认 → planning (任务规划)
 | AI 协作效率 | 10% | AI Agent 使用覆盖率、Acceptance Rate 等 |
 | 迭代健康度 | 5% | 复盘建议转化率、闭环完整性 |
 
-**输出**：`docs/prd-{项目名}/analysis-report-eval-{YYYYMMDD}.md`
+**输出**：`projects/prd-{项目名}/analysis-report-eval-{YYYYMMDD}.md`
 
 **与 gate_review 的区别**：gate_review 评单次产物质量（单阶段），pm_workflow_evaluator 评跨阶段流程健康度和一致性。
 

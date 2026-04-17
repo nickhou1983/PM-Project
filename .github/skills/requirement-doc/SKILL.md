@@ -26,7 +26,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 确定输入来源并提取关键信息：
 
-**迭代检测（优先执行）**：检查目标路径 `docs/prd-{项目名}/prd-{项目名}.md` 是否已存在 PRD 文档。
+**迭代检测（优先执行）**：检查目标路径 `projects/prd-{项目名}/prd-{项目名}.md` 是否已存在 PRD 文档。
 - 若**已存在**：进入「迭代更新模式」，读取现有文档头的版本号、状态、变更记录，作为基线进行增量修改（版本管理规则见下方「版本管理」章节）
 - 若**不存在**：进入「首次创建模式」，按下方步骤完整生成
 
@@ -139,7 +139,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 3. §4 填写为**导航层**：
    - §4.1 模块导航表：列出所有模块的 slug、中文名、功能点数、最高优先级，以及指向 `modules/prd-{module_en_slug}.md` 的链接
    - §4.2 功能概览：全局功能汇总表（含 RICE 评分），但**不写功能详细描述**
-4. 输出到 `docs/prd-{项目名}/prd-{项目名}.md`
+4. 输出到 `projects/prd-{项目名}/prd-{项目名}.md`
 
 **Step 3 — 生成各模块 PRD**：
 1. 加载 [module-prd-template.md](references/module-prd-template.md) 模板
@@ -151,10 +151,10 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
    - 填充测试要点（§4）：从验收标准推导核心测试场景、边界条件、测试数据需求、测试类型分布
    - 填充交互设计（§5）：关联 wireframe 页面（以 `{module_en_slug}-` 为前缀的文件）
    - 填充依赖/风险/技术参考占位符（§6）
-3. 输出到 `docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
+3. 输出到 `projects/prd-{项目名}/modules/prd-{module_en_slug}.md`
 
 **Step 4 — 生成导航索引**：
-1. 在 `docs/prd-{项目名}/modules/` 目录下生成 `README.md`
+1. 在 `projects/prd-{项目名}/modules/` 目录下生成 `README.md`
 2. 列出所有模块的 PRD 链接、架构文档链接（待生成）、原型图链接
 3. 标注下游消费关系（architect → requirement-to-issues → gate_review）
 
@@ -219,7 +219,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
    - 遵循 wireframe-guide.md 的灰度配色、系统字体、占位元素规范
    - 页面之间通过相对链接互相跳转，形成可点击的交互流程
    - 生成一个 `index.html` 作为原型导航首页，列出所有页面及其功能说明，**按模块分组展示**
-4. **文件输出位置**：`docs/prd-{项目名}/wireframes/`（保持扁平结构，不按模块建子文件夹）
+4. **文件输出位置**：`projects/prd-{项目名}/wireframes/`（保持扁平结构，不按模块建子文件夹）
 5. **在文档中引用**：
    - 主 PRD「交互设计」章节（6.1）：添加所有原型图文件链接
    - 各 Module PRD「交互设计」章节（§4.2）：关联以该模块 `module_en_slug` 为前缀的原型页面
@@ -265,17 +265,17 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - 模块化模式下：先输出主 PRD，然后逐一输出各 Module PRD
 
 **可选：写入本地文件**
-- 主 PRD 写入 `docs/prd-{项目名}/prd-{项目名}.md`
-- Module PRD 写入 `docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
-- 导航索引写入 `docs/prd-{项目名}/modules/README.md`
+- 主 PRD 写入 `projects/prd-{项目名}/prd-{项目名}.md`
+- Module PRD 写入 `projects/prd-{项目名}/modules/prd-{module_en_slug}.md`
+- 导航索引写入 `projects/prd-{项目名}/modules/README.md`
 
 **可选：发布到飞书**
 - 使用 `feishu-docs` Skill 的 `create-doc` 操作将 PRD 创建为飞书文档
 
 **可选：提交到 GitHub 并创建 PR**
 - 使用 `github-publish` Skill 将 PRD 文件提交到 GitHub：
-  1. 基于 `main` 分支创建特性分支（建议命名 `docs/prd-{项目名}`）
-  2. 将 PRD 文件（`docs/prd-{项目名}/prd-{项目名}.md`）提交到该分支
+  1. 基于 `main` 分支创建特性分支（建议命名 `projects/prd-{项目名}`）
+  2. 将 PRD 文件（`projects/prd-{项目名}/prd-{项目名}.md`）提交到该分支
   3. 创建 Pull Request，标题格式：`docs: 添加 {项目名} 产品需求文档（PRD）`
   4. 在 PR 描述中简要说明需求背景和文档结构，并指定相关团队成员进行 Review
 

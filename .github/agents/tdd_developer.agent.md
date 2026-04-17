@@ -54,15 +54,15 @@ user-invocable: true
 > **跨仓库场景**：当 Issue 中的文档链接为 GitHub 绝对 URL（`https://github.com/...`）时，说明 PRD/架构文档存放在另一个仓库。此时使用 `mcp_github_get_file_contents` 或通过 URL 直接获取文档内容，而非本地文件读取。
 
 1. **架构文档**（优先模块级）：
-   - 优先：`docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
-   - 回退：`docs/prd-{项目名}/architecture-{项目名}.md`（主架构）
+   - 优先：`projects/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+   - 回退：`projects/prd-{项目名}/architecture-{项目名}.md`（主架构）
    - 提取：数据模型（ER 图、表结构）、API 设计（端点、请求/响应格式）、前端组件结构、技术栈
 2. **Module PRD**：
-   - 路径：`docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
+   - 路径：`projects/prd-{项目名}/modules/prd-{module_en_slug}.md`
    - 提取：用户故事、业务规则、异常场景、非功能需求
 3. **原型图**（如存在）：
-   - 低保真：`docs/prd-{项目名}/wireframes/{module_en_slug}-*.html`
-   - 高保真：`docs/prd-{项目名}/hifi-wireframes/{module_en_slug}-*.html`
+   - 低保真：`projects/prd-{项目名}/wireframes/{module_en_slug}-*.html`
+   - 高保真：`projects/prd-{项目名}/hifi-wireframes/{module_en_slug}-*.html`
    - 提取：页面布局、交互流程、表单字段
 
 #### 1.3 分析项目技术栈

@@ -244,7 +244,7 @@ flowchart TD
 | 度量指标 | 定义 | 计算公式 | 现有数据源 |
 |---------|------|---------|-----------|
 | PRD 章节完整度 | 10 个标准章节的填写覆盖率 | `已填写章节数 / 10 × 100%` | PRD 文档内容检查 |
-| 模块化程度 | 是否按规范拆分 Module PRD | `Module PRD 数量 ≥ 3 为"模块化"` | `docs/prd-{项目}/modules/` 目录 |
+| 模块化程度 | 是否按规范拆分 Module PRD | `Module PRD 数量 ≥ 3 为"模块化"` | `projects/prd-{项目}/modules/` 目录 |
 | PRD 修订轮次 | 从初稿到 Gate 1 评审版的修订次数 | `Git commit 中 prd-*.md 的变更次数` | Git log |
 | 原型页面覆盖率 | wireframe 覆盖 P0 功能的比例 | `有原型的 P0 功能数 / P0 功能总数 × 100%` | wireframes/ 目录 + PRD §4 |
 | AI 辅助率 | PRD 中由 AI 生成后未经实质修改的段落占比 | 人工标注或 diff 分析 | PRD 版本对比 |

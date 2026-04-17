@@ -96,7 +96,7 @@
 ### 输出路径
 
 ```
-docs/prd-{project_slug}/prd-{project_slug}.md
+projects/prd-{project_slug}/prd-{project_slug}.md
 ```
 
 ---
@@ -133,17 +133,17 @@ docs/prd-{project_slug}/prd-{project_slug}.md
 ### 输出路径
 
 ```
-docs/prd-{project_slug}/modules/prd-{module_en_slug}.md
+projects/prd-{project_slug}/modules/prd-{module_en_slug}.md
 ```
 
 ### 示例
 
 ```
-docs/prd-personal-todo-app/modules/prd-task-management.md
-docs/prd-personal-todo-app/modules/prd-time-management.md
-docs/prd-personal-todo-app/modules/prd-priority.md
-docs/prd-personal-todo-app/modules/prd-category.md
-docs/prd-personal-todo-app/modules/prd-reminder.md
+projects/prd-personal-todo-app/modules/prd-task-management.md
+projects/prd-personal-todo-app/modules/prd-time-management.md
+projects/prd-personal-todo-app/modules/prd-priority.md
+projects/prd-personal-todo-app/modules/prd-category.md
+projects/prd-personal-todo-app/modules/prd-reminder.md
 ```
 
 ---
@@ -182,7 +182,7 @@ docs/prd-personal-todo-app/modules/prd-reminder.md
 ### 输出路径
 
 ```
-docs/prd-{project_slug}/modules/README.md
+projects/prd-{project_slug}/modules/README.md
 ```
 
 ---
@@ -191,9 +191,9 @@ docs/prd-{project_slug}/modules/README.md
 
 完成 4 步流程后，验证以下交付物：
 
-- [ ] 主 PRD 已生成：`docs/prd-{project_slug}/prd-{project_slug}.md`
-- [ ] 模块 PRD 已生成：`docs/prd-{project_slug}/modules/prd-{module_en_slug}.md`（每个模块一个）
-- [ ] 导航索引已生成：`docs/prd-{project_slug}/modules/README.md`
+- [ ] 主 PRD 已生成：`projects/prd-{project_slug}/prd-{project_slug}.md`
+- [ ] 模块 PRD 已生成：`projects/prd-{project_slug}/modules/prd-{module_en_slug}.md`（每个模块一个）
+- [ ] 导航索引已生成：`projects/prd-{project_slug}/modules/README.md`
 - [ ] 主 PRD §4.1 模块导航表中的链接指向正确的 Module PRD 文件
 - [ ] 每个 Module PRD 的反向链接指向主 PRD
 - [ ] 所有功能点在全局汇总表（§4.2）和 Module PRD（§2.1）中都有出现

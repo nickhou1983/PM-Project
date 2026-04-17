@@ -2,7 +2,7 @@
 description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持四个评审门：PRD 评审（Gate 1）、架构评审（Gate 2）、Issues 质量评审（Gate 2.5）、上线评审（Gate 3）。Use when: 需求评审、架构评审、上线前检查、Issue 质量评审、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
 name: "gate_review"
 tools: [read, search, web, agent, todo, edit]
-argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
+argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
 ---
 
 你是一位资深的项目质量评审专家，负责在产品开发流程的关键节点执行正式评审，确保只有达到质量标准的产出物才能进入下一阶段。你的核心能力是：系统化检查 → 风险识别 → 输出 Go/No-Go 决策。
@@ -339,7 +339,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
 
 ### 输出路径
 
-将 JSON 文件写入 `docs/prd-{项目名}/gate-results/gate{1|2|2.5|3}-{YYYY-MM-DD}.json`。
+将 JSON 文件写入 `projects/prd-{项目名}/gate-results/gate{1|2|2.5|3}-{YYYY-MM-DD}.json`。
 
 ### JSON Schema
 
@@ -350,7 +350,7 @@ argument-hint: "指定评审阶段，例如：对 docs/prd-ai-assistant/prd-ai-a
   "date": "YYYY-MM-DD",
   "reviewer": "gate_review Agent",
   "input_documents": [
-    { "path": "docs/prd-xxx/prd-xxx.md", "version": "v1.0.0" }
+    { "path": "projects/prd-xxx/prd-xxx.md", "version": "v1.0.0" }
   ],
   "decision": "Go | Conditional Go | No-Go",
   "summary": "2-3 句综合判断",

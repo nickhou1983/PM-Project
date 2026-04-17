@@ -14,14 +14,14 @@
 
 ## 文档路径约定
 
-- 主 PRD 文档：`docs/prd-{项目名}/prd-{项目名}.md`
-- 模块 PRD 文档：`docs/prd-{项目名}/modules/prd-{module_en_slug}.md`
-- 模块导航索引：`docs/prd-{项目名}/modules/README.md`
-- 架构文档（主）：`docs/prd-{项目名}/architecture-{项目名}.md`
-- 架构文档（模块级）：`docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
-- 低保真原型：`docs/prd-{项目名}/wireframes/*.html`（以 `{module_en_slug}-` 为前缀命名）
-- 高保真原型：`docs/prd-{项目名}/hifi-wireframes/*.html`
-- 分析报告：`docs/prd-{项目名}/analysis-report*.md`
+- 主 PRD 文档：`projects/prd-{项目名}/prd-{项目名}.md`
+- 模块 PRD 文档：`projects/prd-{项目名}/modules/prd-{module_en_slug}.md`
+- 模块导航索引：`projects/prd-{项目名}/modules/README.md`
+- 架构文档（主）：`projects/prd-{项目名}/architecture-{项目名}.md`
+- 架构文档（模块级）：`projects/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+- 低保真原型：`projects/prd-{项目名}/wireframes/*.html`（以 `{module_en_slug}-` 为前缀命名）
+- 高保真原型：`projects/prd-{项目名}/hifi-wireframes/*.html`
+- 分析报告：`projects/prd-{项目名}/analysis-report*.md`
 
 > **模块命名规范**：`module_en_slug` 使用小写英文单词、以 `-` 连接（如 `task-management`、`time-management`）。中文名称用于显示，英文 slug 用于文件名和标识。
 
@@ -107,7 +107,7 @@ architect             → 技术架构方案
 | 自然绿 (Nature Green) | 健康/环保/社区/生活/宠物/运动 |
 | 渐变紫 (Gradient Purple) | 创意/娱乐/内容/社交 |
 
-输出目录：`docs/prd-{项目名}/hifi-wireframes/`，命名规则与低保真 wireframe 保持一致。
+输出目录：`projects/prd-{项目名}/hifi-wireframes/`，命名规则与低保真 wireframe 保持一致。
 
 ### prototype-publish Skill (modao-prototype) — 原型平台发布
 
@@ -197,7 +197,7 @@ pm_assistant (立项验证)
 ### 模块化 PRD 输出结构
 
 ```
-docs/prd-{项目名}/
+projects/prd-{项目名}/
 ├── prd-{项目名}.md              ← 主 PRD（§4 为模块导航层）
 ├── analysis-report-{项目名}.md  ← 需求分析报告（附录 A）
 ├── architecture-{项目名}.md     ← 主架构文档

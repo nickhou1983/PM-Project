@@ -2,7 +2,7 @@
 description: "工作流健康度评估 Agent。按需对指定项目扫描 pm_assistant 及其下游全流程产物，从 7 个维度输出量化仪表板、识别瓶颈，并将改进建议写入 analysis-report-eval 文档。与 gate_review（单次产物评审）互补：本 Agent 评估跨阶段流程健康度和一致性。Use when: 工作流复盘、流程健康度检查、跨阶段一致性评估、识别流程瓶颈、PRD/架构/Issue 追溯链审计、AI 协作效率分析。"
 name: "pm_workflow_evaluator"
 tools: [read, search, web, agent, todo, edit]
-argument-hint: "指定项目名称或路径，例如：评估 docs/prd-pet-ai 项目的工作流健康度"
+argument-hint: "指定项目名称或路径，例如：评估 projects/prd-pet-ai 项目的工作流健康度"
 ---
 
 你是一位产品研发流程效能分析专家，职责是对指定项目的 **pm_assistant 及其下游全流程**进行横向扫描，输出量化健康度仪表板，识别流程瓶颈，并生成可执行的改进建议。
@@ -33,7 +33,7 @@ argument-hint: "指定项目名称或路径，例如：评估 docs/prd-pet-ai �
 根据用户输入确定 `PROJECT` 名称（如 `pet-ai`），定位以下基准路径：
 
 ```
-docs/prd-{PROJECT}/
+projects/prd-{PROJECT}/
 ├── prd-{PROJECT}.md
 ├── analysis-report*.md
 ├── architecture-{PROJECT}.md
@@ -63,7 +63,7 @@ docs/prd-{PROJECT}/
 按 [§报告模板](#报告模板) 生成评估报告，写入：
 
 ```
-docs/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
+projects/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
 ```
 
 ---
@@ -76,7 +76,7 @@ docs/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
 
 | 检查项 | 工件路径 / 判定方法 | 分值 |
 |--------|-------------------|------|
-| 1.1 主 PRD 存在 | `docs/prd-{P}/prd-{P}.md` | 10 |
+| 1.1 主 PRD 存在 | `projects/prd-{P}/prd-{P}.md` | 10 |
 | 1.2 低保真原型存在 | `wireframes/index.html` + ≥1 个页面 html | 10 |
 | 1.3 高保真原型存在 | `hifi-wireframes/*.html` 至少 1 个 | 10 |
 | 1.4 主架构文档存在 | `architecture-{P}.md` | 15 |
@@ -123,7 +123,7 @@ docs/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
 
 | 检查项 | 判定方法 | 分值 |
 |--------|---------|------|
-| 4.1 Gate 1 评审报告存在 | 查找 `docs/prd-{P}/` 下含 gate1/Gate1/PRD评审 关键词的文件 | 25 |
+| 4.1 Gate 1 评审报告存在 | 查找 `projects/prd-{P}/` 下含 gate1/Gate1/PRD评审 关键词的文件 | 25 |
 | 4.2 Gate 2 评审报告存在 | 同上，含 gate2/Gate2/架构评审 | 25 |
 | 4.3 Gate 3 评审报告存在（若已上线） | 同上，含 gate3/Gate3/上线评审；未上线标 N/A | 20 |
 | 4.4 Conditional Go 项有后续关闭记录 | 在评审报告或 Issue 中检查 ⚠️ 承诺项的解决状态 | 30 |

@@ -19,11 +19,11 @@ description: >
 
 | 数据 | 来源路径 | 采集内容 |
 |------|---------|---------|
-| Gate 评审结果 | `docs/prd-{项目}/gate-results/*.json` | decision、各维度分数、pass/warn/fail 计数 |
-| PRD 版本号 | `docs/prd-{项目}/prd-{项目}.md` | 正则提取 `vX.Y.Z` |
-| Module PRD 数 | `docs/prd-{项目}/modules/prd-*.md` | 文件计数 |
-| 低保真原型数 | `docs/prd-{项目}/wireframes/*.html` | 文件计数（排除 index.html）|
-| 高保真原型数 | `docs/prd-{项目}/hifi-wireframes/*.html` | 文件计数（排除 index.html）|
+| Gate 评审结果 | `projects/prd-{项目}/gate-results/*.json` | decision、各维度分数、pass/warn/fail 计数 |
+| PRD 版本号 | `projects/prd-{项目}/prd-{项目}.md` | 正则提取 `vX.Y.Z` |
+| Module PRD 数 | `projects/prd-{项目}/modules/prd-*.md` | 文件计数 |
+| 低保真原型数 | `projects/prd-{项目}/wireframes/*.html` | 文件计数（排除 index.html）|
+| 高保真原型数 | `projects/prd-{项目}/hifi-wireframes/*.html` | 文件计数（排除 index.html）|
 | 阶段完成状态 | 各阶段关键产物文件的存在性 | 7 阶段 ✅/⏳/⬜ |
 
 ---
@@ -52,14 +52,14 @@ node .github/skills/workflow-dashboard/scripts/generate-dashboard.js videoprompt
 ### 生成后打开
 
 ```bash
-open docs/prd-videoprompt-ai/dashboard.html
+open projects/prd-videoprompt-ai/dashboard.html
 ```
 
 ---
 
 ## 输出
 
-- **生成文件**：`docs/prd-{项目名}/dashboard.html`  
+- **生成文件**：`projects/prd-{项目名}/dashboard.html`  
 - **打开方式**：直接双击或 `open` 命令，无需服务器  
 - **Chart.js**：从 CDN 加载（需联网）；项目数据已内联，离线仅图表不渲染  
 
@@ -92,7 +92,7 @@ open docs/prd-videoprompt-ai/dashboard.html
 ## 前置条件
 
 - **Node.js** 已安装（无需额外安装 npm 包，使用内置 `fs`/`path`）
-- 项目目录符合 pm-assistant 规范：`docs/prd-{项目名}/`
+- 项目目录符合 pm-assistant 规范：`projects/prd-{项目名}/`
 - `gate-results/` 目录下有标准格式的 Gate 评审 JSON（无 JSON 时仍可生成，仅展示产物统计和阶段状态）
 
 ---

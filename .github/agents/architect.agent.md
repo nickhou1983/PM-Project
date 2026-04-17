@@ -1,7 +1,7 @@
 ---
 description: "架构师 Agent。根据产品需求文档（PRD）设计完整的技术架构方案，输出结构化的架构设计文档。覆盖：技术栈选型、系统架构、数据模型、API 设计、部署方案、非功能需求、安全设计。Use when: 用户需要架构设计、技术方案、系统设计、技术选型、从 PRD 推导架构、设计技术架构、数据库设计、API 设计、部署架构。"
 name: "architect"
-argument-hint: "提供 PRD 文档路径或描述产品需求，例如：根据 docs/prd-ai-movie-review.md 设计技术架构"
+argument-hint: "提供 PRD 文档路径或描述产品需求，例如：根据 projects/prd-ai-movie-review.md 设计技术架构"
 user-invocable: true
 ---
 
@@ -128,8 +128,8 @@ user-invocable: true
 将设计成果写入项目文档：
 
 1. **确定输出路径**：
-   - 主架构：默认 `docs/prd-{项目名}/architecture-{项目名}.md`
-   - 模块架构：默认 `docs/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
+   - 主架构：默认 `projects/prd-{项目名}/architecture-{项目名}.md`
+   - 模块架构：默认 `projects/prd-{项目名}/architecture-{项目名}-{module_en_slug}.md`
    - 用户可自定义，但必须保持主架构与模块架构的引用关系完整
 2. **版本管理**：
    - 若目标路径已存在架构文档（迭代更新）：读取现有版本号，根据变更范围递增（Patch/Minor/Major），追加变更记录

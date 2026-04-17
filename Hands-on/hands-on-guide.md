@@ -176,12 +176,12 @@ flowchart LR
 
 | 阶段 | Agent / Skill | 交付物 | 输出路径 |
 |------|--------------|--------|----------|
-| 立项前验证 | `pm_assistant` | 价值评估报告 | `docs/prd-{项目名}/analysis-report-{项目名}.md` |
-| PRD 生成 | `requirement-doc` | PRD + 低保真 wireframe | `docs/prd-{项目名}/prd-{项目名}.md` + `wireframes/*.html` |
+| 立项前验证 | `pm_assistant` | 价值评估报告 | `projects/prd-{项目名}/analysis-report-{项目名}.md` |
+| PRD 生成 | `requirement-doc` | PRD + 低保真 wireframe | `projects/prd-{项目名}/prd-{项目名}.md` + `wireframes/*.html` |
 | PRD 评审 | `gate_review` Gate 1 | Go/No-Go 评审报告 | 输出到终端 |
-| 高保真原型 | `designer` + `prototype-design` | 高保真 HTML 原型 | `docs/prd-{项目名}/hifi-wireframes/*.html` |
+| 高保真原型 | `designer` + `prototype-design` | 高保真 HTML 原型 | `projects/prd-{项目名}/hifi-wireframes/*.html` |
 | 墨刀导入 | `prototype-publish` | 墨刀个人空间原型 | 墨刀平台 |
-| 架构设计 | `architect` | 架构文档 + 子文档 | `docs/prd-{项目名}/architecture-{项目名}.md` |
+| 架构设计 | `architect` | 架构文档 + 子文档 | `projects/prd-{项目名}/architecture-{项目名}.md` |
 | 架构评审 | `gate_review` Gate 2 | Go/No-Go 评审报告 | 输出到终端 |
 | 任务拆分 | `requirement-to-issues` | GitHub Epic / Task / Sub-Issue | GitHub Issues |
 | 上线评审 | `gate_review` Gate 3 | Go/No-Go 评审报告 | 输出到终端 |
@@ -480,14 +480,14 @@ flowchart LR
 Agent 会执行以下操作：
 
 1. **整理需求信息**，结合 Step 2 的分析结果
-2. **按模板生成 PRD**，输出到 `docs/prd-todo-app/prd-todo-app.md`
-3. **生成低保真 wireframe**，输出到 `docs/prd-todo-app/wireframes/` 目录下
+2. **按模板生成 PRD**，输出到 `projects/prd-todo-app/prd-todo-app.md`
+3. **生成低保真 wireframe**，输出到 `projects/prd-todo-app/wireframes/` 目录下
 
 **检查交付物**：
 
 ```bash
 # 查看生成的文件
-ls docs/prd-todo-app/
+ls projects/prd-todo-app/
 
 # 预期结构：
 # prd-todo-app.md           ← PRD 文档
@@ -506,10 +506,10 @@ ls docs/prd-todo-app/
 
 ```bash
 # macOS
-open docs/prd-todo-app/wireframes/index.html
+open projects/prd-todo-app/wireframes/index.html
 
 # Windows
-start docs/prd-todo-app/wireframes/index.html
+start projects/prd-todo-app/wireframes/index.html
 ```
 
 ![alt text](image-7.png)
@@ -521,7 +521,7 @@ start docs/prd-todo-app/wireframes/index.html
 在 Codex App 中输入指令，调用 `prototype-publish` Skill：
 
 ```text
-将 docs/prd-todo-app/wireframes/ 下的低保真原型导入墨刀。
+将 projects/prd-todo-app/wireframes/ 下的低保真原型导入墨刀。
 ```
 
 或者生成高保真原型并导入：

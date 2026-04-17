@@ -35,7 +35,7 @@ description: "高保真原型设计 Skill（设计师角色）。基于 PM 产�
    - 提取产品定位、目标用户、功能需求、交互设计章节
 
 2. **定位低保真 wireframe**：
-   - 检查 `docs/prd-{项目名}/wireframes/` 目录
+   - 检查 `projects/prd-{项目名}/wireframes/` 目录
    - 读取 `index.html` 获取页面清单
    - 逐一读取各 wireframe 页面，理解布局结构和交互流程
 
@@ -100,7 +100,7 @@ description: "高保真原型设计 Skill（设计师角色）。基于 PM 产�
    - 保留页面间的跳转链接
    - 生成 `index.html` 导航首页
 
-4. **文件输出位置**：`docs/prd-{项目名}/hifi-wireframes/`
+4. **文件输出位置**：`projects/prd-{项目名}/hifi-wireframes/`
 
 #### 方式 B：通过 gen_html 生成（可选）
 
@@ -117,7 +117,7 @@ description: "高保真原型设计 Skill（设计师角色）。基于 PM 产�
    - 记录每个页面返回的 key（用于后续可选的墨刀导入）
 
 3. **写入本地文件**：
-   - 将 `gen_html` 返回的 HTML 写入 `docs/prd-{项目名}/hifi-wireframes/` 目录
+   - 将 `gen_html` 返回的 HTML 写入 `projects/prd-{项目名}/hifi-wireframes/` 目录
    - 文件名保持与低保真 wireframe 一致（如 `home.html`、`detail.html`）
 
 4. **生成 `index.html` 导航首页**：
@@ -152,7 +152,7 @@ description: "高保真原型设计 Skill（设计师角色）。基于 PM 产�
 ### 步骤 5：输出与交付
 
 **默认：写入本地文件**
-- 将高保真原型写入 `docs/prd-{项目名}/hifi-wireframes/` 目录
+- 将高保真原型写入 `projects/prd-{项目名}/hifi-wireframes/` 目录
 - 在 PRD 文档的「交互设计」章节中补充高保真原型文件链接
 
 **可选：导入墨刀**（方式 B 时主动询问用户）

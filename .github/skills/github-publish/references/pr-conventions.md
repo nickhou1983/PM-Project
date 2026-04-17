@@ -93,7 +93,7 @@ Closes #<issue-number>
 
 PRD 或架构文档的迭代更新，分支名中应包含版本号：
 
-- `docs/prd-{项目名}-v{版本号}` — PRD 迭代更新，如 `docs/prd-videoprompt-ai-v1.1.0`
+- `projects/prd-{项目名}-v{版本号}` — PRD 迭代更新，如 `projects/prd-videoprompt-ai-v1.1.0`
 - `docs/arch-{项目名}-v{版本号}` — 架构文档迭代更新，如 `docs/arch-videoprompt-ai-v1.1.0`
 
 PR 标题示例：

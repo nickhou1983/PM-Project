@@ -39,7 +39,7 @@ agents: []
    - 检查是否有类似功能的已有实现可参考
 2. **文档研读**：
    - 架构文档（优先模块级 `architecture-{项目名}-{module_en_slug}.md`）
-   - Module PRD（`docs/prd-{项目名}/modules/prd-{module_en_slug}.md`）
+   - Module PRD（`projects/prd-{项目名}/modules/prd-{module_en_slug}.md`）
    - 原型图（如存在）
 3. **依赖分析**：
    - 上游依赖：本任务需要哪些模块/服务/数据已就绪

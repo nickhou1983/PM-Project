@@ -87,8 +87,8 @@
 
 | 产物 | 位置 | 职责 |
 |------|------|------|
-| PRD 文档 | `docs/prd-{项目名}/prd-{项目名}.md` | 唯一需求源 |
-| 仓库 HTML wireframes | `docs/prd-{项目名}/wireframes/` | 唯一可版本化原型源 |
+| PRD 文档 | `projects/prd-{项目名}/prd-{项目名}.md` | 唯一需求源 |
+| 仓库 HTML wireframes | `projects/prd-{项目名}/wireframes/` | 唯一可版本化原型源 |
 | 墨刀原型 | 墨刀个人空间 | 快速评审展示载体 |
 | Figma frames | Figma 文件 | 设计深度协作与 Code Connect 载体 |
 
@@ -152,10 +152,10 @@ prototype-publish 将核心页面导入墨刀或 Figma（展示层）
 
 ```bash
 # 低保真 wireframes
-npx serve docs/prd-{项目名}/wireframes -p 3001
+npx serve projects/prd-{项目名}/wireframes -p 3001
 
 # 高保真 hifi-wireframes
-npx serve docs/prd-{项目名}/hifi-wireframes -p 3001
+npx serve projects/prd-{项目名}/hifi-wireframes -p 3001
 ```
 
 访问示例：`http://localhost:3001/login.html`

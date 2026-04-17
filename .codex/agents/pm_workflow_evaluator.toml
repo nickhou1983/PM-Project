@@ -23,10 +23,10 @@ developer_instructions = """
 - 必须在报告末尾给出「总健康度分数」和优先改进项（TOP 3）
 
 ## 工作步骤
-1. 定位项目目录（docs/prd-{PROJECT}/）
+1. 定位项目目录（projects/prd-{PROJECT}/）
 2. 逐维度评估（Dim1-Dim7）
 3. 综合计算总健康度分数
-4. 输出报告写入 docs/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
+4. 输出报告写入 projects/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
 
 ## 7 大评估维度与权重
 

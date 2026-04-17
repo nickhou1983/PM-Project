@@ -29,7 +29,8 @@
 ├── .agents/
 │   └── skills -> ../.github/skills
 ├── .codex/
-│   └── agents/
+│   ├── agents/
+│   └── rules/
 ├── .github/
 │   ├── agents/
 │   │   ├── architect.agent.md
@@ -52,11 +53,13 @@
 │       ├── microservices/
 │       ├── modao-prototype/  (prototype-publish)
 │       ├── playwright-testing/
+│       ├── premium-frontend-ui/
 │       ├── prototype-design/
 │       ├── requirement-doc/
 │       ├── requirement-to-issues/
 │       ├── security-audit/
-│       └── tdd-coder/
+│       ├── tdd-coder/
+│       └── workflow-dashboard/
 ├── docs/
 │   └── ai-era-metrics-framework.md
 ├── Hands-on/
@@ -65,6 +68,7 @@
 ├── scripts/                       ← PPT 生成脚本（pptxgenjs）
 ├── plans/
 │   └── README.md
+├── projects/
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 └── README.md
@@ -106,6 +110,8 @@
 | prototype-publish | 压生成并发布墨刀/Figma 原型（支持墨刀 MCP 和 Figma MCP 双路径） |
 | microservices | 微服务设计、治理与部署规范 |
 | playwright-testing | Playwright UI/E2E 测试规范 |
+| premium-frontend-ui | 沉浸式高端前端 UI 设计（Awwwards 级别） |
+| workflow-dashboard | 工作流度量仪表盘（Gate 评审可视化、产物统计） |
 
 ## 使用方式
 

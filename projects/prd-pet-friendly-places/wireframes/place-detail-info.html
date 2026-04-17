@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>场所详情 — 宠物友好场所</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; background: #f5f5f5; color: #333; }
+.container { max-width: 375px; margin: 0 auto; min-height: 100vh; background: #fff; display: flex; flex-direction: column; }
+
+.nav-bar { display: flex; align-items: center; padding: 12px 16px; background: #fff; border-bottom: 1px solid #eee; }
+.nav-bar a { text-decoration: none; color: #666; font-size: 12px; }
+.nav-bar .title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; }
+.nav-bar .share-btn { font-size: 18px; cursor: pointer; }
+
+/* 顶部图片区 */
+.hero-image { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 48px; position: relative; }
+.photo-count { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.5); color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 12px; }
+
+/* 内容区 */
+.content { flex: 1; overflow-y: auto; padding-bottom: 70px; }
+
+/* 场所基本信息 */
+.place-header { padding: 16px; }
+.place-name { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.place-type { display: inline-block; font-size: 11px; padding: 2px 8px; background: #f0f0f0; border-radius: 4px; color: #666; margin-bottom: 8px; }
+.place-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.stars { color: #ff9800; font-size: 14px; }
+.rating-score { font-size: 16px; font-weight: 600; color: #ff9800; }
+.rating-count { font-size: 12px; color: #999; }
+
+/* 信息行 */
+.info-section { padding: 0 16px; }
+.info-row { display: flex; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+.info-row .icon { width: 24px; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.info-row .label { font-size: 13px; color: #666; width: 60px; flex-shrink: 0; }
+.info-row .value { font-size: 13px; color: #333; flex: 1; }
+.info-row .action { font-size: 12px; color: #4a90d9; cursor: pointer; }
+
+/* 宠物政策卡片 */
+.pet-policy-card { margin: 16px; padding: 16px; background: #f9fdf9; border: 1px solid #c8e6c9; border-radius: 12px; }
+.pet-policy-card .card-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #2e7d32; }
+.policy-item { display: flex; align-items: center; padding: 6px 0; font-size: 13px; }
+.policy-item .check { margin-right: 8px; font-size: 14px; }
+.policy-item .text { color: #333; }
+.policy-divider { height: 1px; background: #e8f5e9; margin: 8px 0; }
+.facility-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.facility-tag { font-size: 11px; padding: 4px 10px; background: #e8f5e9; border-radius: 12px; color: #2e7d32; }
+
+/* 评价区 */
+.review-section { padding: 16px; }
+.section-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.section-title .more { font-size: 12px; color: #999; font-weight: 400; }
+
+.review-card { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+.review-user { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.review-avatar { width: 32px; height: 32px; background: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.review-name { font-size: 13px; font-weight: 500; }
+.review-date { font-size: 11px; color: #999; margin-left: auto; }
+.review-stars { color: #ff9800; font-size: 12px; margin-bottom: 4px; }
+.review-text { font-size: 13px; color: #555; line-height: 1.5; }
+.review-photos { display: flex; gap: 6px; margin-top: 8px; }
+.review-photo { width: 64px; height: 64px; background: #e8e8e8; border-radius: 6px; }
+
+/* 底部操作栏 */
+.action-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 375px; background: #fff; border-top: 1px solid #eee; padding: 10px 16px; display: flex; gap: 8px; align-items: center; }
+.action-btn { flex: 1; height: 40px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.action-btn.primary { background: #666; color: #fff; border-color: #666; }
+.action-btn .btn-icon { font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部导航 -->
+  <div class="nav-bar">
+    <a href="place-discovery-map.html">← 返回</a>
+    <div class="title">场所详情</div>
+    <span class="share-btn">↗</span>
+  </div>
+
+  <!-- 顶部图片 -->
+  <div class="hero-image">
+    🍽️
+    <div class="photo-count">📷 12 张</div>
+  </div>
+
+  <div class="content">
+    <!-- 基本信息 -->
+    <div class="place-header">
+      <div class="place-name">Pet's Kitchen 宠物友好餐厅</div>
+      <span class="place-type">西餐厅</span>
+      <div class="place-rating">
+        <span class="stars">★★★★★</span>
+        <span class="rating-score">4.6</span>
+        <span class="rating-count">(128 条评价)</span>
+      </div>
+    </div>
+
+    <!-- 基本信息行 -->
+    <div class="info-section">
+      <div class="info-row">
+        <span class="icon">📍</span>
+        <span class="label">地址</span>
+        <span class="value">上海市静安区南京西路 1234 号 2F</span>
+        <span class="action">复制</span>
+      </div>
+      <div class="info-row">
+        <span class="icon">🕐</span>
+        <span class="label">营业</span>
+        <span class="value">10:00 - 22:00（营业中）</span>
+      </div>
+      <div class="info-row">
+        <span class="icon">📞</span>
+        <span class="label">电话</span>
+        <span class="value">021-1234-5678</span>
+        <span class="action">拨打</span>
+      </div>
+    </div>
+
+    <!-- 宠物政策卡片 -->
+    <div class="pet-policy-card">
+      <div class="card-title">🐾 宠物政策</div>
+      <div class="policy-item">
+        <span class="check">✅</span>
+        <span class="text">允许宠物类型：犬、猫</span>
+      </div>
+      <div class="policy-item">
+        <span class="check">⚠️</span>
+        <span class="text">犬种限制：中小型犬（≤15kg）</span>
+      </div>
+      <div class="policy-item">
+        <span class="check">💰</span>
+        <span class="text">清洁费：无 / 押金：无</span>
+      </div>
+      <div class="policy-item">
+        <span class="check">📋</span>
+        <span class="text">规定：需牵绳，禁止上椅</span>
+      </div>
+      <div class="policy-divider"></div>
+      <div class="policy-item">
+        <span class="check">🏠</span>
+        <span class="text">宠物设施：</span>
+      </div>
+      <div class="facility-list">
+        <span class="facility-tag">🥤 饮水碗</span>
+        <span class="facility-tag">🍖 宠物菜单</span>
+        <span class="facility-tag">🪢 系绳桩</span>
+        <span class="facility-tag">🌿 户外区域</span>
+      </div>
+    </div>
+
+    <!-- 用户评价 -->
+    <div class="review-section">
+      <div class="section-title">
+        用户评价 (128)
+        <span class="more">查看全部 ›</span>
+      </div>
+
+      <div class="review-card">
+        <div class="review-user">
+          <div class="review-avatar">🐕</div>
+          <span class="review-name">柯基妈妈</span>
+          <span class="review-date">3 天前</span>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">带我家柯基来的，服务员态度很好！专门给狗狗准备了水碗，户外区域宽敞，非常推荐。</div>
+        <div class="review-photos">
+          <div class="review-photo"></div>
+          <div class="review-photo"></div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-user">
+          <div class="review-avatar">🐈</div>
+          <span class="review-name">猫奴小王</span>
+          <span class="review-date">1 周前</span>
+        </div>
+        <div class="review-stars">★★★★☆</div>
+        <div class="review-text">带猫咪去了，店员说可以带但建议放猫包里。整体还不错，食物味道一般。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部操作栏 -->
+  <div class="action-bar">
+    <a href="place-discovery-map.html" class="action-btn primary">
+      <span class="btn-icon">🧭</span> 导航
+    </a>
+    <button class="action-btn">
+      <span class="btn-icon">❤️</span> 收藏
+    </button>
+    <button class="action-btn">
+      <span class="btn-icon">↗️</span> 分享
+    </button>
+    <button class="action-btn">
+      <span class="btn-icon">✏️</span> 纠错
+    </button>
+  </div>
+</div>
+</body>
+</html>

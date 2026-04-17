@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上报场所 — 宠物友好场所</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; background: #f5f5f5; color: #333; }
+.container { max-width: 375px; margin: 0 auto; min-height: 100vh; background: #fff; display: flex; flex-direction: column; }
+
+.nav-bar { display: flex; align-items: center; padding: 12px 16px; background: #fff; border-bottom: 1px solid #eee; }
+.nav-bar a { text-decoration: none; color: #666; font-size: 12px; }
+.nav-bar .title { flex: 1; text-align: center; font-size: 16px; font-weight: 600; }
+
+/* 步骤指示器 */
+.steps { display: flex; padding: 16px; gap: 4px; }
+.step { flex: 1; text-align: center; }
+.step-dot { width: 24px; height: 24px; border-radius: 50%; background: #e0e0e0; color: #999; font-size: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; }
+.step.active .step-dot { background: #666; color: #fff; }
+.step.done .step-dot { background: #4caf50; color: #fff; }
+.step-label { font-size: 10px; color: #999; }
+.step.active .step-label { color: #333; font-weight: 500; }
+
+/* 表单 */
+.form-content { flex: 1; padding: 0 16px 16px; overflow-y: auto; }
+.form-section { margin-bottom: 20px; }
+.form-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #333; }
+
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 13px; color: #666; margin-bottom: 6px; display: flex; align-items: center; }
+.form-label .required { color: #f44336; margin-left: 2px; }
+.form-input { width: 100%; height: 40px; border: 1px solid #ddd; border-radius: 8px; padding: 0 12px; font-size: 13px; background: #fafafa; }
+.form-textarea { width: 100%; height: 80px; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 13px; background: #fafafa; resize: none; }
+
+/* 地图选点 */
+.map-picker { width: 100%; height: 150px; background: #e8e8e8; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 13px; border: 1px dashed #ccc; cursor: pointer; margin-top: 6px; flex-direction: column; gap: 4px; }
+.map-picker .icon { font-size: 24px; }
+
+/* 选择标签 */
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-option { font-size: 12px; padding: 6px 14px; border: 1px solid #ddd; border-radius: 16px; cursor: pointer; background: #fff; }
+.tag-option.selected { background: #666; color: #fff; border-color: #666; }
+
+/* 多选列表 */
+.checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+.checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 8px 12px; background: #fafafa; border-radius: 8px; cursor: pointer; }
+.checkbox-item .box { width: 18px; height: 18px; border: 2px solid #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.checkbox-item.checked .box { background: #666; border-color: #666; color: #fff; font-size: 12px; }
+
+/* 照片上传 */
+.photo-upload { display: flex; flex-wrap: wrap; gap: 8px; }
+.photo-item { width: 72px; height: 72px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.photo-add { border: 1px dashed #ccc; cursor: pointer; flex-direction: column; color: #999; font-size: 11px; }
+.photo-add .plus { font-size: 24px; color: #ccc; }
+
+/* 底部按钮 */
+.form-footer { padding: 16px; border-top: 1px solid #eee; }
+.submit-btn { width: 100%; height: 44px; background: #666; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; }
+.submit-btn:disabled { background: #ccc; }
+
+/* 底部 Tab */
+.tab-bar { display: flex; background: #fff; border-top: 1px solid #eee; padding: 8px 0; }
+.tab-item { flex: 1; text-align: center; padding: 6px 0; text-decoration: none; color: #999; }
+.tab-item.active { color: #333; }
+.tab-item .tab-icon { font-size: 20px; }
+.tab-item .tab-label { font-size: 10px; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部导航 -->
+  <div class="nav-bar">
+    <a href="index.html">← 返回</a>
+    <div class="title">上报宠物友好场所</div>
+  </div>
+
+  <!-- 步骤指示器 -->
+  <div class="steps">
+    <div class="step active">
+      <div class="step-dot">1</div>
+      <div class="step-label">基本信息</div>
+    </div>
+    <div class="step">
+      <div class="step-dot">2</div>
+      <div class="step-label">宠物政策</div>
+    </div>
+    <div class="step">
+      <div class="step-dot">3</div>
+      <div class="step-label">照片上传</div>
+    </div>
+    <div class="step">
+      <div class="step-dot">4</div>
+      <div class="step-label">确认提交</div>
+    </div>
+  </div>
+
+  <!-- 表单内容 -->
+  <div class="form-content">
+    <!-- Step 1: 基本信息 -->
+    <div class="form-section">
+      <div class="form-section-title">📍 基本信息</div>
+
+      <div class="form-group">
+        <div class="form-label">场所名称 <span class="required">*</span></div>
+        <input class="form-input" type="text" placeholder="请输入场所名称" title="场所名称">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">场所类型 <span class="required">*</span></div>
+        <div class="tag-group">
+          <span class="tag-option selected">餐厅</span>
+          <span class="tag-option">咖啡馆</span>
+          <span class="tag-option">公园</span>
+          <span class="tag-option">商场</span>
+          <span class="tag-option">酒店</span>
+          <span class="tag-option">宠物店</span>
+          <span class="tag-option">其他</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">详细地址 <span class="required">*</span></div>
+        <input class="form-input" type="text" placeholder="请输入详细地址" title="详细地址">
+        <div class="map-picker">
+          <span class="icon">📍</span>
+          <span>点击在地图上选择位置</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">营业时间</div>
+        <input class="form-input" type="text" placeholder="如 10:00 - 22:00" title="营业时间">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">联系电话</div>
+        <input class="form-input" type="text" placeholder="请输入联系电话" title="联系电话">
+      </div>
+    </div>
+
+    <!-- Step 2: 宠物政策（预览） -->
+    <div class="form-section">
+      <div class="form-section-title">🐾 宠物政策</div>
+
+      <div class="form-group">
+        <div class="form-label">允许的宠物类型 <span class="required">*</span></div>
+        <div class="tag-group">
+          <span class="tag-option selected">犬</span>
+          <span class="tag-option selected">猫</span>
+          <span class="tag-option">其他</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">犬种/体重限制</div>
+        <div class="tag-group">
+          <span class="tag-option">不限</span>
+          <span class="tag-option selected">仅中小型犬</span>
+          <span class="tag-option">仅小型犬</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">宠物设施</div>
+        <div class="checkbox-group">
+          <div class="checkbox-item checked">
+            <div class="box">✓</div>
+            <span>饮水碗</span>
+          </div>
+          <div class="checkbox-item">
+            <div class="box"></div>
+            <span>宠物菜单</span>
+          </div>
+          <div class="checkbox-item checked">
+            <div class="box">✓</div>
+            <span>系绳桩</span>
+          </div>
+          <div class="checkbox-item">
+            <div class="box"></div>
+            <span>宠物游乐区</span>
+          </div>
+          <div class="checkbox-item checked">
+            <div class="box">✓</div>
+            <span>户外区域</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">特殊规定</div>
+        <textarea class="form-textarea" placeholder="如：需牵绳、禁止上椅、仅限户外等"></textarea>
+      </div>
+    </div>
+
+    <!-- Step 3: 照片上传（预览） -->
+    <div class="form-section">
+      <div class="form-section-title">📷 场所照片</div>
+      <div class="photo-upload">
+        <div class="photo-item">📷</div>
+        <div class="photo-item">📷</div>
+        <div class="photo-item photo-add">
+          <span class="plus">+</span>
+          <span>添加</span>
+        </div>
+      </div>
+      <div class="form-label" style="margin-top: 8px; font-size: 11px; color: #999;">
+        最多上传 9 张照片，支持 JPG/PNG 格式
+      </div>
+    </div>
+
+    <!-- 补充说明 -->
+    <div class="form-section">
+      <div class="form-section-title">💬 补充说明</div>
+      <textarea class="form-textarea" placeholder="还有什么想告诉其他宠主的？（选填，限 200 字）"></textarea>
+    </div>
+  </div>
+
+  <!-- 提交按钮 -->
+  <div class="form-footer">
+    <button class="submit-btn">提交上报</button>
+  </div>
+
+  <!-- 底部 Tab -->
+  <div class="tab-bar">
+    <a class="tab-item" href="place-discovery-map.html">
+      <div class="tab-icon">🗺️</div>
+      <div class="tab-label">发现</div>
+    </a>
+    <a class="tab-item" href="place-discovery-search.html">
+      <div class="tab-icon">🔍</div>
+      <div class="tab-label">搜索</div>
+    </a>
+    <a class="tab-item active" href="#">
+      <div class="tab-icon">➕</div>
+      <div class="tab-label">上报</div>
+    </a>
+    <a class="tab-item" href="user-center-profile.html">
+      <div class="tab-icon">👤</div>
+      <div class="tab-label">我的</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

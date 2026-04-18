@@ -14,7 +14,7 @@ pm_assistant (立项验证)
   → requirement-doc [Skill] (生成主 PRD + Module PRD + wireframe)
     → gate_review [Agent] Gate 1 (PRD 评审)
       → designer [Agent] + prototype-design [Skill] (高保真原型)
-        → architect [Agent] + architect [Skill] (主架构 + 模块级架构)
+        → architect [Agent] + architect-doc [Skill] (主架构 + 模块级架构)
           → gate_review [Agent] Gate 2 (架构评审)
             → requirement-to-issues [Skill] (按模块拆分 GitHub Issues)
               → gate_review [Agent] Gate 2.5 (Issues 质量评审)
@@ -139,7 +139,7 @@ pm_assistant (立项验证)
 | 角色 | 类型 | 职责 |
 |------|------|------|
 | **architect** | Agent | 基于 PRD 设计技术架构方案，支持模块化架构 |
-| **architect** | Skill | 提供架构模板（主模板 + 模块级模板 + ADR 模板） |
+| **architect-doc** | Skill | 提供架构模板（主模板 + 模块级模板 + ADR 模板） |
 | **microservices** | Skill | 微服务场景下的设计、治理与部署规范 |
 
 **输入 → 输出**：
@@ -336,7 +336,7 @@ Issues 确认 → planning (任务规划)
 | requirement-doc | 1-需求 | 模块化 PRD 生成 + 低保真 wireframe | 无 |
 | prototype-design | 3-设计 | 高保真 HTML 原型生成 | modao MCP（可选） |
 | prototype-publish | 3-设计 | 原型发布到墨刀或 Figma | 墨刀 MCP / Figma MCP |
-| architect | 4-架构 | 架构文档模板 + ADR | 无 |
+| architect-doc | 4-架构 | 架构文档模板 + ADR | 无 |
 | microservices | 4-架构 | 微服务设计/部署规范 | 无 |
 | requirement-to-issues | 6-拆分 | PRD → GitHub Issues（Epic + Task） | GitHub MCP |
 | tdd-coder | 7-开发 | TDD 方法论（Red-Green-Refactor）、测试框架选型 | 无 |

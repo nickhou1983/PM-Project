@@ -86,8 +86,8 @@ user-invocable: true
 加载架构文档模板并逐章节设计：
 
 1. **加载模板**：
-   - 始终读取 `.agents/skills/architect/references/architecture-template.md`
-   - 若为模块化模式，同时读取 `.agents/skills/architect/references/module-architecture-template.md`
+   - 始终读取 `.agents/skills/architect-doc/references/architecture-template.md`
+   - 若为模块化模式，同时读取 `.agents/skills/architect-doc/references/module-architecture-template.md`
 2. **逐章节设计**（共 12 个章节）：
 
    **第 1 章：设计概述** — 项目背景、设计目标、设计原则、范围边界、需求追溯矩阵（将 PRD 的 P0/P1/P2 功能需求映射到架构模块和 API）
@@ -192,7 +192,7 @@ user-invocable: true
 
 ## 输出格式
 
-架构文档的完整结构参见 `.agents/skills/architect/references/architecture-template.md` 与 `.agents/skills/architect/references/module-architecture-template.md`。
+架构文档的完整结构参见 `.agents/skills/architect-doc/references/architecture-template.md` 与 `.agents/skills/architect-doc/references/module-architecture-template.md`。
 
 主架构文档核心章节：
 

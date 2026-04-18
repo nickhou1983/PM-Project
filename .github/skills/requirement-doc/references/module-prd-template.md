@@ -163,7 +163,7 @@
 
 ### 6.3 技术参考
 
-> 此部分为占位区域，由 `architect` Skill 生成模块级架构设计后填充或链接。
+> 此部分为占位区域，由 `architect-doc` Skill 生成模块级架构设计后填充或链接。
 
 - **模块级架构文档**：[architecture-{project_slug}-{module_en_slug}.md](../architecture-{project_slug}-{module_en_slug}.md)（若已生成）
 - **涉及数据模型**：{待架构设计后补充}

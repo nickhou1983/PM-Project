@@ -255,7 +255,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 >
 >    | 下游产物 | Patch | Minor | Major | 同步方式 |
 >    |----------|-------|-------|-------|----------|
->    | 架构文档（`architecture-*.md`） | — | ⚠️ 检查 | ✅ 必须更新 | 提醒用户使用 `architect` Skill 重新评估 |
+>    | 架构文档（`architecture-*.md`） | — | ⚠️ 检查 | ✅ 必须更新 | 提醒用户使用 `architect-doc` Skill 重新评估 |
 >    | Module PRD（`modules/prd-*.md`） | — | ✅ 同步修改 | ✅ 重新生成 | 当前 Skill 直接更新受影响的 Module PRD |
 >    | 低保真原型（`wireframes/*.html`） | — | ⚠️ 检查 | ✅ 必须更新 | 识别受影响页面，更新或新增 wireframe |
 >    | 高保真原型（`hifi-wireframes/*.html`） | — | ⚠️ 检查 | ✅ 必须更新 | 提醒用户使用 `designer` Agent 同步 |
@@ -359,5 +359,5 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] `module_en_slug` 符合命名规范（小写英文、`-` 连接）
 - [ ] Wireframe 文件使用 `{module_en_slug}-{page}.html` 命名，Module PRD §5.2 正确引用
 - [ ] 所有功能点在主 PRD 全局汇总表和对应 Module PRD 中都有出现（无遗漏）
-- [ ] Module PRD §6.3 技术参考区域已标注为占位符（待 architect skill 填充）
+- [ ] Module PRD §6.3 技术参考区域已标注为占位符（待 architect-doc skill 填充）
 - [ ] （如选择导出到墨刀）P0 核心页面已通过 prototype-publish Skill 导入墨刀并确认可查看

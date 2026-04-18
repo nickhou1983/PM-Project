@@ -93,6 +93,18 @@ argument-hint: "描述要复盘的功能或版本，例如：复盘 AI 对话功
 
 ### 步骤 5：输出复盘报告
 
+> **manifest 接入**：报告落盘后调用 `node scripts/workflow-manifest.js check {项目} post_launch` 验证 `gate3` 已通过；随后写入：
+>
+> ```bash
+> echo '{
+>   "agent": "post_launch_review",
+>   "report": "projects/prd-{项目}/post-launch-review-{YYYYMMDD}.md",
+>   "review_round": {N}
+> }' | node scripts/workflow-manifest.js set {项目} post_launch
+> ```
+>
+> 同时检查 `feedback_log` 中未闭环项，在报告「后续行动」部分汇总。规范见 [`docs/workflow-manifest-spec.md`](../../docs/workflow-manifest-spec.md)。
+
 ## 输出报告模板
 
 ```markdown

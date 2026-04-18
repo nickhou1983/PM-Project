@@ -24,9 +24,23 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 | 评审门 | 触发时机 | 输入文档 | 决策影响 |
 |--------|---------|---------|----------|
 | **Gate 1: PRD 评审** | PRD 文档完成后、进入架构设计前 | PRD + 低保真原型 | 是否进入架构阶段 |
-| **Gate 2: 架构评审** | 架构文档完成后、进入开发前 | 主架构文档 + 模块级架构文档（如有） + PRD | 是否进入开发阶段 |
-| **Gate 2.5: Issues 质量评审** | requirement-to-issues 执行完成后、开发启动前 | GitHub Issues 列表 + PRD（含 Module PRD）+ 架构文档 | 是否批准开发启动 |
+| **Gate 2: 架构 + Issues 就绪门**（合并 Gate 2 与 Gate 2.5） | 架构文档 + GitHub Issues 均完成后、开发启动前 | 主架构文档 + 模块级架构（如有）+ PRD + GitHub Issues 列表 | 是否进入开发阶段并启动开发 |
+| **Gate 2.5: Issues 质量评审**（兼容旧流程，独立触发） | requirement-to-issues 执行完成后、开发启动前 | GitHub Issues 列表 + PRD（含 Module PRD）+ 架构文档 | 是否批准开发启动 |
 | **Gate 3: 上线评审** | 开发测试完成后、正式发布前 | 测试报告 + PR 列表 | 是否批准上线 |
+
+### 评审强度模式（轻/重双模式）
+
+根据项目规模选择评审强度，避免小项目被重型流程拖累：
+
+| 模式 | 适用条件 | 检查范围 | 决策方式 |
+|------|---------|---------|---------|
+| **🪶 Lite（轻量门）** | 满足任一：模块数 ≤ 2 / 团队 ≤ 1 人 / 内部工具 / Patch 级迭代 | 仅检查每个 Gate 标注 ⭐ 的「最小必检集」（Gate 1: 5 项；Gate 2: 6 项；Gate 3: 5 项） | 全部通过即 Go；任意 ❌ 即 No-Go |
+| **🛡️ Standard（标准门）** | 默认。模块数 3–5 / 团队 2–5 人 / 面向外部用户 | 完整清单 | 按权重评分 + 高风险项一票否决 |
+| **🏛️ Strict（严格门）** | 模块数 ≥ 6 / 涉及合规或支付 / 关键基础设施 | 完整清单 + 强制要求所有 ⚠️ 在 24h 内闭环 | 标准模式 + 全员评审签名 |
+
+**模式判定优先级**：用户显式指定 > 项目 `workflow.config.yaml`（若存在）> 自动判定（基于模块数与产物规模）。
+
+**最小必检集标记**：在下方各 Gate 检查清单中，必检项以 **⭐** 前缀标注；Lite 模式下其余项跳过。
 
 ---
 
@@ -38,10 +52,10 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 | # | 检查项 | 判定 | 说明 |
 |---|--------|------|------|
-| 1 | PRD 11 个章节是否全部填写（或明确标注「待补充」） | ✅/⚠️/❌ | |
-| 2 | 用户故事是否覆盖所有 P0 功能 | ✅/⚠️/❌ | |
-| 3 | 功能需求是否有明确的 P0/P1/P2 优先级 | ✅/⚠️/❌ | |
-| 4 | 非功能需求是否包含可量化指标 | ✅/⚠️/❌ | |
+| 1 | ⭐ PRD 11 个章节是否全部填写（或明确标注「待补充」） | ✅/⚠️/❌ | |
+| 2 | ⭐ 用户故事是否覆盖所有 P0 功能 | ✅/⚠️/❌ | |
+| 3 | ⭐ 功能需求是否有明确的 P0/P1/P2 优先级 | ✅/⚠️/❌ | |
+| 4 | ⭐ 非功能需求是否包含可量化指标，且每项指标都给出 **{定义、采集方式、数据源、目标值、容忍区间}** 五元组（缺一即 ⚠️，全部缺失即 ❌） | ✅/⚠️/❌ | 指标可观测性硬检查 |
 | 5 | 非功能需求是否包含验证方法（每项 NFR 有对应的验证手段） | ✅/⚠️/❌ | |
 | 6 | §5.1 验收测试策略（UAT）是否已定义（测试范围/执行者/通过标准） | ✅/⚠️/❌ | |
 | 7 | 用户画像是否基于数据或调研（而非纯假设） | ✅/⚠️/❌ | |
@@ -89,9 +103,10 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 | # | 检查项 | 判定 | 说明 |
 |---|--------|------|------|
-| 22 | 低保真原型是否覆盖所有 P0 页面 | ✅/⚠️/❌ | |
+| 22 | ⭐ 低保真原型是否覆盖所有 P0 页面 | ✅/⚠️/❌ | |
 | 23 | 页面间跳转是否形成完整操作流程 | ✅/⚠️/❌ | |
 | 24 | 核心用户路径是否可走通 | ✅/⚠️/❌ | |
+| 24a | ⭐ 触发源类型已在 PRD §1.1 标注（产品灵感 / 用户反馈 / 竞品 / 合规 / 技术债 / 数据驱动），且关键指标与该触发源吻合 | ✅/⚠️/❌ | 与 pm_assistant 步骤 0.6 联动 |
 
 #### E. 版本管理（权重 5%）
 
@@ -103,8 +118,14 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 ---
 
-## Gate 2: 架构评审
+## Gate 2: 架构 + Issues 就绪门（推荐合并模式）
 
+> **合并理由**：架构文档与 GitHub Issues 在中小项目中往往同期产出，分两次评审会造成 context 切换浪费。本 Gate 默认一次性评审「架构 + Issues 可追溯性」，仅在大项目或 Issues 滞后产出时退化为「先 Gate 2（架构）→ 再 Gate 2.5（Issues）」两次评审。
+>
+> **如何选择**：
+> - 默认 → 一次性评审本节「Gate 2 完整清单」+ 下方「Gate 2.5 完整清单」全部条目，输出单份决策报告
+> - 退化 → 用户显式指定「只做 Gate 2 架构评审」时，仅执行本节清单；后续触发独立 Gate 2.5
+>
 > **模块化架构评审规则**：若 PRD 目录下存在 `modules/prd-{module_en_slug}.md`，则 Gate 2 必须同时评审主架构文档和所有对应的 `architecture-{项目名}-{module_en_slug}.md`。缺少任一模块级架构文档，默认至少判定为 ⚠️；若缺失模块覆盖 P0 功能或导致需求无法追溯，判定为 ❌。
 
 ### 检查清单
@@ -113,9 +134,10 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 | # | 检查项 | 判定 | 说明 |
 |---|--------|------|------|
-| 1 | 架构文档 12 个章节（§0-§12）是否全部填写 | ✅/⚠️/❌ | |
-| 2 | 技术栈选型是否有理由说明 | ✅/⚠️/❌ | |
+| 1 | ⭐ 架构文档 12 个章节（§0-§12）是否全部填写 | ✅/⚠️/❌ | |
+| 2 | ⭐ 技术栈选型是否有理由说明 | ✅/⚠️/❌ | |
 | 3 | 系统架构图（Mermaid）是否清晰 | ✅/⚠️/❌ | |
+| 3a | ⭐ 「设计-架构对齐 checkpoint」记录已存在（含 designer 与 architect 双方签名 + 关键差异列表） | ✅/⚠️/❌ | 仅 Standard/Strict 模式必检；Lite 模式下若无前端可豁免 |
 | 4 | ER 数据模型是否覆盖核心实体 | ✅/⚠️/❌ | |
 | 5 | API 设计是否覆盖所有 P0 功能 | ✅/⚠️/❌ | |
 | 6 | §2.2 关键技术选型是否有 ADR（架构决策记录）支撑 | ✅/⚠️/❌ | |
@@ -419,3 +441,37 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 - 输入"架构评审" → 执行 Gate 2
 - 输入"上线评审" → 执行 Gate 3
 - 输入"全流程评审" → 依次执行 Gate 1 → Gate 2 → Gate 3
+
+## 工作流 manifest 接入（v2 必做）
+
+每一次评审输出 Markdown + JSON 后，立即将决策携本身报告路径回写 `workflow-manifest.json` 对应阶段字段（`gate1` / `gate2` / `gate2_5` / `gate3`）。规范见 [`docs/workflow-manifest-spec.md`](../../docs/workflow-manifest-spec.md)。
+
+```bash
+# Gate 1 示例
+echo '{
+  "decision": "Go",
+  "mode": "Standard",
+  "score": 0.86,
+  "report": "projects/prd-{项目}/gate-results/gate1-{YYYY-MM-DD}.json",
+  "attempt": 1,
+  "warnings_open": 2
+}' | node scripts/workflow-manifest.js set {项目} gate1
+
+# Gate 2 合并模式示例（同时覆盖 Issues 就绪）
+echo '{
+  "decision": "Conditional Go",
+  "mode": "Standard",
+  "score": 0.78,
+  "report": "projects/prd-{项目}/gate-results/gate2-{YYYY-MM-DD}.json",
+  "attempt": 1,
+  "warnings_open": 1,
+  "merged_with_gate2_5": true
+}' | node scripts/workflow-manifest.js set {项目} gate2
+```
+
+**强制约束**：
+
+- `decision` / `mode` / `report` 为必填字段
+- 重新评审时 `attempt` 递增、`previous_attempt_date` 在 JSON 报告中同步更新
+- Gate 2 合并模式下必须写 `merged_with_gate2_5: true`，后续 `requirement-to-issues` 仅需检查 gate2 通过即可
+- 若检查发现 `Upstream Defect Report`，必须同时调用 `feedback` 命令补入 `feedback_log`

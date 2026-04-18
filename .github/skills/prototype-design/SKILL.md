@@ -151,6 +151,18 @@ description: "高保真原型设计 Skill（设计师角色）。基于 PM 产�
 
 ### 步骤 5：输出与交付
 
+> **manifest 接入**：写入 `stages.design`。启动前 `check {项目} design` 校验 `gate1` 通过；产出后写入：
+>
+> ```bash
+> echo '{
+>   "agent": "designer",
+>   "doc": "projects/prd-{项目}/hifi-wireframes/",
+>   "checkpoint_with_arch": "projects/prd-{项目}/design-arch-sync-{YYYYMMDD}.md"
+> }' | node scripts/workflow-manifest.js set {项目} design
+> ```
+>
+> 若设计-架构 checkpoint 文档尚未产出，`checkpoint_with_arch` 字段留空字符串，并在向用户的收尾消息中提醒「Gate 2 前必须补齐」。规范见 [`docs/workflow-manifest-spec.md`](../../../docs/workflow-manifest-spec.md)。
+
 **默认：写入本地文件**
 - 将高保真原型写入 `projects/prd-{项目名}/hifi-wireframes/` 目录
 - 在 PRD 文档的「交互设计」章节中补充高保真原型文件链接

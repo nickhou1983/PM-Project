@@ -291,7 +291,53 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
   - `[API]` — 需要 API 测试验证
   - `[Unit]` — 需要单元测试验证
   - `[Integration]` — 需要集成测试验证
+- **测试骨架（AC → Test Skeleton）**：每条 P0 验收标准必须附带可执行的测试骨架，便于 tdd_developer 直接进入 Red 阶段
 - **故事点估算**：`Estimate: {X} SP`（基于步骤 2 的初始估算）
+
+#### 5b.1 AC → 测试骨架生成规则（P1-6）
+
+为每个 P0 Task Issue 在 Body 末尾追加 **「测试骨架」** 段落，将每条 AC 转换为可执行的测试雏形（Given/When/Then 或 Pytest/Jest 函数签名），由 `tdd_developer` 直接复制到代码库进入 Red 阶段。
+
+**生成规则**：
+
+| 测试类型 | 骨架格式 | 输出位置建议 |
+|---------|---------|------------|
+| `[Unit]` | 目标语言对应的测试函数签名（pytest / jest / junit）+ Given/When/Then 注释 | `tests/unit/{module}/test_{feature}.py` |
+| `[API]` | 接口契约 stub：HTTP 方法 + path + 请求/响应/状态码 | `tests/api/{module}/test_{endpoint}.py` |
+| `[Integration]` | 模块间调用 stub + 期望副作用 | `tests/integration/{module}/test_{flow}.py` |
+| `[UI]` | Gherkin 风格 Feature/Scenario，或 Playwright 测试函数签名 | `tests/e2e/{module}/{feature}.spec.ts` |
+
+**Body 中的测试骨架示例**（pytest）：
+
+````markdown
+### 测试骨架
+
+> 以下骨架供 `tdd_developer` 进入 Red 阶段使用，请保留文件路径建议。
+
+```python
+# tests/unit/prompt_optimizer/test_template_apply.py
+import pytest
+
+class TestTemplateApply:
+    def test_ac1_应用模板后返回带占位符替换的字符串(self):
+        # Given: 一个含 {{topic}} 占位符的模板与 topic="AI"
+        # When:  调用 apply_template(template, {"topic": "AI"})
+        # Then:  返回字符串包含 "AI" 且不含 "{{topic}}"
+        pytest.fail("Red: not implemented")
+
+    def test_ac2_缺失变量时抛出_TemplateVariableError(self):
+        # Given: 模板含 {{topic}}，但变量字典为空
+        # When:  调用 apply_template(template, {})
+        # Then:  抛出 TemplateVariableError 且消息包含变量名
+        pytest.fail("Red: not implemented")
+```
+````
+
+**强制约束**：
+- 每条 P0 AC 至少对应 1 条测试骨架；P1 推荐生成
+- 测试骨架必须使用 `pytest.fail / expect.fail / xit` 等标记保持 Red 状态，不得伪造通过
+- 工作目录中已存在该测试文件时，仅在 Issue Body 中追加「待补充测试函数」清单，不覆盖既有代码
+- Gate 2.5 / Gate 2 合并模式新增检查项：「P0 Task 是否含测试骨架」缺失即 ⚠️
 
 **Labels**：
 - `enhancement`
@@ -322,6 +368,28 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
    ```
 
 > **必须等待用户确认后再执行步骤 6**。用户可以要求调整某个 Issue 的内容、排除某些模块、或提供 Assignee 映射。
+
+**Issue 创建完成后写入 manifest**：
+
+```bash
+echo '{
+  "skill": "requirement-to-issues",
+  "epic_count": {M},
+  "task_count": {N},
+  "test_skeletons_generated": true,
+  "target_repo": "{owner/repo}"
+}' | node scripts/workflow-manifest.js set {项目} issues
+```
+
+### 步骤 5.5：manifest 上游校验（v2 必做）
+
+执行：
+
+```bash
+node scripts/workflow-manifest.js check {项目} issues
+```
+
+要求 `gate2` 已通过（或 `gate2.merged_with_gate2_5=true`）；不通过则停止并报错。规范见 [`docs/workflow-manifest-spec.md`](../../../docs/workflow-manifest-spec.md)。
 
 ### 步骤 6：创建到 GitHub
 

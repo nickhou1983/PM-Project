@@ -442,6 +442,32 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 - 输入"上线评审" → 执行 Gate 3
 - 输入"全流程评审" → 依次执行 Gate 1 → Gate 2 → Gate 3
 
+## doc-lint 前置检查集成
+
+在执行 Gate Review 前，建议先运行 `doc-lint` Skill 做自动化预检，减少人工逐项检查负担：
+
+```bash
+# Gate 1 前：PRD Lint
+node .github/skills/doc-lint/scripts/prd-lint.js {项目}
+
+# Gate 2 前：架构 Lint + RTM
+node .github/skills/doc-lint/scripts/arch-lint.js {项目}
+node .github/skills/doc-lint/scripts/generate-rtm.js {项目}
+
+# 任意 Gate 前：扫描历史 warnings
+node .github/skills/doc-lint/scripts/warning-tracker.js scan {项目}
+```
+
+**使用方式**：
+
+1. 先读取 Lint 输出 JSON（`gate-results/prd-lint-*.json` / `arch-lint-*.json`）
+2. 将 Lint `pass/warn/fail` 结果直接映射到对应 Gate 检查项（规则 ID 已标注 `gate_ref`）
+3. Lint 已通过的检查项可标记 ✅ 并引用 Lint 报告作为证据
+4. 仅对 Lint 无法覆盖的语义类检查项进行人工评审
+5. 如需深度语义评估，可调用 `doc-quality-judge` Skill
+
+---
+
 ## 工作流 manifest 接入（v2 必做）
 
 每一次评审输出 Markdown + JSON 后，立即将决策携本身报告路径回写 `workflow-manifest.json` 对应阶段字段（`gate1` / `gate2` / `gate2_5` / `gate3`）。规范见 [`docs/workflow-manifest-spec.md`](../../docs/workflow-manifest-spec.md)。

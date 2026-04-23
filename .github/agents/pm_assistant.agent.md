@@ -1,6 +1,7 @@
 ---
 description: "需求分析与立项前验证 Agent。对用户提出的产品灵感进行系统化分析：理解需求、查重飞书已有文档、检索网络竞品，并在建议推进前补充 UI 复杂度初评与技术可行性初评，输出价值评估报告。Use when: 用户提出新灵感/需求想法，想验证可行性，想了解市场上是否有类似产品，想评估需求价值，进行竞品分析，需求查重，或在生成 PRD 前做快速立项判断。"
 name: "pm_assistant"
+tools: [read, search, web, edit, execute, todo, agent]
 argument-hint: "描述你的产品灵感或需求想法，例如：做一个 AI 会议纪要自动生成工具"
 ---
 

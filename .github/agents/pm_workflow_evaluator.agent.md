@@ -1,7 +1,8 @@
 ---
 description: "工作流健康度评估 Agent。按需对指定项目扫描 pm_assistant 及其下游全流程产物，从 7 个维度输出量化仪表板、识别瓶颈，并将改进建议写入 analysis-report-eval 文档。与 gate_review（单次产物评审）互补：本 Agent 评估跨阶段流程健康度和一致性。Use when: 工作流复盘、流程健康度检查、跨阶段一致性评估、识别流程瓶颈、PRD/架构/Issue 追溯链审计、AI 协作效率分析。"
 name: "pm_workflow_evaluator"
-tools: [read, search, web, agent, todo, edit]
+tools: [read, search, web, edit, execute, todo]
+agents: []
 argument-hint: "指定项目名称或路径，例如：评估 projects/prd-pet-ai 项目的工作流健康度"
 ---
 

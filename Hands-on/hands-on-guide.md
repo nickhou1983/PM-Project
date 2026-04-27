@@ -90,7 +90,7 @@ PM-Project/
 | `requirement-to-issues` | 将 PRD 需求拆分为 GitHub Issues |
 | `prototype-design` | 从低保真升级为高保真原型 |
 | `prototype-publish` | 生成 HTML 原型并发布到墨刀或 Figma 平台 |
-| `architect` | 技术架构设计模板与 ADR |
+| `architect-doc` | 技术架构设计模板与 ADR |
 | `microservices` | 微服务架构/部署/CI-CD 规范 |
 | `coding-standards` | 全栈编码规范与最佳实践 |
 | `code-review` | 标准化代码审查流程与评论模板 |
@@ -111,7 +111,7 @@ pm_assistant ──调用──→ feishu-docs（查重）
 designer ──调用──→ prototype-design（高保真生成）
                └→ prototype-publish（导入墨刀）
 
-architect ──调用──→ architect Skill（架构模板）
+architect ──调用──→ architect-doc Skill（架构模板）
                 └→ microservices（微服务规范）
 
 code_review ──调用──→ code-review（审查流程）
@@ -153,7 +153,7 @@ flowchart TD
     C --> D["designer Agent"]
     D --> E["prototype-design Skill<br/>生成高保真原型"]
     E --> F["architect Agent"]
-    F --> G["architect Skill<br/>生成架构文档"]
+    F --> G["architect-doc Skill<br/>生成架构文档"]
     G --> H["gate_review Agent<br/>Gate 2: 架构评审"]
     H --> I["requirement-to-issues Skill<br/>拆分 Epic / Task"]
     I --> J["开发 / 测试 / 审查"]

@@ -1,7 +1,8 @@
 ---
 description: "工作流健康度评估 Agent。按需对指定项目扫描 pm_assistant 及其下游全流程产物，从 7 个维度输出量化仪表板、识别瓶颈，并将改进建议写入 analysis-report-eval 文档。与 gate_review（单次产物评审）互补：本 Agent 评估跨阶段流程健康度和一致性。Use when: 工作流复盘、流程健康度检查、跨阶段一致性评估、识别流程瓶颈、PRD/架构/Issue 追溯链审计、AI 协作效率分析。"
 name: "pm_workflow_evaluator"
-tools: [read, search, web, agent, todo, edit]
+tools: [read, search, web, edit, execute, todo]
+agents: []
 argument-hint: "指定项目名称或路径，例如：评估 projects/prd-pet-ai 项目的工作流健康度"
 ---
 
@@ -278,3 +279,26 @@ projects/prd-{PROJECT}/analysis-report-eval-{YYYYMMDD}.md
 - 若 Dim2（追溯链）断点在架构层，建议调用 `architect` Agent 补齐模块级架构
 - 若 Dim5（需求质量）< 60，建议调用 `requirement_analyst` 或 `pm_assistant` 重新过需求
 - 本报告结论可输入 `post_launch_review` 作为复盘的效能数据支撑
+
+## doc-lint 数据集成
+
+评估时可自动调用 `doc-lint` Skill 脚本获取量化数据，替代手动逐项检查：
+
+```bash
+# 运行全套检查
+node .github/skills/doc-lint/scripts/prd-lint.js {项目}
+node .github/skills/doc-lint/scripts/arch-lint.js {项目}
+node .github/skills/doc-lint/scripts/generate-rtm.js {项目}
+node .github/skills/doc-lint/scripts/warning-tracker.js scan {项目}
+```
+
+**维度映射**：
+
+| doc-lint 输出 | 支撑维度 |
+|--------------|---------|
+| RTM 覆盖率 (`rtm-*.json` → `summary.coverage_rate`) | Dim1 工作流完整性、Dim2 跨阶段可追溯性 |
+| RTM P0 覆盖率 (`rtm-*.json` → `summary.p0_coverage_rate`) | Dim2 跨阶段可追溯性 |
+| R04/AR07 版本一致性 (`prd-lint/arch-lint` 结果) | Dim3 产物版本一致性 |
+| R09 模糊词密度 | Dim5 需求质量信号 |
+| Warning Tracker open 数 | Dim4 Gate 决策执行力 |
+| `doc-quality-judge` LLM 评分（如已执行） | Dim5 需求质量信号 |

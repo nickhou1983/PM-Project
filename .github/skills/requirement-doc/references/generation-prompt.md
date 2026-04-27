@@ -128,7 +128,7 @@ projects/prd-{project_slug}/prd-{project_slug}.md
 5. **填充 §5 依赖与风险**：
    - 外部依赖（第三方 API 等）
    - 风险项
-   - 技术参考占位符（待 architect skill 填充）
+   - 技术参考占位符（待 architect-doc skill 填充）
 
 ### 输出路径
 
@@ -174,7 +174,7 @@ projects/prd-personal-todo-app/modules/prd-reminder.md
 
 ## 下游消费
 
-- `architect` Skill → 读取 Module PRD 生成模块级架构设计
+- `architect-doc` Skill → 读取 Module PRD 生成模块级架构设计
 - `requirement-to-issues` Skill → 读取 Module PRD 生成 Epic + Task Issues
 - `gate_review` Agent → Gate 1 评审时检查主 PRD + 所有 Module PRD
 ```

@@ -1,6 +1,8 @@
 ---
 description: "架构师 Agent。根据产品需求文档（PRD）设计完整的技术架构方案，输出结构化的架构设计文档。覆盖：技术栈选型、系统架构、数据模型、API 设计、部署方案、非功能需求、安全设计。Use when: 用户需要架构设计、技术方案、系统设计、技术选型、从 PRD 推导架构、设计技术架构、数据库设计、API 设计、部署架构。"
 name: "architect"
+tools: [read, search, web, edit, execute, todo]
+agents: []
 argument-hint: "提供 PRD 文档路径或描述产品需求，例如：根据 projects/prd-ai-movie-review.md 设计技术架构"
 user-invocable: true
 ---
@@ -44,6 +46,7 @@ user-invocable: true
    - **模块信息**（仅模块化模式）：模块清单、模块间依赖、每个模块的功能边界与验收标准
 3. **分析原型图**（如存在）：
    - **定位原型文件**：在 PRD 同级目录下查找 `wireframes/` 和 `hifi-wireframes/` 目录
+   - **降级策略**：若 `wireframes/` 和 `hifi-wireframes/` 目录均不存在，在需求摘要中标注「原型分析：N/A — 原型未提供」，前端架构基于 PRD 文字描述推导，跳过原型相关的页面清单和交互分析
    - **读取 HTML 原型**：逐个读取目录下的 `.html` 文件，分析其内容
    - **低保真分析**（`wireframes/`）：
      - **页面清单与导航结构**：有哪些页面、页面之间的跳转关系 → 影响前端路由设计
@@ -86,8 +89,8 @@ user-invocable: true
 加载架构文档模板并逐章节设计：
 
 1. **加载模板**：
-   - 始终读取 `.agents/skills/architect/references/architecture-template.md`
-   - 若为模块化模式，同时读取 `.agents/skills/architect/references/module-architecture-template.md`
+   - 始终读取 `.agents/skills/architect-doc/references/architecture-template.md`
+   - 若为模块化模式，同时读取 `.agents/skills/architect-doc/references/module-architecture-template.md`
 2. **逐章节设计**（共 12 个章节）：
 
    **第 1 章：设计概述** — 项目背景、设计目标、设计原则、范围边界、需求追溯矩阵（将 PRD 的 P0/P1/P2 功能需求映射到架构模块和 API）
@@ -192,7 +195,7 @@ user-invocable: true
 
 ## 输出格式
 
-架构文档的完整结构参见 `.agents/skills/architect/references/architecture-template.md` 与 `.agents/skills/architect/references/module-architecture-template.md`。
+架构文档的完整结构参见 `.agents/skills/architect-doc/references/architecture-template.md` 与 `.agents/skills/architect-doc/references/module-architecture-template.md`。
 
 主架构文档核心章节：
 

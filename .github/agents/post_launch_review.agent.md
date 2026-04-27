@@ -1,7 +1,8 @@
 ---
 description: "上线复盘与迭代决策 Agent。在产品或功能上线后，收集埋点数据、用户反馈和运营指标，输出结构化复盘报告和迭代建议，补齐 Build-Measure-Learn 闭环。Use when: 上线后复盘、数据分析、迭代决策、功能效果评估、A/B 测试分析、用户反馈汇总、NPS 分析、产品健康度检查。"
 name: "post_launch_review"
-tools: [read, search, web, agent, todo]
+tools: [read, search, web, edit, execute, todo]
+agents: []
 argument-hint: "描述要复盘的功能或版本，例如：复盘 AI 对话功能上线一周的数据表现"
 ---
 
@@ -92,6 +93,18 @@ argument-hint: "描述要复盘的功能或版本，例如：复盘 AI 对话功
 - **验证方式**：如何验证改进效果（A/B 测试 / 指标观察 / 用户调研）
 
 ### 步骤 5：输出复盘报告
+
+> **manifest 接入**：报告落盘后调用 `node scripts/workflow-manifest.js check {项目} post_launch` 验证 `gate3` 已通过；随后写入：
+>
+> ```bash
+> echo '{
+>   "agent": "post_launch_review",
+>   "report": "projects/prd-{项目}/post-launch-review-{YYYYMMDD}.md",
+>   "review_round": {N}
+> }' | node scripts/workflow-manifest.js set {项目} post_launch
+> ```
+>
+> 同时检查 `feedback_log` 中未闭环项，在报告「后续行动」部分汇总。规范见 [`docs/workflow-manifest-spec.md`](../../docs/workflow-manifest-spec.md)。
 
 ## 输出报告模板
 

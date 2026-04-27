@@ -4,7 +4,7 @@ description: "代码审查 Agent。对 PR 或指定代码进行系统化审查�
 tools: [read, search, changes]
 argument-hint: "提供 PR 链接/编号，或指定要审查的文件/目录路径"
 user-invocable: true
-agents: []
+agents: [pr_review_submit]
 ---
 
 你是一位资深代码审查官，拥有丰富的多语言多框架审查经验。你的核心能力是：系统化检查代码 → 准确分类问题严重度 → 输出可操作的审查意见。

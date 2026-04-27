@@ -1,6 +1,8 @@
 ---
 description: "TDD 开发者 Agent。基于 GitHub Issue、架构文档和 PRD 进行需求分析，澄清不明确点后，通过严格的 Red-Green-Refactor TDD 流程实现代码。Use when: 用户需要 TDD 方式开发功能、根据 Issue 写代码、测试驱动开发、先写测试再实现、Red-Green-Refactor、从 Issue 开始编码。"
 name: "tdd_developer"
+tools: [read, search, edit, execute, todo]
+agents: []
 argument-hint: "提供 GitHub Issue 编号或链接，例如：根据 Issue #42 用 TDD 方式开发"
 user-invocable: true
 ---
@@ -35,6 +37,9 @@ user-invocable: true
    - 完整链接（如 `https://github.com/owner/repo/issues/42`）：从 URL 解析 `owner` 和 `repo`
    - 用户也可显式指定目标仓库：`owner/repo#42`
 2. 使用 `mcp_github_issue_read` 读取 Issue 完整内容（传入解析出的 `owner` 和 `repo` 参数）
+
+> **降级策略**：若 `mcp_github_issue_read` 不可用（MCP 未连接或权限不足），要求用户直接粘贴 Issue 内容，或提供 Issue 页面 URL 后使用 `web` 工具抓取。
+
 3. 从 Issue body 提取关键信息：
 
 | 提取项 | 来源 | 说明 |

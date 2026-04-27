@@ -46,7 +46,7 @@
 │   │   ├── tdd_developer.agent.md
 │   │   └── plans/
 │   └── skills/
-│       ├── architect/
+│       ├── architect-doc/
 │       ├── code-review/
 │       ├── feishu-docs/
 │       ├── github-publish/
@@ -100,7 +100,7 @@
 | --- | --- |
 | requirement-doc | 生成模块化 PRD（主 PRD + Module PRD）与低保真 wireframe |
 | requirement-to-issues | 将 PRD 按模块拆分为 GitHub Issues（Epic + Task） |
-| architect | 架构设计模板和 ADR（支持模块级架构设计） |
+| architect-doc | 架构设计模板和 ADR（支持模块级架构设计） |
 | code-review | 代码审查规范（5 维度 × MUST/SHOULD/NIT 分级） |
 | security-audit | OWASP Top 10 安全审查 |
 | tdd-coder | TDD 编码方法论（Red-Green-Refactor） |

@@ -135,6 +135,20 @@ mcp_github_pull_request_read:
 
 关注：CI 检查是否通过、审查者是否已审批、是否有未解决的评论。
 
+### 步骤 7.5：manifest 接入（v2 必做）
+
+创建 PR 后向 manifest 追加 PR 链接（在 `stages.development.pr_links` 数组中累积）：
+
+```bash
+# 读出当前 pr_links → 追加 → 回写
+node scripts/workflow-manifest.js show {项目} \
+  | jq '.stages.development.pr_links // [] | . + ["{PR_URL}"]' \
+  | jq -s '{pr_links: .[0]}' \
+  | node scripts/workflow-manifest.js set {项目} development
+```
+
+或简化版：直接 set 一次性传入累积后的字段。规范见 [`docs/workflow-manifest-spec.md`](../../../docs/workflow-manifest-spec.md)。
+
 ### 步骤 8：合并 PR
 
 满足合并条件后执行合并：

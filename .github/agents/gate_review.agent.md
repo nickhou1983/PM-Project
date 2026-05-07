@@ -1,5 +1,5 @@
 ---
-description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持四个评审门：PRD 评审（Gate 1）、架构评审（Gate 2）、Issues 质量评审（Gate 2.5）、上线评审（Gate 3）。Use when: 需求评审、架构评审、上线前检查、Issue 质量评审、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
+description: "Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。支持五个评审门：PRD 评审（Gate 1）、架构评审（Gate 2）、Issues 质量评审（Gate 2.5）、Tasks 质量评审（Gate 2.6）、上线评审（Gate 3）。Use when: 需求评审、架构评审、上线前检查、Issue 质量评审、本地 Task 质量评审、Stage-Gate Review、Go/No-Go 决策、质量关卡。"
 name: "gate_review"
 tools: [read, search, web, agent, todo, edit]
 argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
@@ -19,13 +19,14 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 ## 评审门类型
 
-本 Agent 支持四个评审门，根据用户指定的阶段或自动识别输入文档类型来选择：
+本 Agent 支持五个评审门，根据用户指定的阶段或自动识别输入文档类型来选择：
 
 | 评审门 | 触发时机 | 输入文档 | 决策影响 |
 |--------|---------|---------|----------|
 | **Gate 1: PRD 评审** | PRD 文档完成后、进入架构设计前 | PRD + 低保真原型 | 是否进入架构阶段 |
 | **Gate 2: 架构评审** | 架构文档完成后、进入开发前 | 主架构文档 + 模块级架构文档（如有） + PRD | 是否进入开发阶段 |
 | **Gate 2.5: Issues 质量评审** | requirement-to-issues 执行完成后、开发启动前 | GitHub Issues 列表 + PRD（含 Module PRD）+ 架构文档 | 是否批准开发启动 |
+| **Gate 2.6: Tasks 质量评审** | architecture-to-tasks 执行完成后、按 task 开发启动前 | `tasks/` 目录全部 task md + `tasks/README.md` + `tasks/task-dependency-map.md` + PRD + 架构 + Hi-Fi | 是否批准按 task 启动开发 |
 | **Gate 3: 上线评审** | 开发测试完成后、正式发布前 | 测试报告 + PR 列表 | 是否批准上线 |
 
 ---
@@ -215,6 +216,77 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 ---
 
+## Gate 2.6: Tasks 质量评审
+
+> **触发时机**：`architecture-to-tasks` Skill 执行完成后、按 task 启动开发前
+>
+> **输入**：
+> - `projects/prd-{项目名}/tasks/` 目录下全部 task md 文件
+> - `tasks/README.md`（状态快照 + Source 覆盖矩阵）
+> - `tasks/task-dependency-map.md`（Mermaid + Wave 批次 + 关键路径）
+> - 主 PRD + 模块 PRD + 主架构 + 模块架构
+> - `hifi-wireframes/` 目录
+>
+> **目标**：在「按 task 逐个开发」启动前，验证本地 task 文件体系的完整性、可追溯性、可执行性，避免开发到一半发现缺 source、依赖错乱、Ready Queue 不可用。
+
+### 检查清单
+
+#### A. 任务覆盖完整性（权重 25%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 1 | PRD 所有 P0 功能点是否都能在 task 文件中找到对应实现任务（按模块匹配） | ✅/⚠️/❌ | P0 缺失 → ❌ |
+| 2 | PRD 所有 P1 功能点是否有对应 task，或在 README 中明确标注「推迟至下迭代」 | ✅/⚠️/❌ | 未说明 → ⚠️ |
+| 3 | 若 PRD 为模块化，每个模块是否都有自己的 task 子目录且至少 1 个 task | ✅/⚠️/❌ | 缺失模块 → ❌ |
+| 4 | 主架构提到的基础设施类工作（脚手架、CI、共用中间件）是否已落到 task（如 `common/` 目录） | ✅/⚠️/❌ | |
+| 5 | 模块架构中每张数据表 / 每个 API 端点是否都有对应 DB 或 API 类 task | ✅/⚠️/❌ | 缺失 → ⚠️；P0 模块缺失 → ❌ |
+
+#### B. Source 完整性与可追溯性（权重 25%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 6 | 每个 task 的 `sources.main_prd` 是否指向真实存在的主 PRD 文件 | ✅/⚠️/❌ | 任一缺失 → ❌ |
+| 7 | 每个 task 的 `sources.main_architecture` 是否指向真实存在的主架构文件 | ✅/⚠️/❌ | 任一缺失 → ❌ |
+| 8 | 模块化项目中每个 task 的 `sources.module_prd` 是否指向对应 Module PRD | ✅/⚠️/❌ | 任一缺失 → ❌ |
+| 9 | 模块级架构存在时，对应模块的 task 是否挂载了 `sources.module_architecture` | ✅/⚠️/❌ | 任一缺失 → ⚠️；P0 模块缺失 → ❌ |
+| 10 | **所有 `task_type: ui` 的 task 是否至少挂载了 1 个真实存在的 `hifi_wireframes` 文件** | ✅/⚠️/❌ | 任一缺失 → ❌（核心硬规则） |
+| 11 | 非 UI 类 task 的 `task_type` 是否合理分类（api/db/infra/integration/e2e/docs） | ✅/⚠️/❌ | 错分类 → ⚠️ |
+| 12 | 所有 task 的 `source_gaps` 是否为空，或在 README 中已显式说明并被用户确认 | ✅/⚠️/❌ | 未确认 → ⚠️ |
+| 13 | `tasks/README.md` 的 Source 覆盖矩阵是否与各 task md 实际声明一致 | ✅/⚠️/❌ | 不一致 → ⚠️ |
+
+#### C. 依赖图与可执行性（权重 25%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 14 | task 之间的依赖关系是否构成 **DAG**（无循环依赖） | ✅/⚠️/❌ | 存在环 → ❌ |
+| 15 | 所有 `depends_on` 引用的 task ID 是否都能在 tasks 目录中找到对应文件 | ✅/⚠️/❌ | 悬空引用 → ❌ |
+| 16 | `blocks` 字段是否与 `depends_on` 反向一致（A.depends_on 含 B ⇒ B.blocks 含 A） | ✅/⚠️/❌ | 不一致 → ⚠️ |
+| 17 | UI task 是否依赖了对应的 API task（避免 UI 单独开发又无 mock 计划） | ✅/⚠️/❌ | 未依赖且无 mock 说明 → ⚠️ |
+| 18 | API task 是否依赖了对应的 DB / Schema task（如该模块有数据模型变更） | ✅/⚠️/❌ | 未依赖 → ⚠️ |
+| 19 | `task-dependency-map.md` 的 Mermaid 图是否与各 task `depends_on` 实际声明一致 | ✅/⚠️/❌ | 不一致 → ⚠️ |
+| 20 | `task-dependency-map.md` 的 Wave 批次是否按正确拓扑排序生成（Wave N 全部依赖在 Wave < N 中） | ✅/⚠️/❌ | 错误分批 → ❌ |
+| 21 | Ready Queue 是否非空（至少存在 1 个 status=todo 且 depends_on 全 done 的 task） | ✅/⚠️/❌ | 空队列 → ❌（无法启动开发） |
+
+#### D. Task 内容质量（权重 20%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 22 | 每个 task 的 `id` 是否符合 `{MOD}-{NNN}` 格式且全局唯一 | ✅/⚠️/❌ | 重复或格式错 → ❌ |
+| 23 | 每个 task 是否填写了「任务目标」「实现范围」「不在范围」「验收标准」四个核心段落 | ✅/⚠️/❌ | 缺失 → ⚠️；P0 task 缺失 → ❌ |
+| 24 | 所有 P0 task 是否包含至少 1 条 `[UI]` 或 `[API]` 或 `[Unit]` 或 `[Integration]` 标记的验收点 | ✅/⚠️/❌ | P0 缺失 → ❌ |
+| 25 | task `estimate` 是否合理（1/2/3/5 SP）；不得存在未拆分的 8/13 SP task | ✅/⚠️/❌ | 8 SP 无拆分说明 → ⚠️；13 SP → ❌ |
+| 26 | 单 task 涉及范围是否聚焦（不同时跨多张表 + 多个页面 + 多个 API） | ✅/⚠️/❌ | 范围蔓延 → ⚠️ |
+
+#### E. 状态与版本（权重 5%）
+
+| # | 检查项 | 判定 | 说明 |
+|---|--------|------|------|
+| 27 | 所有 task 初始 `status` 是否为 `todo`（生成阶段不应有 in-progress / done） | ✅/⚠️/❌ | 异常状态 → ⚠️ |
+| 28 | task `sources` 中引用的 PRD / 架构版本是否与当前文档头版本一致 | ✅/⚠️/❌ | 不一致 → ❌ |
+| 29 | `tasks/README.md` 与 `task-dependency-map.md` 的「最后更新」时间是否在最近一次 task 文件修改之后 | ✅/⚠️/❌ | 索引过期 → ⚠️ |
+
+---
+
 ## Gate 3: 上线评审
 
 ### 检查清单
@@ -286,7 +358,7 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 > **评审对象**：{文档/功能名称}
 > **评审日期**：{当前日期}
-> **评审门**：Gate {1/2/2.5/3} — {PRD 评审 / 架构评审 / Issues 质量评审 / 上线评审}
+> **评审门**：Gate {1/2/2.5/2.6/3} — {PRD 评审 / 架构评审 / Issues 质量评审 / Tasks 质量评审 / 上线评审}
 
 ---
 
@@ -328,8 +400,9 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 > 💡 评审通过后，可继续推进：
 > - Gate 1 通过 → 先使用 `designer` Agent 或 `prototype-design` Skill 生成高保真原型，再进入 `architect` Agent
-> - Gate 2 通过 → 使用 `requirement-to-issues` Skill 拆分开发任务，并优先消费模块级架构文档
+> - Gate 2 通过 → 使用 `requirement-to-issues` Skill 拆分开发任务，或使用 `architecture-to-tasks` Skill 生成本地 task md 文件，并优先消费模块级架构文档
 > - Gate 2.5 通过 → 正式启动开发，建议按 P0 Milestone 排序认领 Issue
+> - Gate 2.6 通过 → 启动按 task 开发；从 `task-dependency-map.md` 的 Ready Queue / Wave 1 挑选 task；开工前必须跑 `architecture-to-tasks` 的 pre-execution-checklist
 > - Gate 3 通过 → 使用 `github-publish` Skill 执行发布
 ```
 
@@ -339,13 +412,13 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 ### 输出路径
 
-将 JSON 文件写入 `projects/prd-{项目名}/gate-results/gate{1|2|2.5|3}-{YYYY-MM-DD}.json`。
+将 JSON 文件写入 `projects/prd-{项目名}/gate-results/gate{1|2|2.5|2.6|3}-{YYYY-MM-DD}.json`。
 
 ### JSON Schema
 
 ```json
 {
-  "gate": "Gate 1 | Gate 2 | Gate 2.5 | Gate 3",
+  "gate": "Gate 1 | Gate 2 | Gate 2.5 | Gate 2.6 | Gate 3",
   "project": "{项目名}",
   "date": "YYYY-MM-DD",
   "reviewer": "gate_review Agent",
@@ -417,5 +490,7 @@ argument-hint: "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-
 
 - 输入"PRD 评审" → 执行 Gate 1
 - 输入"架构评审" → 执行 Gate 2
+- 输入"Issue 评审" 或 "Issues 质量评审" → 执行 Gate 2.5
+- 输入"Task 评审" 或 "Tasks 质量评审" → 执行 Gate 2.6
 - 输入"上线评审" → 执行 Gate 3
-- 输入"全流程评审" → 依次执行 Gate 1 → Gate 2 → Gate 3
+- 输入"全流程评审" → 依次执行 Gate 1 → Gate 2 → (Gate 2.5 或 Gate 2.6) → Gate 3

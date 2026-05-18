@@ -38,7 +38,8 @@ pm_assistant → requirement-doc → gate1 → designer + architect → gate2
 ### Skill 文件
 
 - `SKILL.md` 聚焦工作流步骤、触发条件和工具映射
-- 可复用模板放 `references/`，辅助脚本放 `scripts/`
+- 可复用模板放 `references/`，辅助脚本放 `scripts/`, 资源文件放 `assets/`
+- 文件夹命名格式：`<name>/SKILL.md`
 - 每个 Skill 一个关注点，不要混合不相关的领域
 
 ### 文档风格

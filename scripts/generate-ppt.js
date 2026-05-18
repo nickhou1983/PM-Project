@@ -892,7 +892,130 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 14 — Q&A
+  // SLIDE 14 — Harness Engineering 适配度评估
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.light };
+    titleBar(s, "Harness Engineering 适配度评估");
+
+    s.addText("对照 Harness Engineering 六大能力维度，PM-Project 当前得分 77/100（良好）", {
+      x: 0.5, y: 1.02, w: 9.0, h: 0.32,
+      fontSize: 12, fontFace: FONT_B, italic: true, color: C.muted, margin: 0,
+    });
+
+    // Score summary card
+    addCard(s, 0.5, 1.45, 2.6, 3.7, C.navy);
+    s.addText("总评分", {
+      x: 0.7, y: 1.6, w: 2.2, h: 0.28,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.white, margin: 0, align: "center",
+    });
+    s.addText("77", {
+      x: 0.7, y: 2.0, w: 2.2, h: 0.8,
+      fontSize: 48, fontFace: FONT_H, bold: true, color: C.amber, margin: 0, align: "center",
+    });
+    s.addText("/100", {
+      x: 1.8, y: 2.45, w: 0.8, h: 0.3,
+      fontSize: 14, fontFace: FONT_B, color: C.muted, margin: 0,
+    });
+    s.addText("🔵 良好", {
+      x: 0.7, y: 2.85, w: 2.2, h: 0.3,
+      fontSize: 13, fontFace: FONT_B, bold: true, color: C.sec, margin: 0, align: "center",
+    });
+
+    // Key strengths
+    s.addText("核心优势", {
+      x: 0.7, y: 3.3, w: 2.2, h: 0.24,
+      fontSize: 10, fontFace: FONT_B, bold: true, color: C.white, margin: 0,
+    });
+    const strengths = ["4 级 Gate 门禁", "上游校验矩阵", "feedback_log 闭环", "16+ Skills 扩展"];
+    strengths.forEach((st, i) => {
+      s.addText("✓ " + st, {
+        x: 0.7, y: 3.58 + i * 0.26, w: 2.2, h: 0.24,
+        fontSize: 9, fontFace: FONT_B, color: C.light, margin: 0,
+      });
+    });
+
+    // Dimension bars
+    addCard(s, 3.3, 1.45, 6.2, 2.0);
+    s.addText("六维评分", {
+      x: 3.5, y: 1.55, w: 5.8, h: 0.28,
+      fontSize: 11, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+    });
+
+    const dims = [
+      { name: "编排与路由", score: 17, max: 20, color: C.sec },
+      { name: "执行隔离",   score: 9,  max: 15, color: C.amber },
+      { name: "治理与审批", score: 22, max: 25, color: C.green },
+      { name: "可观测性",   score: 12, max: 20, color: C.amber },
+      { name: "记忆与状态", score: 8,  max: 10, color: C.teal },
+      { name: "扩展与集成", score: 9,  max: 10, color: C.green },
+    ];
+
+    dims.forEach((d, i) => {
+      const dy = 1.92 + i * 0.24;
+      const barW = 3.0;
+      const pct = d.score / d.max;
+      s.addText(d.name, {
+        x: 3.5, y: dy, w: 1.3, h: 0.2,
+        fontSize: 9, fontFace: FONT_B, color: C.text, margin: 0,
+      });
+      s.addShape("rect", { x: 4.85, y: dy + 0.04, w: barW, h: 0.12, fill: { color: C.card } });
+      s.addShape("rect", { x: 4.85, y: dy + 0.04, w: barW * pct, h: 0.12, fill: { color: d.color } });
+      s.addText(`${d.score}/${d.max}`, {
+        x: 4.85 + barW + 0.1, y: dy - 0.01, w: 0.6, h: 0.2,
+        fontSize: 9, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+      });
+    });
+
+    // Gap & improvement cards
+    addCard(s, 3.3, 3.6, 3.0, 1.55);
+    addAccentBar(s, 3.3, 3.6, 1.55, C.rose);
+    s.addText("主要缺口", {
+      x: 3.55, y: 3.7, w: 2.5, h: 0.24,
+      fontSize: 10, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+    });
+    const gaps = [
+      "无结构化 Tracing（Agent 调用链）",
+      "无容器级执行隔离",
+      "无 CI/CD 自动 Gate",
+      "无异步审批状态化",
+    ];
+    gaps.forEach((g, i) => {
+      s.addText("△ " + g, {
+        x: 3.55, y: 4.0 + i * 0.26, w: 2.6, h: 0.22,
+        fontSize: 8.5, fontFace: FONT_B, color: C.muted, margin: 0,
+      });
+    });
+
+    addCard(s, 6.5, 3.6, 3.0, 1.55);
+    addAccentBar(s, 6.5, 3.6, 1.55, C.teal);
+    s.addText("TOP 3 改进方向", {
+      x: 6.75, y: 3.7, w: 2.5, h: 0.24,
+      fontSize: 10, fontFace: FONT_B, bold: true, color: C.text, margin: 0,
+    });
+    const improvements = [
+      "P0 引入 ai_runs_index 执行轨迹",
+      "P1 只读 Agent 设 workspace-read",
+      "P2 GitHub Action 自动 Gate",
+    ];
+    improvements.forEach((imp, i) => {
+      s.addText("→ " + imp, {
+        x: 6.75, y: 4.0 + i * 0.26, w: 2.6, h: 0.22,
+        fontSize: 8.5, fontFace: FONT_B, color: C.muted, margin: 0,
+      });
+    });
+
+    // Bottom summary
+    s.addShape("rect", { x: 0.5, y: 5.25, w: 9.0, h: 0.3, fill: { color: C.navy } });
+    s.addText("结论：治理与审批维度行业领先，可观测性和执行隔离是下一步补齐重点", {
+      x: 0.7, y: 5.28, w: 8.6, h: 0.24,
+      fontSize: 10, fontFace: FONT_B, bold: true, color: C.white, margin: 0, align: "center",
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 15 — Q&A
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();

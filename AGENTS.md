@@ -56,7 +56,7 @@ pm_assistant → requirement-doc → gate_review Gate 1 → designer + architect
 | Skill | 用途 |
 | --- | --- |
 | `requirement-doc` | 生成主 PRD、Module PRD 与低保真 wireframe |
-| `requirement-to-issues` | 将 PRD 拆分为 Epic / Task / Sub-issue |
+| `requirement-to-issues` | 将 PRD 拆分为 Epic / Task（支持 GitHub 远程创建或本地 Markdown 存储） |
 | `architect-doc` | 技术架构模板、ADR 与模块级架构设计 |
 | `prototype-design` | 从低保真升级高保真原型 |
 | `prototype-publish` | 发布原型到墨刀 / Figma |

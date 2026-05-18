@@ -101,7 +101,7 @@ PM-Project/
 | Skill | 作用 |
 | --- | --- |
 | `requirement-doc` | 生成主 PRD、Module PRD 与低保真 wireframe |
-| `requirement-to-issues` | 将 PRD 拆分为 Epic / Task / Sub-issue |
+| `requirement-to-issues` | 将 PRD 拆分为 Epic / Task（支持 GitHub 远程创建或本地 Markdown 存储） |
 | `architect-doc` | 技术架构模板、ADR 与模块级架构设计 |
 | `prototype-design` | 从低保真升级为高保真原型 |
 | `prototype-publish` | 发布原型到墨刀 / Figma |
@@ -458,7 +458,8 @@ start projects/prd-todo-app/wireframes/index.html
 | --- | --- |
 | 高保真原型 | `请使用 designer 基于 todo-app 的 PRD 和 wireframe 生成高保真原型。` |
 | 架构设计 | `请使用 architect 基于 todo-app 的 PRD 生成架构文档。` |
-| 任务拆分 | `请调用 requirement-to-issues，把 todo-app PRD 拆分成 Epic 和 Task。` |
+| 任务拆分（GitHub） | `请调用 requirement-to-issues，把 todo-app PRD 拆分成 Epic 和 Task。` |
+| 任务拆分（本地） | `请调用 requirement-to-issues，把 todo-app PRD 拆分成本地 Issue 文件。` |
 | 测试策略 | `请使用 code_testing 为 todo-app 制定测试策略。` |
 | 工作流评估 | `请使用 pm_workflow_evaluator 评估 todo-app 的流程健康度。` |
 
@@ -490,7 +491,23 @@ start projects/prd-todo-app/wireframes/index.html
 - 没有配置 `TAVILY_API_KEY` 时，外部竞品检索能力会受限
 - 但本地需求理解、PRD 生成、wireframe 生成仍然可以继续
 
-### 5.5 当前实操至少要配哪些环境变量？
+### 5.5 `requirement-to-issues` 不配置 GitHub Token 能用吗？
+
+可以。当前 `requirement-to-issues` 已支持**本地存储模式**：
+
+- 无 `GITHUB_TOKEN` 或无 GitHub MCP 时，Skill 会自动推断为「本地模式」
+- 产物以 Markdown + YAML frontmatter 形式存储在 `projects/prd-{project}/issues/` 目录下
+- 输出包含 Epic 文件、Task 文件和 `_index.md` 索引
+
+三种存储模式：
+
+| 模式 | 触发方式 | 需要 GitHub Token |
+| --- | --- | --- |
+| GitHub 模式（默认） | 正常使用，且 GitHub MCP 可用 | 是 |
+| 本地模式 | 说"本地存储 Issue"或无 GitHub MCP | 否 |
+| 混合模式 | 说"同时本地和 GitHub" | 是 |
+
+### 5.6 当前实操至少要配哪些环境变量？
 
 最小集合如下：
 
@@ -500,9 +517,9 @@ start projects/prd-todo-app/wireframes/index.html
 | `TAVILY_API_KEY` | 可选 | 竞品分析、网络检索 |
 | `FEISHU_APP_ID` | 可选 | 飞书文档查重与同步 |
 | `FEISHU_APP_SECRET` | 可选 | 飞书文档查重与同步 |
-| `GITHUB_TOKEN` | 可选 | GitHub Issue / PR 流程 |
+| `GITHUB_TOKEN` | 可选 | GitHub Issue / PR 流程（本地模式下不需要） |
 
-### 5.6 如何快速确认 Codex 真的读取了仓库配置？
+### 5.7 如何快速确认 Codex 真的读取了仓库配置？
 
 可以做三件事：
 

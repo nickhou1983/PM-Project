@@ -2,16 +2,42 @@
 
 一条命令向你的业务仓库注入 PM Agent/Skill 工作流体系。
 
-## 快速使用
+## 安装
+
+### 方式一：npx 直接运行（推荐）
+
+无需安装，在你的业务仓库根目录执行：
+
+```bash
+npx create-pm-agents
+```
+
+或通过 GitHub 仓库直接运行：
 
 ```bash
 npx github:nickhou1983/PM-Project/create-pm-agents
 ```
 
-或 clone 后本地使用：
+### 方式二：全局安装
 
 ```bash
-cd create-pm-agents
+npm install -g create-pm-agents
+```
+
+然后在业务仓库中运行：
+
+```bash
+cd /path/to/your-project
+create-pm-agents
+```
+
+### 方式三：本地开发
+
+Clone 仓库后本地链接：
+
+```bash
+git clone https://github.com/nickhou1983/PM-Project.git
+cd PM-Project/create-pm-agents
 npm install
 npm link
 
@@ -19,6 +45,8 @@ npm link
 cd /path/to/your-project
 create-pm-agents
 ```
+
+> **要求：** Node.js >= 18.0.0
 
 ## 选项
 

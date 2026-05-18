@@ -90,16 +90,30 @@ export async function generate({ answers, targetDir, dryRun }) {
     if (!dryRun) await fs.outputFile(configDest, configContent);
   }
 
-  // ─── 5. .agents/skills/ 软链接（Codex 发现入口） ────────────
+  // ─── 5. .agents/skills/（Codex 发现入口） ────────────────────
   if (platform === 'codex' || platform === 'both') {
     for (const skillId of skills) {
       const linkPath = join(targetDir, '.agents', 'skills', skillId);
-      const linkTarget = join('..', '..', '.github', 'skills', skillId);
-      files.push(relative(targetDir, linkPath));
-      if (!dryRun) {
-        await fs.ensureDir(dirname(linkPath));
-        if (!await fs.pathExists(linkPath)) {
-          await fs.symlink(linkTarget, linkPath, 'dir');
+      if (platform === 'both') {
+        // both 模式：.github/skills/ 已存在，创建相对软链接
+        const linkTarget = join('..', '..', '.github', 'skills', skillId);
+        files.push(relative(targetDir, linkPath));
+        if (!dryRun) {
+          await fs.ensureDir(dirname(linkPath));
+          if (!await fs.pathExists(linkPath)) {
+            await fs.symlink(linkTarget, linkPath, 'dir');
+          }
+        }
+      } else {
+        // codex-only 模式：直接复制 skill 文件（无 .github/skills/ 可链接）
+        const src = join(TEMPLATES_DIR, 'skills', skillId);
+        if (await fs.pathExists(src)) {
+          const skillFiles = await collectFiles(src);
+          for (const f of skillFiles) {
+            const rel = relative(src, f);
+            files.push(join('.agents', 'skills', skillId, rel));
+          }
+          if (!dryRun) await fs.copy(src, linkPath);
         }
       }
     }

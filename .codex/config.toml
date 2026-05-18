@@ -1,0 +1,96 @@
+# Codex 项目级配置
+# 本文件定义 Codex App 运行时的全局设置、MCP 服务器和 Agent 路由
+
+[project]
+name = "PM-Project"
+description = "GitHub Copilot / Codex 自定义 Agent 与 Skill 知识库"
+default_agent = "pm_assistant"
+language = "zh-CN"
+
+# Agent 目录配置
+[agents]
+directory = ".codex/agents"
+system_prompt_base = ".github/agents"
+
+# Skill 目录配置
+[skills]
+directory = ".github/skills"
+# Skill 通过读取 <skill-name>/SKILL.md 获取工作流定义
+# 参考模板位于 <skill-name>/references/
+
+# ─────────────────────────────────────────────
+# MCP 服务器配置
+# ─────────────────────────────────────────────
+
+[mcp_servers.tavily]
+# Tavily 网络搜索 — 用于竞品分析和市场调研
+command = "npx"
+args = ["-y", "tavily-mcp"]
+env = { TAVILY_API_KEY = "$TAVILY_API_KEY" }
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
+[mcp_servers.github]
+# GitHub MCP — Issue/PR 管理
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+env = { GITHUB_PERSONAL_ACCESS_TOKEN = "$GITHUB_TOKEN" }
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
+[mcp_servers.playwright]
+# Playwright MCP — UI 自动化测试
+command = "npx"
+args = ["-y", "@anthropic-ai/mcp-server-playwright"]
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.feishu]
+# 飞书文档 MCP — 文档查重和同步
+command = "npx"
+args = ["-y", "@nicepkg/feishu-mcp"]
+env = { FEISHU_APP_ID = "$FEISHU_APP_ID", FEISHU_APP_SECRET = "$FEISHU_APP_SECRET" }
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
+[mcp_servers.modao]
+# 墨刀 MCP — 原型发布
+command = "sh"
+args = ["-lc", "exec npx -y @modao-mcp/modao-proto-mcp --token \"$MODAO_TOKEN\" --url https://modao.cc"]
+startup_timeout_sec = 15
+tool_timeout_sec = 60
+
+[mcp_servers.context7]
+# Context7 — 文档检索
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
+# ─────────────────────────────────────────────
+# 沙箱与权限配置
+# ─────────────────────────────────────────────
+
+[sandbox]
+# 允许写入的目录
+writable_paths = [
+    "projects/",
+    "plans/",
+    "Presentations/",
+    ".tmp/"
+]
+# 只读目录（Agent/Skill 定义不应被修改）
+readonly_paths = [
+    ".github/agents/",
+    ".github/skills/",
+    ".codex/",
+    "docs/"
+]
+
+# ─────────────────────────────────────────────
+# 运行时规则
+# ─────────────────────────────────────────────
+
+[rules]
+directory = ".codex/rules"
+# 规则文件在匹配条件时按需加载

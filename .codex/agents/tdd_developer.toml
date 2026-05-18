@@ -1,0 +1,20 @@
+# Codex Agent: tdd_developer
+# TDD 开发者
+
+[agent]
+name = "tdd_developer"
+description = """
+TDD 开发者 Agent。基于 GitHub Issue、架构文档和 PRD 进行需求分析，澄清不明确点后，通过严格的 Red-Green-Refactor TDD 流程实现代码。
+Use when: 用户需要 TDD 方式开发功能、根据 Issue 写代码、测试驱动开发、先写测试再实现、Red-Green-Refactor、从 Issue 开始编码。
+"""
+input_hint = "提供 GitHub Issue 编号或链接，例如：根据 Issue #42 用 TDD 方式开发"
+mode = "workspace-write"
+
+[agent.tools]
+allowed = ["read", "search", "edit", "execute", "todo"]
+
+[agent.routing]
+handoff_agents = []
+
+[agent.system_prompt]
+file = "../.github/agents/tdd_developer.agent.md"

@@ -1,0 +1,21 @@
+# Codex Agent: code_testing
+# 代码测试编排
+
+[agent]
+name = "code_testing"
+description = """
+代码测试 Agent。编排和执行多层测试策略（单元/集成/API/UI/E2E），生成测试覆盖报告。
+支持测试策略制定、缺陷定位和覆盖分析。
+Use when: 代码测试、单元测试、集成测试、测试策略、测试覆盖分析、补充测试、测试编排。
+"""
+input_hint = "指定要测试的模块/文件/功能，或提供 Issue 链接"
+mode = "workspace-write"
+
+[agent.tools]
+allowed = ["read", "search", "web"]
+
+[agent.routing]
+handoff_agents = []
+
+[agent.system_prompt]
+file = "../.github/agents/code_testing.agent.md"

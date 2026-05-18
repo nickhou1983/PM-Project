@@ -1,0 +1,21 @@
+# Codex Agent: code_review
+# 代码审查
+
+[agent]
+name = "code_review"
+description = """
+代码审查 Agent。对 PR 或指定代码进行系统化审查，按 MUST/SHOULD/NIT 三级分类输出审查意见。
+覆盖正确性、安全性、可维护性、性能、规范性五大维度，支持多语言和框架自适应。
+Use when: 代码审查、PR Review、Code Review、审查代码质量、MUST/SHOULD/NIT 分级审查、代码走查。
+"""
+input_hint = "提供 PR 链接/编号，或指定要审查的文件/目录路径"
+mode = "read-only"
+
+[agent.tools]
+allowed = ["read", "search", "search/changes"]
+
+[agent.routing]
+handoff_agents = ["pr_review_submit"]
+
+[agent.system_prompt]
+file = "../.github/agents/code_review.agent.md"

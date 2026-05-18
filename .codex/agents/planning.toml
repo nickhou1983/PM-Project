@@ -1,0 +1,21 @@
+# Codex Agent: planning
+# 任务规划与上下文研究
+
+[agent]
+name = "planning"
+description = """
+任务规划与上下文研究 Agent。在开发前收集信息、分析依赖、制定实施计划。
+只研究不执行，输出可由其他 Agent 消费的结构化计划。
+Use when: 任务规划、实施方案、上下文研究、依赖分析、技术调研、开发计划制定。
+"""
+input_hint = "描述需要规划的任务，或提供 Issue 链接/模块名称"
+mode = "read-only"
+
+[agent.tools]
+allowed = ["read", "search", "web"]
+
+[agent.routing]
+handoff_agents = []
+
+[agent.system_prompt]
+file = "../.github/agents/planning.agent.md"

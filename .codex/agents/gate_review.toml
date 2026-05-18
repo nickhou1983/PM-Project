@@ -1,0 +1,21 @@
+# Codex Agent: gate_review
+# Stage-Gate 评审门
+
+[agent]
+name = "gate_review"
+description = """
+Stage-Gate 评审门 Agent。在工作流关键节点执行正式评审，输出 Go/No-Go 决策。
+支持四个评审门：PRD 评审（Gate 1）、架构评审（Gate 2）、Issues 质量评审（Gate 2.5）、上线评审（Gate 3）。
+Use when: 需求评审、架构评审、上线前检查、Issue 质量评审、Stage-Gate Review、Go/No-Go 决策、质量关卡。
+"""
+input_hint = "指定评审阶段，例如：对 projects/prd-ai-assistant/prd-ai-assistant.md 做 PRD 评审"
+mode = "workspace-write"
+
+[agent.tools]
+allowed = ["read", "search", "web", "edit", "execute", "todo", "agent"]
+
+[agent.routing]
+handoff_agents = []
+
+[agent.system_prompt]
+file = "../.github/agents/gate_review.agent.md"

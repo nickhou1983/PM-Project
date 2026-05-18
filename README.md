@@ -1,6 +1,6 @@
 # PM-Project
 
-面向 GitHub Copilot 的自定义 Agent 与 Skill 仓库，用于把需求分析、架构设计、代码审查、测试、文档、发布等工作流沉淀为可复用的协作能力。
+面向 GitHub Copilot 和 OpenAI Codex 的自定义 Agent 与 Skill 仓库，用于把需求分析、架构设计、代码审查、测试、文档、发布等工作流沉淀为可复用的协作能力。
 
 ## 仓库用途
 
@@ -11,16 +11,20 @@
 
 运行时目录约定：
 
-- `.codex/agents/`：Codex/App 当前实际使用的 Agent 运行时定义。
-- `.github/agents/`：面向 GitHub Copilot 和说明文档的 Agent 定义。
+- `.codex/agents/`：Codex 当前实际使用的 Agent 运行时定义（`.toml` 格式）。
+- `.codex/config.toml`：Codex 项目级配置（MCP 服务器、沙箱权限等）。
+- `.codex/rules/`：Codex 运行时规则（按需加载）。
+- `.github/agents/`：面向 GitHub Copilot 的 Agent 定义（`.agent.md` 格式）。
 - `.github/skills/`：Skill 主目录；`.agents/skills/` 为兼容软链接。
+- `AGENTS.md`：Codex 全局项目指令（启动时自动加载）。
 - `plans/`：运行时 Planning 结果与路由中间产物目录。
 
 适合的使用场景：
 
-- 为团队建立统一的 Copilot 协作工作流。
+- 为团队建立统一的 Copilot / Codex 协作工作流。
 - 复用需求分析、PRD、架构设计、代码审查、测试与发布规范。
 - 在 VS Code 中通过自定义 Agent 和 Skill 提高复杂任务的执行一致性。
+- 在 Codex App 中通过 `.codex/` 配置享有同等的 Agent/Skill 能力。
 
 ## 目录结构
 
@@ -171,6 +175,17 @@ node scripts/generate-skills-ppt.js     # Skills 能力总览
 - Skill 负责方法、模板和操作步骤，尽量把可复用知识放进 references。
 - 运行时规划文档建议统一沉淀到 plans/；历史设计过程保留在 .github/agents/plans。
 - 提交信息建议使用 Conventional Commits，便于后续自动化处理。
+
+## 双平台适配
+
+本仓库同时支持 GitHub Copilot 和 OpenAI Codex：
+
+| 平台 | Agent 定义 | 项目指令 | 规则 |
+|------|-----------|---------|------|
+| GitHub Copilot | `.github/agents/*.agent.md` | `.github/copilot-instructions.md` | `.github/instructions/` |
+| OpenAI Codex | `.codex/agents/*.toml` | `AGENTS.md` | `.codex/rules/` |
+
+Skill 定义（`.github/skills/`）为双平台共用，通过 `.agents/skills/` 软链接兼容。
 
 ## 许可证
 

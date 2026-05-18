@@ -31,7 +31,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-scripts/
+/scripts/
 
 # Build outputs
 dist/

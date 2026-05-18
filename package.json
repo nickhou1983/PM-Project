@@ -1,8 +1,20 @@
 {
+  "name": "create-pm-agents",
+  "version": "0.1.0",
+  "description": "CLI 脚手架：一条命令向业务仓库注入 PM Agent/Skill 工作流体系",
+  "type": "module",
+  "bin": {
+    "create-pm-agents": "./create-pm-agents/bin/index.js"
+  },
   "scripts": {
-    "dashboard": "node scripts/generate-dashboard.js"
+    "dashboard": "node scripts/generate-dashboard.js",
+    "scaffold": "node create-pm-agents/bin/index.js",
+    "sync-templates": "node create-pm-agents/scripts/sync-templates.js"
   },
   "dependencies": {
+    "@inquirer/prompts": "^7.0.0",
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0",
     "pptxgenjs": "^4.0.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -10,5 +22,21 @@
     "remark-parse": "^11.0.0",
     "sharp": "^0.34.5",
     "unified": "^11.0.5"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickhou1983/PM-Project.git"
+  },
+  "keywords": [
+    "copilot",
+    "codex",
+    "agent",
+    "scaffold",
+    "pm",
+    "workflow"
+  ]
 }

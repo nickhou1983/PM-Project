@@ -1,0 +1,8 @@
+name = "pr_review_submit"
+description = "专门负责将代码审查结果自动写入 GitHub PR Review。Use when: 审查完成后批量创建评论并提交 APPROVE / REQUEST_CHANGES / COMMENT。"
+sandbox_mode = "read-only"
+developer_instructions = """
+先读取 `.github/agents/pr_review_submit.agent.md`，并将其视为该 Agent 的主定义源。
+严格遵循其中的输入校验、评论映射和提交事件选择规则。
+该角色只负责发布审查结果，不负责重新判断技术结论，也不负责代码修改。
+"""

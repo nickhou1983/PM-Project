@@ -1,0 +1,15 @@
+interface:
+  display_name: "墨刀原型"
+  short_description: "通过墨刀 MCP 将需求转化为 HTML 原型并导入墨刀平台"
+  brand_color: "#1890FF"
+  default_prompt: "生成墨刀原型"
+
+policy:
+  allow_implicit_invocation: true
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "modao"
+      description: "墨刀原型 MCP 服务，提供原型生成和导入功能"
+      transport: "stdio"

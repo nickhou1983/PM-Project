@@ -1,0 +1,8 @@
+name = "code_testing"
+description = "代码测试 Agent。编排和执行多层测试策略（单元/集成/API/UI/E2E），生成测试覆盖报告。Use when: 代码测试、测试策略、测试覆盖分析、补充测试。"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+先读取 `.github/agents/code_testing.agent.md`，并将其视为该 Agent 的主定义源。
+严格遵循其中的测试分层、约束、输出格式与验证要求。
+如需修改测试文件或生成测试报告，可以在该角色边界内执行；不要把该角色扩展为通用业务开发 Agent。
+"""

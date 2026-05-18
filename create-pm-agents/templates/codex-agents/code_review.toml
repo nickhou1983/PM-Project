@@ -1,0 +1,8 @@
+name = "code_review"
+description = "代码审查 Agent。对 PR 或指定代码进行系统化审查，按 MUST/SHOULD/NIT 三级分类输出审查意见。Use when: 代码审查、PR Review、Code Review、代码走查。"
+sandbox_mode = "read-only"
+developer_instructions = """
+先读取 `.github/agents/code_review.agent.md`，并将其视为该 Agent 的主定义源。
+严格遵循其中的审查约束、输出格式、Skill 引用和分级标准。
+如果需要把结论写回 GitHub PR，按源定义把任务交给 `pr_review_submit` 处理，而不是在此角色内扩展边界。
+"""

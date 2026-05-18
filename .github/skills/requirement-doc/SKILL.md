@@ -22,6 +22,8 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 ## 工作流
 
+> **manifest 接入**：本 Skill 写入 `stages.prd`。启动前必须执行 `node scripts/workflow-manifest.js check {项目} prd` 校验上游 `intake`；产出后调用 `set {项目} prd` 回写。详见 [`docs/workflow-manifest-spec.md`](../../../docs/workflow-manifest-spec.md)。
+
 ### 步骤 1：收集输入
 
 确定输入来源并提取关键信息：
@@ -119,7 +121,17 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 
 ### 步骤 3：生成需求文档
 
-> **模式选择**：当产品功能模块 ≥3 个，或用户明确要求「模块化 PRD」「按模块拆分」时，进入**模块化生成模式**；否则使用单文件模式（向后兼容）。
+> **模式选择（多维判定，v2 规则）**：替代「机械的 ≥3 模块」单一阈值，启用模块化需满足以下信号 **≥2 个**：
+>
+> | 信号 | 触发条件 |
+> |------|---------|
+> | 模块数 | 功能模块数 ≥ 3 |
+> | UI 复杂度 | pm_assistant §5.1 UI 评分 ≥ 13 |
+> | 团队规模 | 协作开发团队 ≥ 3 人或多团队 |
+> | 迭代周期 | 计划迭代 ≥ 2 个 Sprint |
+> | 用户显式要求 | 用户明确要求「模块化 PRD」「按模块拆分」 |
+>
+> 命中 ≥2 → 进入**模块化生成模式**；命中 0–1 → 使用单文件模式。判定结果与命中信号必须写入 PRD §1.1「文档结构决策」段落，便于回溯。
 
 #### 3a. 模块化生成模式（默认推荐）
 
@@ -243,7 +255,7 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 >
 >    | 下游产物 | Patch | Minor | Major | 同步方式 |
 >    |----------|-------|-------|-------|----------|
->    | 架构文档（`architecture-*.md`） | — | ⚠️ 检查 | ✅ 必须更新 | 提醒用户使用 `architect` Skill 重新评估 |
+>    | 架构文档（`architecture-*.md`） | — | ⚠️ 检查 | ✅ 必须更新 | 提醒用户使用 `architect-doc` Skill 重新评估 |
 >    | Module PRD（`modules/prd-*.md`） | — | ✅ 同步修改 | ✅ 重新生成 | 当前 Skill 直接更新受影响的 Module PRD |
 >    | 低保真原型（`wireframes/*.html`） | — | ⚠️ 检查 | ✅ 必须更新 | 识别受影响页面，更新或新增 wireframe |
 >    | 高保真原型（`hifi-wireframes/*.html`） | — | ⚠️ 检查 | ✅ 必须更新 | 提醒用户使用 `designer` Agent 同步 |
@@ -263,6 +275,18 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 **默认：对话输出**
 - 在对话中直接输出完整的 PRD Markdown 文档
 - 模块化模式下：先输出主 PRD，然后逐一输出各 Module PRD
+- 输出完成后立即写入 manifest：
+
+  ```bash
+  echo '{
+    "skill": "requirement-doc",
+    "doc": "projects/prd-{项目}/prd-{项目}.md",
+    "version": "v{X.Y.Z}",
+    "module_count": {N},
+    "modular": {true|false},
+    "module_signals_hit": {命中的多维信号数}
+  }' | node scripts/workflow-manifest.js set {项目} prd
+  ```
 
 **可选：写入本地文件**
 - 主 PRD 写入 `projects/prd-{项目名}/prd-{项目名}.md`
@@ -335,5 +359,5 @@ description: "需求文档（PRD）生成 Skill（产品经理角色）。将产
 - [ ] `module_en_slug` 符合命名规范（小写英文、`-` 连接）
 - [ ] Wireframe 文件使用 `{module_en_slug}-{page}.html` 命名，Module PRD §5.2 正确引用
 - [ ] 所有功能点在主 PRD 全局汇总表和对应 Module PRD 中都有出现（无遗漏）
-- [ ] Module PRD §6.3 技术参考区域已标注为占位符（待 architect skill 填充）
+- [ ] Module PRD §6.3 技术参考区域已标注为占位符（待 architect-doc skill 填充）
 - [ ] （如选择导出到墨刀）P0 核心页面已通过 prototype-publish Skill 导入墨刀并确认可查看

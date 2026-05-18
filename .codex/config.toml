@@ -1,70 +1,105 @@
-# PM-Project Codex CLI Configuration
-# 项目级配置，放在仓库 .codex/config.toml
-# 用户级配置放在 ~/.codex/config.toml
+# PM-Project Codex project configuration
+#
+# Codex automatically discovers:
+# - project instructions from `AGENTS.md`
+# - custom agents from `.codex/agents/*.toml`
+# - skills from `.agents/skills/`
+#
+# In this repository, `.github/skills/` is the source of truth and
+# `.agents/skills/` is a symlink mirror for Codex skill discovery.
 
-# ============================================================
-# Subagent 设置
-# ============================================================
+approval_policy = "on-request"
+allow_login_shell = true
+sandbox_mode = "workspace-write"
+project_doc_max_bytes = 32768
+project_doc_fallback_filenames = ["README.md"]
+file_opener = "vscode"
+web_search = "cached"
+mcp_oauth_credentials_store = "auto"
+
+[sandbox_workspace_write]
+network_access = true
+
 [agents]
 max_threads = 6
 max_depth = 1
 
-# ============================================================
-# MCP 服务器配置
-# ============================================================
+[agents.architect]
+description = "根据 PRD 设计技术架构方案的专用 Agent。"
+config_file = "agents/architect.toml"
 
-# --- 飞书 (Feishu) MCP ---
-# 用于文档查重、知识库检索、文档同步
-# 需要设置环境变量: FEISHU_MCP_UAT 或 FEISHU_MCP_TAT
-[mcp_servers.feishu]
-url = "https://mcp.feishu.cn/mcp"
-bearer_token_env_var = "FEISHU_MCP_UAT"
+[agents.code_review]
+description = "对 PR 或指定代码进行 MUST/SHOULD/NIT 三级审查的专用 Agent。"
+config_file = "agents/code_review.toml"
+
+[agents.code_testing]
+description = "负责测试策略、测试补齐和覆盖分析的专用 Agent。"
+config_file = "agents/code_testing.toml"
+
+[agents.designer]
+description = "负责把 PRD / wireframe 升级为高保真原型的专用 Agent。"
+config_file = "agents/designer.toml"
+
+[agents.gate_review]
+description = "负责 Gate 1 / 2 / 2.5 / 3 评审与 Go/No-Go 决策的专用 Agent。"
+config_file = "agents/gate_review.toml"
+
+[agents.planning]
+description = "负责开发前上下文研究和实施计划输出的只读 Agent。"
+config_file = "agents/planning.toml"
+
+[agents.pm_assistant]
+description = "负责需求分析、查重和立项前价值评估的入口 Agent。"
+config_file = "agents/pm_assistant.toml"
+
+[agents.pm_workflow_evaluator]
+description = "负责横向评估整条 PM 工作流健康度的专用 Agent。"
+config_file = "agents/pm_workflow_evaluator.toml"
+
+[agents.post_launch_review]
+description = "负责上线复盘、指标分析和迭代建议的专用 Agent。"
+config_file = "agents/post_launch_review.toml"
+
+[agents.pr_review_submit]
+description = "负责把审查结论写入 GitHub PR Review 的专用 Agent。"
+config_file = "agents/pr_review_submit.toml"
+
+[agents.tdd_developer]
+description = "负责基于 Issue 和架构文档执行 TDD 开发的专用 Agent。"
+config_file = "agents/tdd_developer.toml"
+
+[mcp_servers.tavily]
+command = "sh"
+args = ["-lc", "exec env TAVILY_API_KEY=\"$TAVILY_API_KEY\" npx -y tavily-mcp"]
 startup_timeout_sec = 15
 tool_timeout_sec = 30
 
-# --- 墨刀 (Modao) MCP ---
-# 用于原型生成和导入
-# 需要设置环境变量: MODAO_TOKEN
+[mcp_servers.github]
+command = "sh"
+args = ["-lc", "exec env GITHUB_PERSONAL_ACCESS_TOKEN=\"$GITHUB_TOKEN\" npx -y @modelcontextprotocol/server-github"]
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@anthropic-ai/mcp-server-playwright"]
+startup_timeout_sec = 20
+tool_timeout_sec = 60
+
+[mcp_servers.feishu]
+command = "sh"
+args = ["-lc", "exec env FEISHU_APP_ID=\"$FEISHU_APP_ID\" FEISHU_APP_SECRET=\"$FEISHU_APP_SECRET\" npx -y @nicepkg/feishu-mcp"]
+startup_timeout_sec = 15
+tool_timeout_sec = 30
+
 [mcp_servers.modao]
 command = "sh"
 args = ["-lc", "exec npx -y @modao-mcp/modao-proto-mcp --token \"$MODAO_TOKEN\" --url https://modao.cc"]
 startup_timeout_sec = 15
 tool_timeout_sec = 60
 
-
-# --- Playwright MCP ---
-# 用于 UI 自动化测试
-[mcp_servers.playwright]
-command = "npx"
-args = ["-y", "@playwright/mcp"]
-startup_timeout_sec = 15
-tool_timeout_sec = 60
-
-# --- GitHub MCP ---
-# 用于 PR 管理、Issue 操作、代码搜索
-# 需要设置环境变量: GITHUB_PERSONAL_ACCESS_TOKEN
-[mcp_servers.github]
-command = "npx"
-args = ["-y", "@modelcontextprotocol/server-github"]
-
-[mcp_servers.github.env]
-GITHUB_PERSONAL_ACCESS_TOKEN_ENV = "GITHUB_PERSONAL_ACCESS_TOKEN"
-
-# --- Context7 MCP ---
-# 用于获取最新开发文档
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
-
-# --- Tavily MCP ---
-# 用于网络搜索（竞品分析、技术调研）
-# 需要设置环境变量: TAVILY_API_KEY
-[mcp_servers.tavily]
-command = "npx"
-args = ["-y", "@tavily/mcp"]
-
-[mcp_servers.tavily.env]
-TAVILY_API_KEY_ENV = "TAVILY_API_KEY"
-
-[sandbox_workspace_write]
-network_access = true
+startup_timeout_sec = 15
+tool_timeout_sec = 30

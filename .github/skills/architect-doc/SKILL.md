@@ -1,5 +1,5 @@
 ---
-name: architect
+name: architect-doc
 description: "技术架构设计 Skill。根据产品需求文档（PRD）设计完整的技术架构方案，输出结构化的架构设计文档。覆盖技术栈选型、系统架构、数据模型、API 设计、部署方案、非功能需求、安全设计等。触发条件：(1) 设计技术架构，(2) 从 PRD 推导技术方案，(3) 系统设计/技术选型，(4) 数据库设计，(5) API 设计，(6) 部署架构设计。"
 ---
 
@@ -97,6 +97,28 @@ description: "技术架构设计 Skill。根据产品需求文档（PRD）设计
     - 更新模块 PRD 文档头中的「关联架构文档」字段
     - 回填 Module PRD §6.3 技术参考中的数据模型、API 端点、前端组件摘要
     - 若批量生成时某个模块失败，继续处理其他模块，并在最终汇总中列出失败模块和原因
+
+### manifest 接入（v2 必做）
+
+启动前执行：
+
+```bash
+node scripts/workflow-manifest.js check {项目} architecture
+```
+
+校验通过后产出主架构 / 模块级架构文档，落盘后写入：
+
+```bash
+echo '{
+  "agent": "architect",
+  "doc": "projects/prd-{项目}/architecture-{项目}.md",
+  "version": "v{X.Y.Z}",
+  "linked_prd": "v{X.Y.Z}",
+  "module_arch_count": {N}
+}' | node scripts/workflow-manifest.js set {项目} architecture
+```
+
+规范见 [`docs/workflow-manifest-spec.md`](../../../docs/workflow-manifest-spec.md)。
 
 ### 后续操作
 

@@ -14,7 +14,7 @@ pm_assistant (立项验证)
   → requirement-doc [Skill] (生成主 PRD + Module PRD + wireframe)
     → gate_review [Agent] Gate 1 (PRD 评审)
       → designer [Agent] + prototype-design [Skill] (高保真原型)
-        → architect [Agent] + architect [Skill] (主架构 + 模块级架构)
+        → architect [Agent] + architect-doc [Skill] (主架构 + 模块级架构)
           → gate_review [Agent] Gate 2 (架构评审)
             → requirement-to-issues [Skill] (按模块拆分 GitHub Issues)
               → gate_review [Agent] Gate 2.5 (Issues 质量评审)
@@ -139,7 +139,7 @@ pm_assistant (立项验证)
 | 角色 | 类型 | 职责 |
 |------|------|------|
 | **architect** | Agent | 基于 PRD 设计技术架构方案，支持模块化架构 |
-| **architect** | Skill | 提供架构模板（主模板 + 模块级模板 + ADR 模板） |
+| **architect-doc** | Skill | 提供架构模板（主模板 + 模块级模板 + ADR 模板） |
 | **microservices** | Skill | 微服务场景下的设计、治理与部署规范 |
 
 **输入 → 输出**：
@@ -336,7 +336,7 @@ Issues 确认 → planning (任务规划)
 | requirement-doc | 1-需求 | 模块化 PRD 生成 + 低保真 wireframe | 无 |
 | prototype-design | 3-设计 | 高保真 HTML 原型生成 | modao MCP（可选） |
 | prototype-publish | 3-设计 | 原型发布到墨刀或 Figma | 墨刀 MCP / Figma MCP |
-| architect | 4-架构 | 架构文档模板 + ADR | 无 |
+| architect-doc | 4-架构 | 架构文档模板 + ADR | 无 |
 | microservices | 4-架构 | 微服务设计/部署规范 | 无 |
 | requirement-to-issues | 6-拆分 | PRD → GitHub Issues（Epic + Task） | GitHub MCP |
 | tdd-coder | 7-开发 | TDD 方法论（Red-Green-Refactor）、测试框架选型 | 无 |
@@ -396,10 +396,187 @@ post_launch_review 复盘报告
 
 | 原则 | 说明 |
 |------|------|
-| **模块化优先** | ≥3 个功能模块时自动启用模块化 PRD + 模块级架构，下游 Skill 优先消费模块级文档 |
+| **模块化优先** | ≥3 个功能模块或满足多维触发条件（见 §7.5）时自动启用模块化 PRD + 模块级架构，下游 Skill 优先消费模块级文档 |
 | **版本追踪** | 文档头精确记录关联上游版本号，变更记录含来源标识，确保 PRD ↔ 架构 ↔ Issue 版本一致 |
-| **Stage-Gate 质量关卡** | 4 个评审门（Gate 1 PRD / Gate 2 架构 / Gate 2.5 Issues / Gate 3 上线），每门有量化检查清单和权重评分，High Risk 项一票否决 |
+| **Stage-Gate 质量关卡** | 4 个评审门（Gate 1 / Gate 2 含 Issues 就绪 / Gate 2.5 兼容 / Gate 3），支持轻/重双模式（见 §7.1），每门有量化检查清单和权重评分，High Risk 项一票否决 |
 | **角色分离** | Agent 负责决策和协调，Skill 负责方法论和执行模板，Agent 不做 Skill 的事 |
 | **迭代闭环** | post_launch_review 复盘 → pm_assistant 迭代分析 → 增量更新，形成 Build-Measure-Learn 循环 |
 | **渐进细化** | pm_assistant 只做快评（UI 复杂度/技术可行性），正式设计交由 designer 和 architect |
 | **流程健康度** | pm_workflow_evaluator 在复盘后跨阶段扫描全流程产物，与 gate_review 互补：前者评流程健康度，后者评单次产物质量 |
+| **形式化数据契约** | 各阶段产物通过 `workflow-manifest.json` 显式声明上游版本与 Gate 结果，下游 Agent 启动前强制校验（见 §7.2） |
+| **早期失败回流** | 下游 Agent 发现上游缺陷时输出标准化 `Upstream Defect Report`，自动归档并参与流程健康度评分（见 §7.3） |
+| **设计-架构并行** | designer 与 architect 在 Gate 1 通过后并行启动，Gate 2 前完成 checkpoint 对齐（见 §7.4） |
+| **AI 协作可观测** | 每次 Agent/Skill 运行写入 `runs/*.json` 埋点，由 pm_workflow_evaluator 聚合驱动 Dim6 评分（见 §7.6） |
+
+---
+
+## 7. 流程改进规范（v2 增量）
+
+> 本章是对原始线性流程的**正交补充**，不改变现有阶段顺序，但加强了跨阶段的契约、回路与可度量性。各 Agent/Skill 在落地时需逐项接入。
+
+### 7.1 Gate 评审强度模式
+
+| 模式 | 适用条件 | 决策方式 | 评审项范围 |
+|------|---------|---------|-----------|
+| 🪶 **Lite** | 模块数 ≤ 2 / 团队 ≤ 1 人 / 内部工具 / Patch 迭代 | 仅检查标 ⭐ 的最小必检集，全部通过即 Go；任意 ❌ 即 No-Go | Gate 1: 5 项；Gate 2: 6 项；Gate 3: 5 项 |
+| 🛡️ **Standard**（默认） | 模块 3–5 / 团队 2–5 人 / 面向外部用户 | 加权评分，Go / Conditional Go / No-Go | 完整清单 |
+| 🏛️ **Strict** | 模块 ≥ 6 / 涉及合规或支付 / 关键基础设施 | Standard + 强制 ⚠️ 24h 内闭环 + 全员评审签名 | 完整清单 |
+
+模式判定优先级：**用户显式指定 > 项目 `workflow.config.yaml` > 自动判定**。每次 Gate 报告需在 JSON `mode` 字段记录所选模式。
+
+### 7.2 工作流数据契约：`workflow-manifest.json`
+
+每个项目目录下维护 **`projects/prd-{项目}/workflow-manifest.json`**，作为跨阶段的「真理源」。各 Agent/Skill 在产出主要文档时必须**追加写入对应阶段条目**；下游 Agent 启动前必须**校验上游条目存在且 Gate 通过**，否则拒绝启动并提示用户。
+
+```json
+{
+  "project": "ai-assistant",
+  "current_stage": "architecture",
+  "manifest_version": "1.0",
+  "stages": {
+    "intake":        { "agent": "pm_assistant",        "report": "analysis-report-...", "trigger_source": "user_feedback", "completed_at": "2026-04-10" },
+    "prd":           { "skill": "requirement-doc",     "doc": "prd-ai-assistant.md",   "version": "v1.1.0", "module_count": 4 },
+    "gate1":         { "decision": "Go", "mode": "Standard", "score": 0.86, "report": "gate-results/gate1-2026-04-12.json" },
+    "design":        { "agent": "designer",            "doc": "hifi-wireframes/", "checkpoint_with_arch": "design-arch-sync-2026-04-13.md" },
+    "architecture":  { "agent": "architect",           "doc": "architecture-ai-assistant.md", "version": "v1.1.0", "linked_prd": "v1.1.0" },
+    "gate2":         { "decision": "Conditional Go", "mode": "Standard", "score": 0.78, "warnings_open": 2 },
+    "issues":        { "skill": "requirement-to-issues", "epic_count": 4, "task_count": 23, "test_skeletons_generated": true },
+    "gate2_5":       { "decision": "Go", "mode": "Standard", "merged_into_gate2": false },
+    "development":   { "pr_links": [], "open_defect_reports": 0 },
+    "gate3":         { "decision": null },
+    "post_launch":   { "report": null }
+  }
+}
+```
+
+**强制约束**：
+- 任一阶段 manifest 字段缺失 → 下游 Agent 启动时报错并指引人工补录
+- Gate 决策必须在进入下一阶段前更新到 manifest（由 gate_review 自动写入）
+- `linked_prd` / `version` 字段不一致 → 视为 Gate 阻断项
+- pm_workflow_evaluator 优先读取 manifest 而非扫描文件，提高评估速度与一致性
+
+### 7.3 反向反馈回路：`Upstream Defect Report`
+
+下游阶段（架构、开发、测试）若发现上游产物缺陷（PRD 信息不全、架构未覆盖某场景等），不得自行编造修补，而需输出一份 **缺陷报告** 并回流：
+
+**输出位置**：`projects/prd-{项目}/feedback/{from_stage}-to-{to_stage}-{YYYYMMDD}.md`
+
+**模板字段**：
+- 来源阶段 / 目标阶段
+- 缺陷类型：`missing_requirement` / `ambiguous_spec` / `architecture_gap` / `infeasible` / `data_mismatch`
+- 影响范围：受影响的产物路径、Issue 编号、模块
+- 复现/证据：相关引用（Issue/PR/测试日志）
+- 建议修订点：上游应如何修改
+- 阻塞等级：阻塞 / 可绕过 / 仅记录
+
+**处理规则**：
+- 阻塞类缺陷 → 上游 Agent 必须修订并升版本号；新一轮 Gate 必须包含「缺陷已闭环」检查
+- pm_workflow_evaluator Dim2/Dim5 从 `feedback/` 自动统计「缺陷数 / 闭环时长」，纳入流程健康度
+
+### 7.4 设计-架构并行 Checkpoint
+
+阶段 3 与阶段 4 改为并行：
+
+```text
+Gate 1 Go
+  ├── designer  (生成 hifi-wireframes)
+  └── architect (生成 architecture + 模块级架构)
+       ↓
+   设计-架构对齐 checkpoint（Gate 2 前）
+       ↓
+   Gate 2（含 Issues 就绪）
+```
+
+**Checkpoint 输出物**：`projects/prd-{项目}/design-arch-sync-{YYYYMMDD}.md`
+
+强制对齐项：
+1. 前端路由表（designer 出页面 → architect 出路由配置）
+2. 状态管理方案（全局/本地状态划分）
+3. API 形态（请求/响应/错误码与设计稿空/错误状态一一对应）
+4. 关键交互的实现路径（如实时协作、权限可见性）
+5. 双方签名（在 manifest `design.checkpoint_with_arch` 字段引用此文件）
+
+### 7.5 模块化判定多维评估
+
+替代「机械的 ≥3 模块」单一阈值，改为综合判定：
+
+| 信号 | 推荐启用模块化 |
+|------|---------------|
+| 功能模块数 ≥ 3 | ✅ |
+| UI 复杂度评分 ≥ 13（来自 pm_assistant 5.1） | ✅ |
+| 团队规模 ≥ 3 人或多团队协作 | ✅ |
+| 计划迭代周期 ≥ 2 个 Sprint | ✅ |
+
+**至少 2 个信号命中**才启用模块化。命中 1 个或全部未命中 → 单文件 PRD 即可。判定依据需写入 PRD §1.1 项目背景的「文档结构决策」段落。
+
+### 7.6 AI 协作运行时埋点
+
+每次 Agent/Skill 关键执行结束写入：
+
+**路径**：`projects/prd-{项目}/runs/{YYYY-MM-DD}-{agent_or_skill}.json`
+
+**最小字段**：
+```json
+{
+  "actor": "architect",
+  "kind": "agent",
+  "stage": "architecture",
+  "started_at": "2026-04-13T10:00:00Z",
+  "duration_seconds": 320,
+  "outputs": ["projects/prd-xxx/architecture-xxx.md"],
+  "human_edits_after": 12,         // 人工修订行数（git diff 统计）
+  "gate_followup": "gate2",
+  "gate_decision": "Go"
+}
+```
+
+**用途**：
+- pm_workflow_evaluator Dim6（AI 协作效率）从这些 JSON 直接聚合，替代人工填报
+- 可生成「Acceptance Rate / 平均修订行数 / 阶段平均耗时」趋势图
+- 提供给管理层仪表盘（与 `docs/ai-era-metrics-framework.md` 对齐）
+
+### 7.7 触发源识别（pm_assistant 入口）
+
+pm_assistant 在步骤 0.6 增加 **触发源类型识别**，并据此选择精简流程：
+
+| 触发源 | 流程精简建议 |
+|--------|-------------|
+| 产品灵感（默认） | 全流程 |
+| 用户反馈 / 客诉 | 跳过竞品分析（步骤 3）减半，强化痛点验证 |
+| 竞品反追 | 强化步骤 3，强制 ≥5 个竞品 |
+| 合规/安全驱动 | 跳过商业快评（步骤 4），强化 NFR 与上线评审 |
+| 技术债务 | 跳过用户研究门，重点输出技术 ROI 分析 |
+| 数据驱动迭代 | 自动进入迭代模式，强制提供基线数据快照 |
+
+触发源记录到 PRD §1.1 与 manifest `intake.trigger_source` 字段，供 Gate 1 「触发源 ↔ 关键指标对齐」检查项使用。
+
+### 7.8 用户研究门（可选）
+
+当 pm_assistant 输出满足以下条件时，**建议**插入轻量级用户研究门：
+- 用户画像标记为 ⚠️ 假设性
+- 商业模型评分 ≥ 4（高价值灵感）
+- 触发源 ≠ 合规/技术债务
+
+研究门要求至少完成以下一项：
+- 5 人以上用户访谈摘要
+- 问卷样本 ≥ 30，包含痛点排序
+- 竞品评论文本聚类（≥50 条）
+
+研究产物归档到 `projects/prd-{项目}/user-research/`，并在 PRD §2 引用；未完成研究门时进入 Gate 1，§2 自动打 ⚠️ 风险标记，Gate 1 的「用户画像数据来源」项硬判 ⚠️。
+
+---
+
+## 8. 改进路线图（落地参考）
+
+| 优先级 | 改进项 | 涉及文件 | 状态 |
+|--------|--------|---------|------|
+| P0 | Gate 双模式 + Gate 2/2.5 合并 | `.github/agents/gate_review.agent.md` | ✅ 已落地（见 §7.1） |
+| P0 | workflow-manifest.json 数据契约 | 各 Skill / Agent + 本文档 §7.2 + [`workflow-manifest-spec.md`](workflow-manifest-spec.md) | ✅ 规范 + `scripts/workflow-manifest.js` + 8 个 Agent/Skill 已接入 |
+| P0 | Upstream Defect Report 标准 | 本文档 §7.3 + 下游 Agent | ✅ 模板已发布 |
+| P1 | 用户研究门 | `pm_assistant.agent.md` + 本文档 §7.8 | ✅ 触发条件已规范 |
+| P1 | designer/architect 并行 checkpoint | 本文档 §7.4 + Gate 2 检查项 3a | ✅ 流程图与硬检查已加入 |
+| P1 | AC → 测试骨架 | `requirement-to-issues/SKILL.md` | ✅ 模板已加入 |
+| P2 | AI 协作运行时埋点 | 各 Agent/Skill 收尾步骤 + 本文档 §7.6 | ✅ Schema 已发布 |
+| P2 | 模块化阈值多维判定 | `requirement-doc/SKILL.md` + 本文档 §7.5 | ✅ 多维表已发布 |
+| P2 | Gate 1 指标可观测性硬检查 | `gate_review.agent.md` Gate 1 项 4 | ✅ 五元组要求已加入 |
+| P2 | 触发源识别 | `pm_assistant.agent.md` 步骤 0.6 + 本文档 §7.7 | ✅ 类型表已发布 |

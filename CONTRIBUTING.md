@@ -2,7 +2,7 @@
 
 ## 目标
 
-这个仓库主要维护 GitHub Copilot 自定义 Agents、Skills 以及相关参考文档。提交内容应优先提升以下能力：
+这个仓库主要维护 GitHub Copilot / OpenAI Codex 自定义 Agents、Skills 以及相关参考文档。提交内容应优先提升以下能力：
 
 - 任务路由与协作流程清晰可复用。
 - 领域知识能够沉淀为可维护的 Skill。
@@ -29,8 +29,12 @@
 ## 目录约定
 
 - `.github/agents/`：角色化 Agent 定义。
-- `.github/agents/plans/`：规划文档、阶段性说明、过程留痕。
+- `.codex/agents/`：Codex 自定义 Agent 定义。
+- `.codex/config.toml`：Codex 项目级配置与 MCP 注册。
+- `.codex/rules/`：Codex 运行时补充规则。
+- `plans/`：运行时规划文档、阶段性说明、过程留痕。
 - `.github/skills/<skill-name>/`：Skill 主定义。
+- `.agents/skills/<skill-name>`：指向 `.github/skills/<skill-name>` 的兼容软链接镜像。
 - `.github/skills/<skill-name>/references/`：模板、清单、知识沉淀。
 - `.github/skills/<skill-name>/scripts/`：辅助脚本。
 
@@ -53,12 +57,14 @@ chore: clean up repository metadata
 - 描述要明确说明职责、边界和典型触发场景。
 - 避免把过多背景知识直接塞进 Agent 文件。
 - 如果 Agent 负责路由，应优先说明如何选择下游 Skill 或 Agent。
+- GitHub Copilot 侧主定义放在 `.github/agents/*.agent.md`，Codex 侧只在 `.codex/agents/*.toml` 做运行时适配，不重复维护第二套完整 prompt。
 
 ### Skill
 
 - `SKILL.md` 聚焦工作流、触发条件和工具映射。
 - 可复用模板尽量放入 `references/`。
 - 需要脚本时，在 `scripts/` 中补充最小可用实现和说明。
+- `.github/skills/` 是主定义源；`.agents/skills/` 仅作兼容镜像，不直接编辑。
 
 ## 文档要求
 
@@ -70,6 +76,7 @@ chore: clean up repository metadata
 
 - 确认新增文件路径合理。
 - 确认 README 或相关文档已同步更新。
+- 确认 Codex 相关文档与实际目录一致：`AGENTS.md`、`.codex/`、`.agents/skills/`。
 - 确认没有误提交本地缓存、环境文件或编辑器状态。
 - 确认提交信息能准确表达改动目的。
 

@@ -1,6 +1,5 @@
 name = "pr_review_submit"
 description = "专门负责将代码审查结果自动写入 GitHub PR Review。适用于审查完成后批量创建行级评论、提交 APPROVE/REQUEST_CHANGES/COMMENT。Use when: 审查完成后批量创建评论并提交 APPROVE / REQUEST_CHANGES / COMMENT。"
-argument_hint = "提供 owner/repo/pull number，以及审查结论和逐条问题（含文件与行号）"
 sandbox_mode = "read-only"
 developer_instructions = '''
 You are a specialist agent for publishing review feedback to GitHub pull requests.

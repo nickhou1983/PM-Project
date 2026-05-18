@@ -1015,7 +1015,77 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 15 — Q&A
+  // SLIDE 15 — PM-Project vs SuperPowers 对比
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.light };
+    titleBar(s, "PM-Project vs SuperPowers 定位对比");
+
+    // 左列标题
+    s.addText("PM-Project", {
+      x: 0.5, y: 1.15, w: 4.3, h: 0.4,
+      fontSize: 16, fontFace: FONT_H, bold: true, color: C.pri,
+    });
+    // 右列标题
+    s.addText("SuperPowers", {
+      x: 5.2, y: 1.15, w: 4.3, h: 0.4,
+      fontSize: 16, fontFace: FONT_H, bold: true, color: C.purple,
+    });
+
+    // 左侧卡片
+    addCard(s, 0.5, 1.6, 4.3, 3.2, C.white);
+    s.addImage({ data: I.project, x: 0.7, y: 1.72, w: 0.3, h: 0.3 });
+    s.addText("产品研发全流程治理框架", {
+      x: 1.08, y: 1.7, w: 3.5, h: 0.35,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.text,
+    });
+    const pmPts = [
+      "需求→设计→架构→开发→评审→上线→复盘",
+      "Agent（角色化）+ Skill（领域知识）双层编排",
+      "workflow-manifest 跨阶段状态持久化",
+      "Stage-Gate 评审（评分 + Go/No-Go）",
+      "文档驱动 — PRD、架构文档、评审报告",
+      "Copilot + Codex 双平台适配",
+    ];
+    s.addText(pmPts.map(t => ({ text: "• " + t + "\n", options: { fontSize: 10, color: C.text } })), {
+      x: 0.75, y: 2.1, w: 3.9, h: 2.5,
+      fontFace: FONT_B, valign: "top", lineSpacingMultiple: 1.3,
+    });
+
+    // 右侧卡片
+    addCard(s, 5.2, 1.6, 4.3, 3.2, C.white);
+    s.addImage({ data: I.shield, x: 5.4, y: 1.72, w: 0.3, h: 0.3 });
+    s.addText("编码会话行为纪律系统", {
+      x: 5.78, y: 1.7, w: 3.5, h: 0.35,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.text,
+    });
+    const spPts = [
+      "聚焦单次编码 Session 内的执行纪律",
+      "Skill only — 无 Agent 角色区分",
+      "Iron Law — 每步必须有验证证据",
+      "Subagent 隔离执行 + 两阶段 Review",
+      "Anti-rationalization 防自我欺骗机制",
+      "Git Worktree 物理隔离 + 频繁提交",
+    ];
+    s.addText(spPts.map(t => ({ text: "• " + t + "\n", options: { fontSize: 10, color: C.text } })), {
+      x: 5.45, y: 2.1, w: 3.9, h: 2.5,
+      fontFace: FONT_B, valign: "top", lineSpacingMultiple: 1.3,
+    });
+
+    // 底部互补关系
+    addCard(s, 0.5, 5.0, 9.0, 0.55, C.navy);
+    s.addText([
+      { text: "互补 ⇄  ", options: { bold: true, color: C.amber, fontSize: 11 } },
+      { text: "PM-Project 管「做什么 + 质量门槛」  |  SuperPowers 管「做的时候每步不出错」  |  两者已在同一 Workspace 并存", options: { color: C.white, fontSize: 10 } },
+    ], {
+      x: 0.7, y: 5.05, w: 8.6, h: 0.45,
+      fontFace: FONT_B, valign: "middle",
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 16 — Q&A
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();

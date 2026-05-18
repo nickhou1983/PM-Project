@@ -2,17 +2,21 @@
 
 ## 仓库定位
 
-本仓库是面向 GitHub Copilot 的自定义 Agent 与 Skill 知识库，用于沉淀需求分析到上线复盘的完整工作流。不包含业务应用代码。
+本仓库是面向 GitHub Copilot 和 OpenAI Codex 的自定义 Agent 与 Skill 知识库，用于沉淀需求分析到上线复盘的完整工作流。不包含业务应用代码。
 
 ## 目录结构
 
 | 路径 | 用途 |
 |------|------|
-| `.github/agents/*.agent.md` | Agent 定义（角色、职责、路由） |
-| `.github/skills/<name>/SKILL.md` | Skill 定义（工作流、模板、工具映射） |
+| `.github/agents/*.agent.md` | GitHub Copilot 侧 Agent 主定义 |
+| `.codex/agents/*.toml` | Codex 自定义 Agent 定义 |
+| `.codex/config.toml` | Codex 项目级配置与 MCP 注册 |
+| `.codex/rules/*.md` | Codex 运行时补充规则 |
+| `.github/skills/<name>/SKILL.md` | Skill 主定义（双平台共用） |
 | `.github/skills/<name>/references/` | Skill 引用的模板和参考文档 |
 | `.github/instructions/` | 按需加载的 Copilot 指令文件 |
-| `.agents/skills/` | `.github/skills/` 的硬链接镜像，勿单独修改 |
+| `.agents/skills/<name>` | 指向 `.github/skills/<name>` 的兼容软链接镜像，勿单独修改 |
+| `AGENTS.md` | Codex 仓库级项目指令 |
 | `projects/prd-{name}/` | 项目产物目录（PRD、wireframe、架构文档、manifest） |
 | `docs/` | 流程规范和框架文档 |
 | `scripts/` | PPT 生成等辅助脚本（pptxgenjs） |
@@ -60,9 +64,19 @@ node scripts/workflow-manifest.js   # 操作 workflow-manifest.json
 
 使用 Conventional Commits：`feat:` / `fix:` / `docs:` / `refactor:` / `chore:`
 
+## 双平台适配
+
+| 平台 | Agent 入口 | 项目级指令 | Skill 入口 |
+|------|-----------|-----------|-----------|
+| GitHub Copilot | `.github/agents/*.agent.md` | `.github/copilot-instructions.md` | `.github/skills/` |
+| OpenAI Codex | `.codex/agents/*.toml` | `AGENTS.md` | `.agents/skills/` |
+
+本仓库中 `.github/skills/` 是 Skill 主定义源，`.agents/skills/` 仅作为 Codex 发现技能时使用的软链接镜像。
+
 ## 关键参考
 
 - 下游工作流规范：`docs/pm-assistant-downstream-workflow.md`
 - Manifest 规范：`docs/workflow-manifest-spec.md`
 - 指标框架：`docs/ai-era-metrics-framework.md`
+- Codex 项目指令：`AGENTS.md`
 - 贡献指南：`CONTRIBUTING.md`

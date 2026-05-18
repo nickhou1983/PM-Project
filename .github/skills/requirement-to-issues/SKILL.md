@@ -1,11 +1,16 @@
 ---
 name: requirement-to-issues
-description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-doc 生成的 PRD 文档中的功能需求章节，按模块拆分并批量创建 GitHub Issues。触发条件：(1) PRD 转 Issue/拆分到 Issue，(2) 需求文档生成 GitHub Issues，(3) 按模块创建 Issue，(4) 功能需求写入 Issue，(5) 从 PRD 批量创建任务，(6) 需求拆解到 GitHub。"
+description: "将 PRD 需求文档拆分为 Issues（支持 GitHub 远程创建或本地 Markdown 存储）。解析 requirement-doc 生成的 PRD 文档中的功能需求章节，按模块拆分并批量创建 Issues。触发条件：(1) PRD 转 Issue/拆分到 Issue，(2) 需求文档生成 Issues，(3) 按模块创建 Issue，(4) 功能需求写入 Issue，(5) 从 PRD 批量创建任务，(6) 需求拆解到 GitHub，(7) 本地存储 Issue，(8) 生成本地 Issue 文件。"
 ---
 
 # 需求文档转 GitHub Issues
 
 解析 `requirement-doc` Skill 生成的 PRD 文档，提取功能需求按**模块→功能点**两级拆分，创建模块级 Issue（Epic）和功能点级子 Issue（Task），并关联架构文档和里程碑。
+
+**存储模式**：支持两种 Issue 存储方式，用户在步骤 1.0 中选择：
+- **GitHub 模式**（默认）：通过 GitHub MCP 工具远程创建 Issues
+- **本地模式**：将 Issues 以 Markdown 文件形式存储在项目目录的 `issues/` 子目录下
+- **混合模式**：同时创建 GitHub Issues 并在本地保存副本
 
 > **模块化 PRD 支持**：当 PRD 采用模块化结构（`modules/` 目录下存在独立的 Module PRD），优先从 Module PRD 读取功能详情、用户故事和验收标准，取代从主 PRD §4.2 解析。模块作为 Epic，功能点作为 Task Issue。
 >
@@ -19,6 +24,7 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 | ---- | ---- | -------- |
 | [issue-template.md](references/issue-template.md) | 模块级 Issue 标题和 Body 的标准模板 | 步骤 5 生成模块 Issue 内容时 |
 | [sub-issue-template.md](references/sub-issue-template.md) | 功能点级子 Issue 标题和 Body 的标准模板 | 步骤 5 生成子 Issue 内容时 |
+| [local-issue-template.md](references/local-issue-template.md) | 本地 Markdown Issue 文件模板（含 YAML frontmatter） | 本地模式步骤 6-L 生成本地文件时 |
 
 ## MCP 工具映射
 
@@ -40,24 +46,51 @@ description: "将 PRD 需求文档拆分为 GitHub Issues。解析 requirement-d
 ### 工作流总览
 
 ```text
-1. 定位 PRD → 2. 解析功能需求 → 3. 关联上下文（含架构文档） → 4. 解析里程碑与依赖 → 5. 生成 Issue 内容（模块+子 Issue） → 6. 创建到 GitHub
+1. 定位 PRD → 2. 解析功能需求 → 3. 关联上下文（含架构文档） → 4. 解析里程碑与依赖 → 5. 生成 Issue 内容（模块+子 Issue） → 6. 创建到 GitHub / 6-L. 本地存储
 ```
 
 ### 步骤 1：定位 PRD 文档
 
 确定 PRD 文档来源并获取完整内容：
 
-#### 1.0 确认目标仓库
+#### 1.0 确认存储模式与目标仓库
 
-> **在任何 Issue 创建之前，必须先确定 Issue 的目标仓库。** PRD/架构文档所在仓库（当前仓库）和 Issue 目标仓库可以不同。
+> **在任何 Issue 创建之前，必须先确定存储模式和 Issue 的目标位置。**
 
+**1. 选择存储模式**：
+
+询问用户 Issue 的存储方式：
+
+| 模式 | 说明 | 适用场景 |
+| ---- | ---- | -------- |
+| **GitHub**（默认） | 通过 MCP 工具创建到 GitHub 仓库 | 团队协作、已有 GitHub 项目、需要跟踪和分配 |
+| **本地** | 生成 Markdown 文件存储在项目目录 | 离线工作、无 GitHub 访问、Codex 沙箱环境、本地优先工作流 |
+| **混合** | 同时创建 GitHub Issue 并本地保存副本 | 需要本地备份、或需要离线查阅 |
+
+> **自动推断**：如果用户未明确指定，按以下规则默认：
+> - 当前环境可以访问 GitHub MCP 工具 → 默认 **GitHub 模式**
+> - 当前环境无 GitHub MCP 工具（如 Codex 沙箱） → 自动回退到 **本地模式**
+> - 用户说“本地存储”“保存到本地”“生成本地文件” → **本地模式**
+> - 用户说“同时本地和 GitHub” → **混合模式**
+
+**2. 确认目标位置**：
+
+**GitHub 模式 / 混合模式时**：
+
+确定 Issue 的目标仓库：
 1. **询问用户**：Issue 要创建到哪个 GitHub 仓库？
    - 默认：当前工作区仓库（如 `nickhou1983/PM-Project`）
    - 可选：用户指定的代码仓库（如 `nickhou1983/my-app`）
 2. **记录目标仓库**：将 `target_owner` 和 `target_repo` 保存，供步骤 5 和步骤 6 使用
 3. **判断跨仓库模式**：若目标仓库 ≠ 当前工作区仓库，启用跨仓库模式：
    - Issue Body 中的文档链接将使用 GitHub 绝对 URL（而非相对路径）
-   - 预览阶段标注"跨仓库模式：文档在 `{source_owner}/{source_repo}`，Issue 创建到 `{target_owner}/{target_repo}`"
+   - 预览阶段标注“跨仓库模式：文档在 `{source_owner}/{source_repo}`，Issue 创建到 `{target_owner}/{target_repo}`”
+
+**本地模式时**：
+
+确定本地存储路径：
+- 默认路径：`projects/prd-{project}/issues/`
+- 用户可自定义路径
 
 **来源 A：本地文件**
 - 用户提供文件路径（如 `projects/prd-<项目名>/prd-<项目名>.md`），直接读取文件内容
@@ -436,6 +469,136 @@ node scripts/workflow-manifest.js check {项目} issues
    | 3 | [VideoPrompt] 视觉风格选择 | #14 | Task | P0 | #12 | 3 | ✅ 已创建 |
    | 4 | [VideoPrompt] 视频参数配置 | #15 | Task | P0 | #12 | 5 | ✅ 已创建 |
 
+> **分支控制**：步骤 6 仅在「GitHub 模式」或「混合模式」时执行。
+
+### 步骤 6-L：本地存储 Issues
+
+> **分支控制**：步骤 6-L 仅在「本地模式」或「混合模式」时执行。
+
+将步骤 5 生成的 Issue 内容以 Markdown 文件形式存储到本地项目目录。
+
+#### 6-L.1 创建目录结构
+
+```text
+projects/prd-{project}/issues/
+├── _index.md                          ← Issue 索引（总览 + 依赖图）
+├── epic-{NN}-{module_en_slug}.md     ← 模块级 Epic
+├── task-{NN}-{feature_slug}.md       ← 功能点级 Task
+└── ...
+```
+
+- `{NN}` 为两位数自增编号（从 `01` 开始）
+- Epic 编号在前，其下属 Task 紧随其后（如 `epic-01-user-system.md`、`task-02-user-register.md`、`task-03-user-login.md`）
+
+#### 6-L.2 生成 Issue 文件
+
+1. 加载 [local-issue-template.md](references/local-issue-template.md) 模板
+2. 每个 Issue 生成一个独立的 Markdown 文件，含 YAML frontmatter 元数据：
+
+**Epic 文件格式**（`epic-{NN}-{module_en_slug}.md`）：
+
+```markdown
+---
+id: "epic-{NN}"
+type: epic
+title: "[{项目名}] {模块中文名} ({module_en_slug}) — 功能需求"
+project: "{项目名}"
+module: "{module_en_slug}"
+priority: "P0"
+labels: ["enhancement", "epic", "project:{项目名}", "priority:P0", "module:{module_en_slug}"]
+milestone: "{里程碑名称}"
+assignee: ""
+story_points: {总 SP}
+children: ["task-{NN}", "task-{NN}", ...]
+dependencies: ["{依赖模块 slug}"]
+status: "open"
+created_at: "{ISO 日期}"
+---
+
+{按 issue-template.md 模板生成的 Issue Body 内容}
+```
+
+**Task 文件格式**（`task-{NN}-{feature_slug}.md`）：
+
+```markdown
+---
+id: "task-{NN}"
+type: task
+title: "[{项目名}] {功能点名称}"
+project: "{项目名}"
+module: "{module_en_slug}"
+priority: "P0"
+labels: ["enhancement", "task", "project:{项目名}", "priority:P0", "module:{module_en_slug}"]
+parent: "epic-{NN}"
+story_points: {SP}
+status: "open"
+created_at: "{ISO 日期}"
+---
+
+{按 sub-issue-template.md 模板生成的 Issue Body 内容}
+```
+
+#### 6-L.3 生成索引文件
+
+创建 `_index.md` 作为所有 Issue 的总览：
+
+```markdown
+# {项目名} — Issue 索引
+
+> 自动生成于 {日期}，基于 PRD v{版本号}
+
+## 概览
+
+- 模块数：{M}
+- 任务数：{N}
+- 总故事点：{T} SP
+- 存储模式：本地
+
+## 模块依赖图
+
+{Mermaid 依赖图}
+
+## Issue 清单
+
+| 编号 | 标题 | 类型 | 优先级 | 模块 | SP | 父 Issue | 状态 |
+| ---- | ---- | ---- | ------ | ---- | -- | -------- | ---- |
+| epic-01 | [{项目名}] 用户系统 (user-system) — 功能需求 | Epic | P0 | user-system | 13 | — | open |
+| task-02 | [{项目名}] 用户注册 | Task | P0 | user-system | 3 | epic-01 | open |
+| ... | ... | ... | ... | ... | ... | ... | ... |
+```
+
+#### 6-L.4 输出结果摘要
+
+```text
+✅ 本地 Issue 创建完成
+
+目录：projects/prd-{project}/issues/
+文件数：{M + N + 1} 个（{M} Epic + {N} Task + 1 索引）
+总故事点：{T} SP
+
+已生成文件：
+  issues/_index.md
+  issues/epic-01-user-system.md
+  issues/task-02-user-register.md
+  issues/task-03-user-login.md
+  ...
+```
+
+#### 6-L.5 manifest 写入
+
+本地模式的 manifest 写入与 GitHub 模式一致，但 `target_repo` 标记为 `local`：
+
+```bash
+echo '{
+  "skill": "requirement-to-issues",
+  "epic_count": {M},
+  "task_count": {N},
+  "test_skeletons_generated": true,
+  "target_repo": "local",
+  "local_path": "projects/prd-{project}/issues/"
+}' | node scripts/workflow-manifest.js set {项目} issues
+```
+
 ## 快速命令
 
 ### 一键拆分并创建
@@ -457,6 +620,14 @@ node scripts/workflow-manifest.js check {项目} issues
 ### 指定 Assignee
 
 当用户提供模块→负责人映射时（如"Prompt 生成给张三，视频生成给李四"），在步骤 5 中填入 assignee 字段。
+
+### 本地存储 Issue
+
+当用户说"本地存储 Issue""保存到本地""生成本地 Issue 文件""不创建 GitHub Issue"时，在步骤 1.0 中选择「本地模式」，跳过步骤 6，仅执行步骤 6-L。
+
+### 混合模式
+
+当用户说"同时本地和 GitHub""本地备份一份"时，在步骤 1.0 中选择「混合模式」，同时执行步骤 6 和步骤 6-L。
 
 ## 质量检查清单
 

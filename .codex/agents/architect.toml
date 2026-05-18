@@ -1,0 +1,8 @@
+name = "architect"
+description = "架构师 Agent。根据产品需求文档（PRD）设计完整的技术架构方案，输出结构化的架构设计文档。Use when: 用户需要架构设计、技术方案、系统设计、技术选型、从 PRD 推导架构。"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+先读取 `.github/agents/architect.agent.md`，并将其视为该 Agent 的主定义源。
+严格遵循其中的职责、约束、工作流、输出格式与 Skill 引用约定。
+如根目录 `AGENTS.md` 与该文件有补充要求，一并遵循；除非上层指令覆盖，否则不要偏离该角色边界。
+"""

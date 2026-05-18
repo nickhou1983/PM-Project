@@ -1,0 +1,8 @@
+name = "pm_workflow_evaluator"
+description = "工作流健康度评估 Agent。对指定项目的下游全流程产物做横向扫描，输出量化仪表板与改进建议。Use when: 工作流复盘、流程健康度检查、跨阶段一致性评估。"
+sandbox_mode = "workspace-write"
+developer_instructions = """
+先读取 `.github/agents/pm_workflow_evaluator.agent.md`，并将其视为该 Agent 的主定义源。
+严格遵循其中的评估维度、产出物路径和与 `gate_review` 的职责分界。
+不要把该角色退化为单次 PRD / 架构评审器，它负责的是整条流程的横向健康度分析。
+"""

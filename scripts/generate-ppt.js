@@ -1085,7 +1085,188 @@ async function main() {
   }
 
   // ════════════════════════════════════════════════════════════════════
-  // SLIDE 16 — Q&A
+  // SLIDE 16 — 架构设计差异对比
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.light };
+    titleBar(s, "架构设计差异：双层编排 vs 扁平 Skill");
+
+    // 表头
+    const hdrY = 1.2;
+    addCard(s, 0.5, hdrY, 2.2, 0.4, C.navy);
+    s.addText("维度", { x: 0.5, y: hdrY, w: 2.2, h: 0.4, fontSize: 10, fontFace: FONT_B, bold: true, color: C.white, align: "center", valign: "middle" });
+    addCard(s, 2.7, hdrY, 3.4, 0.4, C.pri);
+    s.addText("PM-Project", { x: 2.7, y: hdrY, w: 3.4, h: 0.4, fontSize: 10, fontFace: FONT_B, bold: true, color: C.white, align: "center", valign: "middle" });
+    addCard(s, 6.1, hdrY, 3.4, 0.4, C.purple);
+    s.addText("SuperPowers", { x: 6.1, y: hdrY, w: 3.4, h: 0.4, fontSize: 10, fontFace: FONT_B, bold: true, color: C.white, align: "center", valign: "middle" });
+
+    const rows = [
+      ["基本单元", "Agent(角色) + Skill(方法论) 二级解耦", "Skill 单层扁平组合"],
+      ["角色数", "11 个 Agent (pm, architect, designer…)", "0 — 单代理切换 Skill"],
+      ["技能数", "17 个 Skill", "14 个 Skill"],
+      ["状态管理", "workflow-manifest.json 跨阶段契约", "无持久状态，会话内 Todo 追踪"],
+      ["平台适配", "Copilot + Codex 双平台", "单平台 (Claude Code / Copilot CLI)"],
+      ["MCP 集成", "tavily, github, playwright, feishu, modao…", "无 MCP 依赖"],
+      ["治理模型", "Stage-Gate 4 道正式关卡", "子代理双阶段审查 (轻量级)"],
+    ];
+    const rowH = 0.42;
+    rows.forEach((r, i) => {
+      const y = 1.68 + i * rowH;
+      const bg = i % 2 === 0 ? C.card : C.white;
+      addCard(s, 0.5, y, 2.2, rowH, bg);
+      s.addText(r[0], { x: 0.6, y, w: 2.0, h: rowH, fontSize: 9, fontFace: FONT_B, bold: true, color: C.text, valign: "middle" });
+      addCard(s, 2.7, y, 3.4, rowH, bg);
+      s.addText(r[1], { x: 2.8, y, w: 3.2, h: rowH, fontSize: 8.5, fontFace: FONT_B, color: C.text, valign: "middle" });
+      addCard(s, 6.1, y, 3.4, rowH, bg);
+      s.addText(r[2], { x: 6.2, y, w: 3.2, h: rowH, fontSize: 8.5, fontFace: FONT_B, color: C.text, valign: "middle" });
+    });
+
+    // 底部工作流对比
+    const flowY = 4.7;
+    addCard(s, 0.5, flowY, 4.3, 0.8, C.white);
+    addAccentBar(s, 0.5, flowY, 0.8, C.pri);
+    s.addText("PM-Project 流程", { x: 0.7, y: flowY + 0.02, w: 3.8, h: 0.22, fontSize: 9, fontFace: FONT_B, bold: true, color: C.pri });
+    s.addText("灵感→PRD→Gate1→设计+架构→Gate2→Issue→Gate2.5→TDD→Gate3→发布→复盘", {
+      x: 0.7, y: flowY + 0.28, w: 3.9, h: 0.45, fontSize: 7.5, fontFace: FONT_B, color: C.muted, valign: "top",
+    });
+
+    addCard(s, 5.2, flowY, 4.3, 0.8, C.white);
+    addAccentBar(s, 5.2, flowY, 0.8, C.purple);
+    s.addText("SuperPowers 流程", { x: 5.4, y: flowY + 0.02, w: 3.8, h: 0.22, fontSize: 9, fontFace: FONT_B, bold: true, color: C.purple });
+    s.addText("brainstorm→plan→worktree→subagent(TDD+review 循环)→verify→finish-branch", {
+      x: 5.4, y: flowY + 0.28, w: 3.9, h: 0.45, fontSize: 7.5, fontFace: FONT_B, color: C.muted, valign: "top",
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 17 — 核心能力互补矩阵
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.light };
+    titleBar(s, "核心能力互补矩阵");
+
+    // 左列：PM-Project 独有
+    addCard(s, 0.5, 1.2, 4.3, 3.6, C.white);
+    addAccentBar(s, 0.5, 1.2, 3.6, C.pri);
+    s.addText("PM-Project 独有能力", {
+      x: 0.75, y: 1.28, w: 3.8, h: 0.35,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.pri,
+    });
+    const pmOnly = [
+      "pm_assistant — 立项前价值评估 + 竞品检索",
+      "gate_review — 正式 Stage-Gate 质量关卡 (4道)",
+      "designer / prototype — 高保真原型生成",
+      "requirement-doc — 结构化 PRD + wireframe",
+      "requirement-to-issues — PRD → GitHub Issues",
+      "workflow-manifest — 跨阶段契约 + 产物追溯",
+      "post_launch_review — Build-Measure-Learn 闭环",
+      "pm_workflow_evaluator — 全流程健康度分析",
+    ];
+    s.addText(pmOnly.map(t => ({ text: "▸ " + t + "\n", options: { fontSize: 9, color: C.text } })), {
+      x: 0.75, y: 1.7, w: 3.9, h: 3.0,
+      fontFace: FONT_B, valign: "top", lineSpacingMultiple: 1.35,
+    });
+
+    // 右列：SuperPowers 独有
+    addCard(s, 5.2, 1.2, 4.3, 3.6, C.white);
+    addAccentBar(s, 5.2, 1.2, 3.6, C.purple);
+    s.addText("SuperPowers 独有能力", {
+      x: 5.45, y: 1.28, w: 3.8, h: 0.35,
+      fontSize: 12, fontFace: FONT_B, bold: true, color: C.purple,
+    });
+    const spOnly = [
+      "brainstorming — 强制设计前对话式探索",
+      "subagent-driven-dev — 子代理分发执行引擎",
+      "systematic-debugging — 科学化根因调试方法论",
+      "using-git-worktrees — 隔离 Worktree 管理",
+      "dispatching-parallel-agents — 并行问题分发",
+      "verification-before-completion — 完成前强制验证",
+      "writing-skills — TDD 方式创建新 Skill",
+      "receiving-code-review — 审查反馈应答规范",
+    ];
+    s.addText(spOnly.map(t => ({ text: "▸ " + t + "\n", options: { fontSize: 9, color: C.text } })), {
+      x: 5.45, y: 1.7, w: 3.9, h: 3.0,
+      fontFace: FONT_B, valign: "top", lineSpacingMultiple: 1.35,
+    });
+
+    // 重叠区域
+    addCard(s, 0.5, 4.95, 9.0, 0.6, C.card);
+    s.addText([
+      { text: "重叠领域  ", options: { bold: true, color: C.navy, fontSize: 10 } },
+      { text: "TDD（PM 的 tdd-coder vs SP 的 test-driven-development） · 代码审查（三级分类 vs 子代理审查） · 计划制定（planning Agent vs writing-plans Skill） · 分支管理（github-publish vs finishing-branch）", options: { color: C.muted, fontSize: 8.5 } },
+    ], {
+      x: 0.7, y: 5.0, w: 8.6, h: 0.5,
+      fontFace: FONT_B, valign: "middle",
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 18 — 哲学差异与协同结论
+  // ════════════════════════════════════════════════════════════════════
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.light };
+    titleBar(s, "哲学差异 & 协同运行模型");
+
+    // 哲学对比表
+    const phRows = [
+      ["信任模型", "Gate 制度信任 — 有专人(Agent)把关", "证据信任 — 跑验证才能声称完成"],
+      ["错误防护", "产出不合格则 Gate 阻断向下传播", "3 次修复失败 → 停下来质疑架构"],
+      ["反模式防护", "manifest 防止跳过阶段", "红旗清单 + 反合理化表防走捷径"],
+      ["扩展方式", "增加 Agent / Skill / MCP", "TDD 方式写新 Skill (R-G-R)"],
+      ["自主程度", "Gate 节点需人工审批", "设计好后可无人值守运行"],
+    ];
+    const tblY = 1.2;
+    // 表头
+    addCard(s, 0.5, tblY, 1.8, 0.35, C.navy);
+    s.addText("维度", { x: 0.5, y: tblY, w: 1.8, h: 0.35, fontSize: 9, fontFace: FONT_B, bold: true, color: C.white, align: "center", valign: "middle" });
+    addCard(s, 2.3, tblY, 3.6, 0.35, C.pri);
+    s.addText("PM-Project", { x: 2.3, y: tblY, w: 3.6, h: 0.35, fontSize: 9, fontFace: FONT_B, bold: true, color: C.white, align: "center", valign: "middle" });
+    addCard(s, 5.9, tblY, 3.6, 0.35, C.purple);
+    s.addText("SuperPowers", { x: 5.9, y: tblY, w: 3.6, h: 0.35, fontSize: 9, fontFace: FONT_B, bold: true, color: C.white, align: "center", valign: "middle" });
+
+    const phH = 0.38;
+    phRows.forEach((r, i) => {
+      const y = tblY + 0.4 + i * phH;
+      const bg = i % 2 === 0 ? C.card : C.white;
+      s.addShape("rect", { x: 0.5, y, w: 1.8, h: phH, fill: { color: bg } });
+      s.addText(r[0], { x: 0.6, y, w: 1.6, h: phH, fontSize: 8.5, fontFace: FONT_B, bold: true, color: C.text, valign: "middle" });
+      s.addShape("rect", { x: 2.3, y, w: 3.6, h: phH, fill: { color: bg } });
+      s.addText(r[1], { x: 2.4, y, w: 3.4, h: phH, fontSize: 8, fontFace: FONT_B, color: C.text, valign: "middle" });
+      s.addShape("rect", { x: 5.9, y, w: 3.6, h: phH, fill: { color: bg } });
+      s.addText(r[2], { x: 6.0, y, w: 3.4, h: phH, fontSize: 8, fontFace: FONT_B, color: C.text, valign: "middle" });
+    });
+
+    // 协同模型图示
+    const synY = 3.6;
+    addCard(s, 0.5, synY, 9.0, 1.9, C.white);
+    s.addText("协同运行模型 — 同一 Workspace 并存", {
+      x: 0.75, y: synY + 0.08, w: 8.5, h: 0.3,
+      fontSize: 11, fontFace: FONT_B, bold: true, color: C.navy,
+    });
+
+    // PM-Project 管控区
+    addCard(s, 0.75, synY + 0.45, 4.0, 1.2, "EBF4FF");
+    s.addText("PM-Project 管控层", { x: 0.9, y: synY + 0.5, w: 3.5, h: 0.25, fontSize: 9, fontFace: FONT_B, bold: true, color: C.pri });
+    s.addText("需求验证 → PRD → 架构 → Issue拆分\nGate 评审 (Go/No-Go)\nworkflow-manifest 状态流转", {
+      x: 0.9, y: synY + 0.78, w: 3.7, h: 0.8, fontSize: 8, fontFace: FONT_B, color: C.text, valign: "top", lineSpacingMultiple: 1.3,
+    });
+
+    // SuperPowers 执行区
+    addCard(s, 5.0, synY + 0.45, 4.3, 1.2, "F5F0FF");
+    s.addText("SuperPowers 执行层", { x: 5.15, y: synY + 0.5, w: 3.8, h: 0.25, fontSize: 9, fontFace: FONT_B, bold: true, color: C.purple });
+    s.addText("brainstorm → plan → worktree 隔离\nTDD + subagent 循环执行\nverification 强制验证 → finish branch", {
+      x: 5.15, y: synY + 0.78, w: 4.0, h: 0.8, fontSize: 8, fontFace: FONT_B, color: C.text, valign: "top", lineSpacingMultiple: 1.3,
+    });
+
+    // 箭头指示
+    s.addText("→", { x: 4.6, y: synY + 0.85, w: 0.5, h: 0.4, fontSize: 20, fontFace: FONT_B, color: C.amber, align: "center", valign: "middle" });
+  }
+
+  // ════════════════════════════════════════════════════════════════════
+  // SLIDE 19 — Q&A
   // ════════════════════════════════════════════════════════════════════
   {
     const s = pres.addSlide();

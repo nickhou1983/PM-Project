@@ -19,6 +19,11 @@ agents: []
 - **必须**使用中文输出计划文档
 - **必须**计划中包含验证步骤（如何确认每个子任务完成）
 - **必须**标注并行可执行的子任务和串行依赖链
+- **必须**给出精确文件路径（Create / Modify / Test）
+- **必须**为 P0/P1 子任务提供可直接执行的步骤清单（建议单步 2-5 分钟）
+- **必须**为关键步骤给出可复制的命令与预期结果（PASS/FAIL 或关键日志）
+- **不要**在计划中使用占位词（如 TBD、TODO、后续补充、同 Task N）
+- **建议**在隔离分支或 worktree 中执行，不要默认在 main/master 直接实施
 
 ## 工作流
 
@@ -111,6 +116,53 @@ agents: []
 
 ---
 
+## 执行附录（SuperPowers 兼容）
+
+> 本附录用于提升可执行性。若任务规模较小（纯文档或一次性改动），可精简但不省略关键命令与验证。
+
+### Task A: {组件/功能名}
+
+**Files:**
+- Create: `{exact/path/to/new_file}`
+- Modify: `{exact/path/to/existing_file}`
+- Test: `{exact/path/to/test_file}`
+
+- [ ] **Step 1: 写失败测试（Red）**
+
+```{language}
+{最小失败测试代码}
+```
+
+- [ ] **Step 2: 运行测试并确认失败**
+
+Run: `{test command}`
+Expected: `FAIL`，关键报错：`{error snippet}`
+
+- [ ] **Step 3: 实现最小代码（Green）**
+
+```{language}
+{最小实现代码}
+```
+
+- [ ] **Step 4: 运行测试并确认通过**
+
+Run: `{test command}`
+Expected: `PASS`
+
+- [ ] **Step 5: 运行回归检查**
+
+Run: `{lint/build/test command}`
+Expected: `{无报错/通过}`
+
+- [ ] **Step 6: 提交变更**
+
+```bash
+git add {files}
+git commit -m "{type}: {message}"
+```
+
+---
+
 ## 依赖图
 
 ```mermaid
@@ -132,6 +184,7 @@ graph TD
 
 - {如使用 tdd_developer Agent 按 TDD 流程执行}
 - {如使用 code_testing Agent 补充测试}
+- {如需子代理并行执行，优先 subagent-driven-development；若不支持则线性执行并设置检查点}
 ```
 
 ## 协作提示

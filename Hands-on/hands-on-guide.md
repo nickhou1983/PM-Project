@@ -3,10 +3,10 @@
 本文档面向 Workshop 参与者，基于**当前仓库内容**介绍如何理解 PM-Project，并亲手跑通一条最典型的链路：
 
 ```text
-需求灵感 → pm_assistant → requirement-doc → wireframe 预览 → prototype-publish → 墨刀
+需求灵感 → pm_assistant → requirement-doc → gate_review → prototype-publish → architect → gate_review
 ```
 
-> 本文以当前检出的仓库内容为准。编写本文时，工作分支为 `features/github-only`；如果你在其它分支，Agent / Skill 数量和 `.codex/config.toml` 配置可能不同。
+> 本文以当前检出的仓库内容为准。编写本文时，工作分支为 `main`；如果你在其它分支，Agent / Skill 数量和 `.codex/config.toml` 配置可能不同。
 
 ---
 

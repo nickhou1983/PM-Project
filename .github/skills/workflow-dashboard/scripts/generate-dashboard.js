@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 // ─── CLI args ────────────────────────────────────────────────────────────────
 const project = process.argv[2];
@@ -13,7 +13,7 @@ if (!project) {
 }
 
 const ROOT = process.cwd();
-const projectDir = path.join(ROOT, "docs", `prd-${project}`);
+const projectDir = path.join(ROOT, "projects", `prd-${project}`);
 
 if (!fs.existsSync(projectDir)) {
   console.error(`❌ 项目目录不存在：${projectDir}`);
@@ -105,16 +105,45 @@ function getStages() {
   ];
 }
 
-// ─── 5. 收集所有 warn/fail 事项 ──────────────────────────────────────────────
+// ─── 5. 归一化 dimensions（兼容数组格式和对象格式）─────────────────────────────
+function normalizeDimensions(gate) {
+  const dims = gate.dimensions;
+  if (!dims) return [];
+  if (Array.isArray(dims)) return dims;
+  // Object format: { "A_completeness": { weight, score, items: {...} }, ... }
+  return Object.entries(dims).map(([key, val]) => {
+    const items = val.items
+      ? Array.isArray(val.items)
+        ? val.items
+        : Object.entries(val.items).map(([id, result]) => ({
+            id,
+            check: id,
+            result: typeof result === "string" ? result : result.result || "pass",
+            note: typeof result === "object" ? result.note || "" : "",
+          }))
+      : [];
+    return {
+      name: val.name || key,
+      weight: val.weight || 0,
+      score: val.score || 0,
+      pass_count: items.filter((i) => i.result === "pass").length,
+      warn_count: items.filter((i) => i.result === "warn").length,
+      fail_count: items.filter((i) => i.result === "fail").length,
+      items,
+    };
+  });
+}
+
+// ─── 5b. 收集所有 warn/fail 事项 ─────────────────────────────────────────────
 function collectIssues(gateResults) {
   const issues = [];
   for (const g of gateResults) {
-    for (const dim of g.dimensions || []) {
+    for (const dim of normalizeDimensions(g)) {
       for (const item of dim.items || []) {
         if (item.result === "warn" || item.result === "fail") {
           issues.push({
             gate: g.gate,
-            date: g.date,
+            date: g.date || g.review_date,
             dim: dim.name,
             check: item.check,
             result: item.result,
@@ -129,8 +158,9 @@ function collectIssues(gateResults) {
 
 // ─── 6. 计算各 Gate 加权总分 ─────────────────────────────────────────────────
 function calcOverallScore(gate) {
-  const weighted = (gate.dimensions || []).filter((d) => d.weight > 0);
-  if (!weighted.length) return null;
+  const dims = normalizeDimensions(gate);
+  const weighted = dims.filter((d) => d.weight > 0);
+  if (!weighted.length) return gate.score != null ? (gate.score * 100).toFixed(1) : null;
   const total = weighted.reduce((s, d) => s + d.score * d.weight, 0);
   const weightSum = weighted.reduce((s, d) => s + d.weight, 0);
   return ((total / weightSum) * 100).toFixed(1);
@@ -172,13 +202,16 @@ function buildGateCards(gateResults) {
 
   const cards = gateResults
     .map((g, gi) => {
-      const significantDims = (g.dimensions || []).filter((d) => d.weight > 0);
+      const significantDims = normalizeDimensions(g).filter((d) => d.weight > 0);
       const overallScore = calcOverallScore(g);
 
       const decColorMap = {
         Go: { text: "#15803d", bg: "#dcfce7", border: "#86efac" },
+        go: { text: "#15803d", bg: "#dcfce7", border: "#86efac" },
         "Conditional Go": { text: "#b45309", bg: "#fef3c7", border: "#fcd34d" },
+        conditional_go: { text: "#b45309", bg: "#fef3c7", border: "#fcd34d" },
         "No-Go": { text: "#dc2626", bg: "#fee2e2", border: "#fca5a5" },
+        no_go: { text: "#dc2626", bg: "#fee2e2", border: "#fca5a5" },
       };
       const decStyle = decColorMap[g.decision] || {
         text: "#475569",
@@ -193,7 +226,7 @@ function buildGateCards(gateResults) {
       );
 
       // Bar data (all dims)
-      const allDims = g.dimensions || [];
+      const allDims = normalizeDimensions(g);
       const barLabels = JSON.stringify(allDims.map((d) => d.name));
       const passData = JSON.stringify(allDims.map((d) => d.pass_count || 0));
       const warnData = JSON.stringify(allDims.map((d) => d.warn_count || 0));
@@ -203,7 +236,7 @@ function buildGateCards(gateResults) {
   <div class="gate-header">
     <div class="gate-title-row">
       <span class="gate-name">${esc(g.gate)}</span>
-      <span class="gate-date">${esc(g.date)}</span>
+      <span class="gate-date">${esc(g.date || g.review_date)}</span>
     </div>
     <div class="gate-right">
       ${overallScore ? `<span class="gate-score">${overallScore}分</span>` : ""}
